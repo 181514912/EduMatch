@@ -30,6 +30,7 @@ function table_for_client()
 
 function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card)
 {
+	write_log( "Sending email to client with subject:" + $edugorilla_email_subject );
 	global $wpdb;
 	$location_ids = $lead_card->getLocationList();
 	$category = $lead_card->getCategoryList();
@@ -238,8 +239,9 @@ function edugorilla_client(){
 			# code...
 			$category_name = "category".$i;
 			if ($i>0) {
-				# code...
-				$more_category = $more_category.'<br/><input list="categories_list" name="'.$category_name.'" size="30" value="'.$_POST[$category_name].'">';
+				$categoryRowValue = '<br/><input list="categories_list" name="' . $category_name . '" size="30" value="' . $_POST[ $category_name ] . '">';
+				$removeButton     = '<input type = "button" name = "removeCategory"' . $i . ' value = "  -  " onclick = "removeThisRow(' . $i . ')">';
+				$more_category    = $more_category . $categoryRowValue . $removeButton;
 			}else
 				$category_select_val = $_POST[$category_name];
 			array_push($category, $_POST[$category_name]);
@@ -347,7 +349,7 @@ function edugorilla_client(){
 	?>
 
 	<script type="text/javascript">
-		function add() {
+		function addMoreRows() {
 			var ctrC = parseInt(document.getElementById("category_count").value);
 			var ctrL = parseInt(document.getElementById("location_count").value);
 
@@ -378,6 +380,15 @@ function edugorilla_client(){
 			ctrL++;
 			document.getElementById("location_count").value = ctrL;
 		}
+
+		function removeThisRow(rowId) {
+			var locationElem = document.getElementsByName("location" + rowId)[0];
+			var categoryElem = document.getElementsByName("category" + rowId)[0];
+			var removeButton = document.getElementsByName("removeCategory" + rowId)[0];
+			locationElem.parentNode.removeChild(locationElem);
+			categoryElem.parentNode.removeChild(categoryElem);
+			removeButton.parentNode.removeChild(removeButton);
+		}
 	</script>
 
 	<!-- Client Form -->
@@ -406,15 +417,14 @@ function edugorilla_client(){
 				</td>
 			</tr>
 			<tr>
+				<td rowspan="2">Notification Preferences<sup><font color="red">*</font></sup> :</td>
 				<td colspan = "2"><input type = "checkbox" id = "notification" name = "not_email"
-				                       value = "1" <?php echo $unsub_email_val ?>>Unsubscribe
-					Email
+				                         value="1" <?php echo $unsub_email_val ?>>Unsubscribe from all Emails
 				</td>
 			</tr>
 			<tr>
 				<td colspan = "2"><input type = "checkbox" id = "notification" name = "not_sms"
-				                       value = "1" <?php echo $unsub_sms_val ?>>Unsubscribe
-					SMS<br/>
+				                         value="1" <?php echo $unsub_sms_val ?>>Unsubscribe from all SMS<br/>
 				</td>
 			</tr>
 			<tr>
@@ -444,9 +454,10 @@ function edugorilla_client(){
 					</datalist>
 					<div id = "get_category">
 						<input list = "categories_list" name = "category0" size = "30" value = "<?php
-						 echo $category_select_val?>">
+						echo $category_select_val ?>"><input type="button" name="removeCategory0" value="  -  "
+						                                     onclick="removeThisRow(0)">
 						<?php echo $more_category ?>
-						<input type = "button" value = "  +  " onclick = "add()">
+						<input type="button" value="  +  " onclick="addMoreRows()">
 					</div>
 					<input type = "text" hidden name = "category_count" id = "category_count" value = "<?php echo $category_count_value ?>">
 					</td>

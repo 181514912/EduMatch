@@ -791,6 +791,18 @@ function edugorilla_shortcode_require()
 	);
 }
 
+if ( ! function_exists( 'write_log' ) ) {
+	function write_log( $log ) {
+		if ( true === WP_DEBUG ) {
+			if ( is_array( $log ) || is_object( $log ) ) {
+				error_log( print_r( $log, true ) );
+			} else {
+				error_log( $log );
+			}
+		}
+	}
+}
+
 
 add_action('wp_enqueue_scripts', 'edugorilla_shortcode_require');
 ?>

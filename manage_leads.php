@@ -100,7 +100,13 @@ ul.tab li a:focus, .active {background-color: #ccc;}
 		if (event.target == modal) {
 			modal.style.display = "none";
 		}
-	}
+	};
+
+	window.onhashchange = function () {
+		if (window.location.hash.endsWith("transaction_history_sh")) {
+			window.location.reload();
+		}
+	};
 
 	function customLoadDialog(msg) {
 		modal.style.display = "block";

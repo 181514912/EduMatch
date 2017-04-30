@@ -28,7 +28,7 @@ Create a form to add following details
 
 ### Requirements (Step 2):
 
-Show the details of all the fetched Leads. They should be properly hyperlinked.
+Show the details of all the fetched Leads :
 
 1. Users should be able to purchase definite number of EduCash from their account. 
 2. We should be able to modify the EduCash credited in User&#39;s account from backend from the admin UI.
@@ -37,6 +37,12 @@ Show the details of all the fetched Leads. They should be properly hyperlinked.
 5. Overview of the leads should be given to the user before he makes the purchase (like which city the lead is from and what service the lead is looking for).
 5. User can see contact details of the lead once he is ready to trade his EduCash and those corresponding number of EduCash should be deducted for the user.
 6. The proportion between how many leads you can buy with one EduCash should be configurable. By default,one EduCash can buy one lead. UI to unlock leads from using EduCash. 
+
+### Requirements For Email (Step 3):
+1. Send email to every available user for promotional leads
+2. Send email only to subscribed users for non-promotional leads
+3. Email the user whenever they unlock a lead.
+4. Email the users whenever EduCash is added to their account with relevent invoice.
 
 # Technology:
 
