@@ -313,6 +313,7 @@ function form_not_empty(){
 				</td>
 			</tr>
 			<tr>
+				<td rowspan="2">Unsubscribe Preferences<sup><font color="red">*</font></sup> :</td>
 				<td colspan="2"><input type="checkbox" id="notification" name="not_email"
 				                       value="1" <?php echo $unsub_email_val ?>>Unsubscribe
 					Email

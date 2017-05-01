@@ -128,8 +128,10 @@ function get_category_current_user($user_id, $client_data)
 			if (preg_match('/'.$category_->term_id.'/', $client_data->category)) {
 				# code...
 				$category_name = "category".$count;
-				$more_category = $more_category.'<br/><input list="categories_list" name="'.$category_name.'" size="30" value="'.$category_->name.'">';
-				$count = $count+1;
+				$category_data = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="' . $category_->name . '">';
+				$removeButton  = '<input type = "button" name = "removeCategory' . $count . '" value = "  -  " onclick = "removeThisRow(' . $count . ')">';
+				$more_category = $more_category . $category_data . $removeButton;
+				$count         = $count+1;
 				
 			}
 		}
@@ -153,8 +155,8 @@ function get_location_current_user($user_id , $client_data)
 			if (preg_match('/'.$location_->term_id.'/', $client_data->location)) {
 				# code...
 				$location_name = "location" . $count2;
-				$more_location = $more_location.'<br/><input list="location_list" name="'.$location_name.'" size="30" value="'.$location_->name.'">';
-				$count2 = $count2+1;
+				$more_location = $more_location . '<br name="br' . $location_name . '"/><input list="location_list" name="' . $location_name . '" size="30" value="' . $location_->name . '">';
+				$count2        = $count2+1;
 				
 			}
 		}
@@ -239,8 +241,8 @@ function edugorilla_client(){
 			# code...
 			$category_name = "category".$i;
 			if ($i>0) {
-				$categoryRowValue = '<br/><input list="categories_list" name="' . $category_name . '" size="30" value="' . $_POST[ $category_name ] . '">';
-				$removeButton     = '<input type = "button" name = "removeCategory"' . $i . ' value = "  -  " onclick = "removeThisRow(' . $i . ')">';
+				$categoryRowValue = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="' . $_POST[ $category_name ] . '">';
+				$removeButton     = '<input type = "button" name = "removeCategory' . $i . '" value = "  -  " onclick = "removeThisRow(' . $i . ')">';
 				$more_category    = $more_category . $categoryRowValue . $removeButton;
 			}else
 				$category_select_val = $_POST[$category_name];
@@ -252,7 +254,7 @@ function edugorilla_client(){
 			$location_name = "location".$i;
 			if ($i>0) {
 				# code...
-				$more_location = $more_location.'<br/><input list="location_list" name="'.$location_name.'" size="30" value="'.$_POST[$location_name].'">';
+				$more_location = $more_location . '<br name="br' . $location_name . '"/><input list="location_list" name="' . $location_name . '" size="30" value="' . $_POST[ $location_name ] . '">';
 			}else
 			$location_select_val = $_POST[$location_name];
 			array_push($location, $_POST[$location_name]);
@@ -385,9 +387,13 @@ function edugorilla_client(){
 			var locationElem = document.getElementsByName("location" + rowId)[0];
 			var categoryElem = document.getElementsByName("category" + rowId)[0];
 			var removeButton = document.getElementsByName("removeCategory" + rowId)[0];
+			var catLineBreak = document.getElementsByName("brcategory" + rowId)[0];
+			var locLineBreak = document.getElementsByName("brlocation" + rowId)[0];
 			locationElem.parentNode.removeChild(locationElem);
 			categoryElem.parentNode.removeChild(categoryElem);
 			removeButton.parentNode.removeChild(removeButton);
+			catLineBreak.parentNode.removeChild(catLineBreak);
+			locLineBreak.parentNode.removeChild(locLineBreak);
 		}
 	</script>
 
@@ -417,7 +423,7 @@ function edugorilla_client(){
 				</td>
 			</tr>
 			<tr>
-				<td rowspan="2">Notification Preferences<sup><font color="red">*</font></sup> :</td>
+				<td rowspan="2">Unsubscribe Preferences<sup><font color="red">*</font></sup> :</td>
 				<td colspan = "2"><input type = "checkbox" id = "notification" name = "not_email"
 				                         value="1" <?php echo $unsub_email_val ?>>Unsubscribe from all Emails
 				</td>

@@ -340,6 +340,8 @@ function edugorilla()
 					}
 
 				if ($is_promotional_lead == "yes") {
+					wp_mail( "anantharamnv+localtesting2@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
+
 					$institute_send_emails_status = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
 
 
@@ -382,6 +384,8 @@ function edugorilla()
 
 				} else {
 					$institute_send_emails_status2 = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
+					send_mail_without_unlock( "MyLockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, [ "anantharamnv+localtesting@gmail.com" ], [ "7829888873" ], "1234", "Anantharam", "61" );
+					wp_mail( "anantharamnv+localtesting1@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
 				}
 			}
 
