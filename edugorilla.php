@@ -249,7 +249,6 @@ function edugorilla()
 		$contact_no = $_POST['contact_no'];
 		$keyword = $_POST['keyword'];
 		$email = $_POST['email'];
-		$is_promotional_lead = $_POST['is_promotional_lead'];
 		$listing_type = $_POST['listing_type'];
 		$query = $_POST['query'];
 		$category_id = $_POST['category_id'];
@@ -330,7 +329,10 @@ function edugorilla()
 					add_user_meta($user_id, 'user_general_email', $email);
 				}
 			}
-
+			if ( $is_promotional_lead != "yes" ) {
+				$edugorilla_email_subject = str_replace( "{category}", $category, $edugorilla_email['subject'] );
+				send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card );
+			}
 			foreach ($json_results as $json_result) {
 				$edugorilla_email_subject = str_replace("{category}", $json_result->contact_category, $edugorilla_email['subject']);
 					$email_template_datas = array("{Contact_Person}" => $json_result->contact_person, "{category}" => $json_result->contact_category, "{location}" => $json_result->contact_location, "{listing_URL}" => $json_result->listing_url, "{name}" => $name, "{contact no}" => $contact_no, "{email address}" => $email, "{query}" => $query);
@@ -340,11 +342,7 @@ function edugorilla()
 					}
 
 				if ($is_promotional_lead == "yes") {
-					wp_mail( "anantharamnv+localtesting2@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
-
 					$institute_send_emails_status = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
-
-
 
 					$institute_emails = explode(",", $json_result->emails);
 					$client_pref_database = new ClientEmailPref_Helper();
@@ -358,9 +356,7 @@ function edugorilla()
 							$institute_emails_status[$institute_email] = wp_mail($institute_email, $edugorilla_email_subject, ucwords($edugorilla_email_body));
 
 						remove_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
-
 					}
-
 					$institute_phones = explode(",", $json_result->phones);
 					include_once plugin_dir_path(__FILE__) . "api/gupshup.api.php";
 					foreach ($institute_phones as $institute_phone) {
@@ -383,6 +379,7 @@ function edugorilla()
 					);
 
 				} else {
+					write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
 					$institute_send_emails_status2 = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
 					send_mail_without_unlock( "MyLockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, [ "anantharamnv+localtesting@gmail.com" ], [ "7829888873" ], "1234", "Anantharam", "61" );
 					wp_mail( "anantharamnv+localtesting1@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
@@ -756,29 +753,14 @@ function edugorilla_html_mail_content_type()
 	return 'text/html';
 }
 
-function vc_remove_wp_ver_css_js($src)
-{
-	if (strpos($src, 'ver=' . get_bloginfo('version')))
-		$src = remove_query_arg('ver', $src);
-	return $src;
-}
-
-add_filter('style_loader_src', 'vc_remove_wp_ver_css_js', 9999);
-add_filter('script_loader_src', 'vc_remove_wp_ver_css_js', 9999);
-
 
 include_once plugin_dir_path(__FILE__) . "email_setting.php";
-
 include_once plugin_dir_path(__FILE__) . "list.php";
-
 include_once plugin_dir_path(__FILE__) . "inc/shortcode_transaction_history.php";
-
 include_once plugin_dir_path(__FILE__) . "inc/shortcode_educash_payment.php";
 
 function edugorilla_shortcode_require()
 {
-	// for bootstrap 4.0 to work
-	wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css');
 	wp_enqueue_script('ajaxlib2', 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js');
 	wp_enqueue_script('bootjs', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js');
 	wp_enqueue_script('angularJs', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js');

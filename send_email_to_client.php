@@ -30,7 +30,7 @@ function table_for_client()
 
 function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card)
 {
-	write_log( "Sending email to client with subject:" + $edugorilla_email_subject );
+	write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
 	global $wpdb;
 	$location_ids = $lead_card->getLocationList();
 	$category = $lead_card->getCategoryList();
@@ -43,6 +43,12 @@ function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body
 	foreach ($client_email_addresses as $cea) {
 		$categoryCheck = 0;
 		$locationCheck = 0;
+		if ( empty( $cea->category ) ) {
+			$categoryCheck = 1;
+		}
+		if ( empty( $cea->location ) ) {
+			$locationCheck = 1;
+		}
 		foreach ($categoryArray as $currentCategory) {
 			if (preg_match('/' . $currentCategory . '/', $cea->category)) {
 				$categoryCheck = 1;
@@ -53,10 +59,12 @@ function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body
 				$locationCheck = 1;
 			}
 		}
+		echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if (preg_match('/Instant_Notifications/', $cea->preferences) AND $categoryCheck == 1 AND $locationCheck == 1) {
 			echo $cea->client_name;
 			$eduLeadHelper = new EduLead_Helper();
 			$query_status = $eduLeadHelper->set_card_unlock_status_to_db($cea->email_id, $lead_id, 1);
+			echo "<h2>PHP is sending wp_mail json_encode($query_status)!</h2>";
 			if (str_starts_with($query_status, "Success")) {
 				$lead_card->setUnlocked(true);
 				add_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
