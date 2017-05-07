@@ -330,8 +330,16 @@ function edugorilla()
 				}
 			}
 			if ( $is_promotional_lead != "yes" ) {
+				$edugorilla_email         = get_option( 'edugorilla_email_setting_instant' );
 				$edugorilla_email_subject = str_replace( "{category}", $category, $edugorilla_email['subject'] );
-				send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card );
+				$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
+				$resultCount              = count( $json_results );
+				echo( "<h1>It looks json_result is $resultCount($edugorilla_institute_datas)</h1>" );
+				foreach ( $json_results as $json_result ) {
+					$json = json_decode( $json_results );
+					echo json_encode( $json, JSON_PRETTY_PRINT );
+				}
+				send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, false );
 			}
 			foreach ($json_results as $json_result) {
 				$edugorilla_email_subject = str_replace("{category}", $json_result->contact_category, $edugorilla_email['subject']);
@@ -342,7 +350,7 @@ function edugorilla()
 					}
 
 				if ($is_promotional_lead == "yes") {
-					$institute_send_emails_status = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
+					$institute_send_emails_status = send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, true );
 
 					$institute_emails = explode(",", $json_result->emails);
 					$client_pref_database = new ClientEmailPref_Helper();
@@ -380,7 +388,7 @@ function edugorilla()
 
 				} else {
 					write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
-					$institute_send_emails_status2 = send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card);
+					$institute_send_emails_status2 = send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, false );
 					send_mail_without_unlock( "MyLockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, [ "anantharamnv+localtesting@gmail.com" ], [ "7829888873" ], "1234", "Anantharam", "61" );
 					wp_mail( "anantharamnv+localtesting1@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
 				}

@@ -28,7 +28,7 @@ function table_for_client()
 //end pluginUninstall function
 //Populate the Client Data
 
-function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body, $lead_card)
+function send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, $isPromotional )
 {
 	write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
 	global $wpdb;
@@ -61,21 +61,29 @@ function send_mail_with_unlock($edugorilla_email_subject, $edugorilla_email_body
 		}
 		echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if (preg_match('/Instant_Notifications/', $cea->preferences) AND $categoryCheck == 1 AND $locationCheck == 1) {
-			echo $cea->client_name;
-			$eduLeadHelper = new EduLead_Helper();
-			$query_status = $eduLeadHelper->set_card_unlock_status_to_db($cea->email_id, $lead_id, 1);
-			echo "<h2>PHP is sending wp_mail json_encode($query_status)!</h2>";
-			if (str_starts_with($query_status, "Success")) {
-				$lead_card->setUnlocked(true);
+			//echo $cea->client_name;
+			if ( $isPromotional ) {
+				$eduLeadHelper = new EduLead_Helper();
+				$query_status  = $eduLeadHelper->set_card_unlock_status_to_db( $cea->email_id, $lead_id, 1 );
+				if ( str_starts_with( $query_status, "Success" ) ) {
+					$lead_card->setUnlocked( true );
+					add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
+					$institute_emails_status = wp_mail( $cea->email_id, $edugorilla_email_subject, ucwords( $edugorilla_email_body ), $headers );
+					remove_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
+				}
+			} else {
 				add_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
 				$institute_emails_status = wp_mail($cea->email_id, $edugorilla_email_subject, ucwords($edugorilla_email_body), $headers);
 				remove_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
 			}
+
+			//echo "<h2>PHP is sending wp_mail json_encode($query_status)!</h2>";
+
 		}
 	}
 	if ($institute_emails_status) {
 		# code...
-		echo "Mail send";
+		//echo "Mail send";
 	}
 	return $institute_emails_status;
 }

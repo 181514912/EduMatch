@@ -148,7 +148,9 @@ function form_not_empty(){
 			$category_name = "category".$i;
 			if ($i>0) {
 				# code...
-				$more_category = $more_category.'<br/><input list="categories_list" name="'.$category_name.'" size="30" value="'.$_POST[$category_name].'">';
+				$categoryRowValue = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="' . $_POST[ $category_name ] . '">';
+				$removeButton     = '<input type = "button" name = "removeCategory' . $i . '" value = "  -  " onclick = "removeThisRow(' . $i . ')">';
+				$more_category    = $more_category . $categoryRowValue . $removeButton;
 			}else
 				$category_select_val = $_POST[$category_name];
 			array_push($category, $_POST[$category_name]);
@@ -252,14 +254,16 @@ function form_not_empty(){
 ?>
 
 	<script type="text/javascript">
-		function add() {
+		function addMoreRows() {
 			var ctrC = parseInt(document.getElementById("category_count").value);
 			var ctrL = parseInt(document.getElementById("location_count").value);
+
 			//Create an input type dynamically.
 			var element_c = document.createElement("input");
 			var element_l = document.createElement("input");
 			var br1 = document.createElement("br");
 			var br2 = document.createElement("br");
+
 			var element_name_c = "category" + ctrC;
 			element_c.setAttribute("list", "categories_list");
 			element_c.setAttribute("size", 30);
@@ -269,6 +273,7 @@ function form_not_empty(){
 			foo1.insertBefore(element_c, foo1.childNodes[0]);
 			ctrC++;
 			document.getElementById("category_count").value = ctrC;
+
 			var element_name_l = "location" + ctrL;
 			element_l.setAttribute("list", "location_list");
 			element_l.setAttribute("size", 30);
@@ -279,6 +284,19 @@ function form_not_empty(){
 			foo2.insertBefore(element_l, foo2.childNodes[0]);
 			ctrL++;
 			document.getElementById("location_count").value = ctrL;
+		}
+
+		function removeThisRow(rowId) {
+			var locationElem = document.getElementsByName("location" + rowId)[0];
+			var categoryElem = document.getElementsByName("category" + rowId)[0];
+			var removeButton = document.getElementsByName("removeCategory" + rowId)[0];
+			var catLineBreak = document.getElementsByName("brcategory" + rowId)[0];
+			var locLineBreak = document.getElementsByName("brlocation" + rowId)[0];
+			locationElem.parentNode.removeChild(locationElem);
+			categoryElem.parentNode.removeChild(categoryElem);
+			removeButton.parentNode.removeChild(removeButton);
+			catLineBreak.parentNode.removeChild(catLineBreak);
+			locLineBreak.parentNode.removeChild(locLineBreak);
 		}
 	</script>
 
@@ -353,9 +371,10 @@ function form_not_empty(){
 					</datalist>
 					<div id="get_category">
 						<input list="categories_list" name="category0" size="30" value="<?php
-						 echo $category_select_val?>">
+						echo $category_select_val ?>"><input type="button" name="removeCategory0" value="  -  "
+						                                     onclick="removeThisRow(0)">
 						<?php echo $more_category ?>
-						<input type="button" value="  +  " onclick="add()">
+						<input type="button" value="  +  " onclick="addMoreRows()">
 					</div>
 					<input type="text" hidden name="category_count" id="category_count" value="<?php echo $category_count_value ?>">
 					<font color="red"><?php echo $c_errors['category']; ?></font></td>
