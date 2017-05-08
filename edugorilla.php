@@ -333,12 +333,22 @@ function edugorilla()
 				$edugorilla_email         = get_option( 'edugorilla_email_setting_instant' );
 				$edugorilla_email_subject = str_replace( "{category}", $category, $edugorilla_email['subject'] );
 				$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
-				$resultCount              = count( $json_results );
-				echo( "<h1>It looks json_result is $resultCount($edugorilla_institute_datas)</h1>" );
-				foreach ( $json_results as $json_result ) {
-					$json = json_decode( $json_results );
-					echo json_encode( $json, JSON_PRETTY_PRINT );
+				$lead_unlock_URL          = $_SERVER['HTTP_HOST'] . "/manage_leads/#edugorilla_leads_sh";
+				$email_template_datas     = array( "{Contact_Person}"  => $name,
+				                                   "{category}"        => $category,
+				                                   "{location}"        => $location_id,
+				                                   "{lead_unlock_URL}" => $lead_unlock_URL
+				);
+
+				foreach ( $email_template_datas as $var => $email_template_data ) {
+					$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
 				}
+				$resultCount              = count( $json_results );
+				//echo( "<h1>It looks json_result is $resultCount($edugorilla_institute_datas)</h1>" );
+				//foreach ( $json_results as $json_result ) {
+				//	$json = json_decode( $json_results );
+				//	echo json_encode( $json, JSON_PRETTY_PRINT );
+				//}
 				send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, false );
 			}
 			foreach ($json_results as $json_result) {
