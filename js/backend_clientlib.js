@@ -93,18 +93,17 @@ $(document).on('click','#edugorilla_filter',function(){
                 },
          		success: function(data) 
             	{
-                	$("#edugorilla_institute_datas").val(JSON.stringify(data));
+		            $("#edugorilla_institute_datas").val(JSON.stringify(data['postingDetails']));
                 	
                 	 if($("#edu_name").val() !== "" && $("#edu_email").val() !== "" && $("#edu_contact_no").val() !== "" && $("#edu_query").val() !== "" && $("#edugorilla_institute_datas").val() !== "")
                     {
                     	$('#save_details_button').removeAttr("disabled");
-
-	                    if ($("#is_promotional_lead").is(":checked")) {
+	                    //We should be showing modal in any case.
+	                    // if ($("#is_promotional_lead").is(":checked")) {
                         	$('#save_details_button').attr("rel","modal:open");
-
-	                    } else {
-		                    $('#save_details_button').attr("onclick", "document.details.submit();");
-	                    }
+	                    // } else {
+	                    //    $('#save_details_button').attr("onclick", "document.details.submit();");
+	                    // }
                     }
             
                 
@@ -135,24 +134,28 @@ $(document).on('click','#edugorilla_filter',function(){
        				 	});
                 
                  var infowindow = new google.maps.InfoWindow();
-                	$.each(data,function(i,v){
-                    
-                    cnfbox += "<tr><td><a href='"+v.listing_url+"'>"+v.title+"</a></td><td>"+v.emails+"</td><td>"+v.phones+"</td><td>"+v.flag+"</td></tr>";
-                    	
-        				var marker = new google.maps.Marker({
-          						position: new google.maps.LatLng(v.lat, v.long),
-         						map: map
-        				});
-                    	
-                    	google.maps.event.addListener(marker, 'click', (function(marker, i) {
-       							 return function() {
-       									   infowindow.setContent('Institute Name: <b><a href="'+v.listing_url+'">'+v.title+"</a></b><br>Address: <b>"+v.address+"</b><br>Latitude <b>"+v.lat+"</b><br>Longitude <b>"+v.long+"</b><br>Flag <b>"+v.flag+"</b>");
-      									    infowindow.open(map, marker);
-      							  }
-      					})(marker, i));
-                  
-                    	
-                    });
+
+	    if ($("#is_promotional_lead").is(":checked")) {
+		    $.each(data['postingDetails'], function (i, v) {
+
+			    cnfbox += "<tr><td><a href='" + v.listing_url + "'>" + v.title + "</a></td><td>" + v.emails + "</td><td>" + v.phones + "</td><td>" + v.flag + "</td></tr>";
+
+			    var marker = new google.maps.Marker({
+				    position: new google.maps.LatLng(v.lat, v.long),
+				    map: map
+			    });
+			    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+				    return function () {
+					    infowindow.setContent('Institute Name: <b><a href="' + v.listing_url + '">' + v.title + "</a></b><br>Address: <b>" + v.address + "</b><br>Latitude <b>" + v.lat + "</b><br>Longitude <b>" + v.long + "</b><br>Flag <b>" + v.flag + "</b>");
+					    infowindow.open(map, marker);
+				    }
+			    })(marker, i));
+		    });
+	    }
+
+	    $.each(data['subscriptionPreferenceDetails'], function (i, v) {
+		    cnfbox += "<tr><td>Subscribed Client : </td><td>" + v.emailDetails + "</td><td>" + v.phoneDetails + "</td></tr>";
+	    });
          
 					cnfbox += "</table><center><button id='confirm' onclick='document.details.submit();'>Confirm</button></center>";
                		$("#confirmation").html(cnfbox);
@@ -178,7 +181,7 @@ $(document).on('click','#edugorilla_filter',function(){
   		if ($(this).is(':checked')) {
     		$("#save_details_button").text('Send Details');
   		} else {
-   			 $("#save_details_button").text('Save Details');
+		    //$("#save_details_button").text('Save Details');
   		}
 	});
     

@@ -360,7 +360,7 @@ function edugorilla()
 					}
 
 				if ($is_promotional_lead == "yes") {
-					$institute_send_emails_status = send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, true );
+					$institute_send_emails_status = send_mail_with_unlock( $edugorilla_email_subject . ".", $edugorilla_email_body, $lead_card, true );
 
 					$institute_emails = explode(",", $json_result->emails);
 					$client_pref_database = new ClientEmailPref_Helper();
@@ -397,10 +397,7 @@ function edugorilla()
 					);
 
 				} else {
-					write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
-					$institute_send_emails_status2 = send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, false );
-					send_mail_without_unlock( "MyLockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, [ "anantharamnv+localtesting@gmail.com" ], [ "7829888873" ], "1234", "Anantharam", "61" );
-					wp_mail( "anantharamnv+localtesting1@gmail.com", $edugorilla_email_subject, ucwords( $edugorilla_email_body ) );
+					send_mail_with_unlock( $edugorilla_email_subject . ";", $edugorilla_email_body, $lead_card, false );
 				}
 			}
 
@@ -608,7 +605,7 @@ function edugorilla()
 					</th>
 					<td>
 
-						<a id="save_details_button" disabled href="#confirmation" class="button button-primary">Save
+						<a id="save_details_button" disabled href="#confirmation" class="button button-primary">Send
 							Details</a>
 					</td>
 				</tr>
@@ -755,8 +752,11 @@ function edugorilla_show_location()
 	}
 	wp_reset_query();
 
+	$responseObject["postingDetails"]                = $eduction_posts;
+	$responseObject["subscriptionPreferenceDetails"] = edugorilla_show_pref_details( $address, $category );
+
 	//$response = json_encode(array_values($eduction_posts));
-	$response = json_encode($eduction_posts);
+	$response = json_encode( $responseObject );
 	echo $response;
 	exit();
 
@@ -765,6 +765,44 @@ function edugorilla_show_location()
 add_action('wp_ajax_edugorilla_show_location', 'edugorilla_show_location');
 add_action('wp_ajax_nopriv_edugorilla_show_location', 'edugorilla_show_location');
 
+function edugorilla_show_pref_details( $location_ids, $category ) {
+	global $wpdb;
+	$categoryArray              = explode( ',', $category );
+	$locationArray              = explode( ',', $location_ids );
+	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
+	$client_email_addresses     = $wpdb->get_results( "SELECT * FROM $table_name" );
+	$headers                    = array( 'Content-Type: text/html; charset=UTF-8' );
+	$preference_contact_details = array();
+	foreach ( $client_email_addresses as $cea ) {
+		$categoryCheck = 0;
+		$locationCheck = 0;
+		if ( empty( $cea->category ) ) {
+			$categoryCheck = 1;
+		}
+		if ( empty( $cea->location ) ) {
+			$locationCheck = 1;
+		}
+		foreach ( $categoryArray as $currentCategory ) {
+			if ( preg_match( '/' . $currentCategory . '/', $cea->category ) ) {
+				$categoryCheck = 1;
+			}
+		}
+		foreach ( $locationArray as $currentLocation ) {
+			if ( preg_match( '/' . $currentLocation . '/', $cea->location ) ) {
+				$locationCheck = 1;
+			}
+		}
+		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
+		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 ) {
+			//echo $cea->client_name;
+			$contactObject['emailDetails'] = $cea->email_id;
+			$contactObject['phoneDetails'] = $cea->contact_no;
+			$preference_contact_details[]  = $contactObject;
+		}
+	}
+
+	return $preference_contact_details;
+}
 
 function edugorilla_html_mail_content_type()
 {
