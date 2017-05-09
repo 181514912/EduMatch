@@ -101,7 +101,7 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 
 	}
 
-	include_once plugin_dir_path( __FILE__ ) . "api/gupshup-api.php";
+	include_once plugin_dir_path( __FILE__ ) . "api/gupshup.api.php";
 	foreach ( $institute_phones as $institute_phone ) {
 		$sms_setting_options1 = get_option( 'edugorilla_sms_setting1' );
 		$edugorilla_sms_body1 = stripslashes( $sms_setting_options1['body'] );
