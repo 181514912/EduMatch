@@ -59,7 +59,7 @@ function send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_bod
 				$locationCheck = 1;
 			}
 		}
-		echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
+		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if (preg_match('/Instant_Notifications/', $cea->preferences) AND $categoryCheck == 1 AND $locationCheck == 1) {
 			//echo $cea->client_name;
 			if ( $isPromotional ) {
