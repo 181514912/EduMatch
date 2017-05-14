@@ -8,7 +8,7 @@ function client_preferences_page(){
 			$php_empty_error = "*This field cannot be blank";
 		} else{
 			$client_email = $_POST['client_email'];
-			$check_client = $wpdb->get_var("SELECT COUNT(ID) from $users_table WHERE user_email = '$client_email' ");
+			$check_client = $wpdb->get_var("SELECT COUNT(ID) from $table_name WHERE email_id = '$client_email' ");
             if($check_client == 0){
                 $no_client_found = "*This client does not exist in our database";
             }
