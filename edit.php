@@ -127,7 +127,7 @@ function edugorilla_lead_edit(){
 	else
 	{
 		global $wpdb;
-		$q = "select * from edugorilla_lead_details where id=$iid";
+		$q = "select * from {$wpdb->prefix}edugorilla_lead_details where id=$iid";
 		$lead_details = $wpdb->get_results($q, ARRAY_A);
 
 		foreach($lead_details as $lead_detail);
