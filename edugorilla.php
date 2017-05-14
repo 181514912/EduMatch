@@ -222,6 +222,7 @@ function create_edugorilla_menus()
 
 include_once plugin_dir_path(__FILE__) . "view.php";
 include_once plugin_dir_path(__FILE__) . "edit.php";
+include_once plugin_dir_path(__FILE__) . "delete.php";
 include_once plugin_dir_path(__FILE__) . "otp.php";
 include_once plugin_dir_path(__FILE__) . "sms_setting.php";
 include_once plugin_dir_path(__FILE__) . "educash_allotment_and_history.php";
