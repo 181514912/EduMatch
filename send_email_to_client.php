@@ -4,10 +4,9 @@ function table_for_client()
 {
 	global $wpdb;
 	$table_name6 = $wpdb->prefix.'edugorilla_client_preferences'; //client preferences
+	$users_table = $wpdb->prefix.'users';
 	$sql6 = "CREATE TABLE $table_name6 (
-				                            id int(15) NOT NULL,				                     
-											client_name varchar(200) NOT NULL,
-											email_id varchar(200) NOT NULL,
+				                            id bigint(20) unsigned NOT NULL,				                     
 											contact_no varchar(50) NOT NULL,
 											preferences varchar(100) NOT NULL,
 											location varchar(100) NOT NULL,
@@ -15,7 +14,8 @@ function table_for_client()
 											unsubscribe_sms boolean DEFAULT 0,
 											unsubscribe_email boolean DEFAULT 0,
 											unlock_lead boolean DEFAULT 0,
-											PRIMARY KEY id (id)
+											PRIMARY KEY id (id),
+											FOREIGN KEY (id) REFERENCES $users_table(id)
 				  					    ) $charset_collate;";
 
 
@@ -38,7 +38,8 @@ function send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_bod
 	$categoryArray = explode(',', $category);
 	$locationArray = explode(',', $location_ids);
 	$table_name = $wpdb->prefix .'edugorilla_client_preferences';
-	$client_email_addresses = $wpdb->get_results("SELECT * FROM $table_name");
+	$users_table = $wpdb->prefix.'users';
+	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id");
 	$headers = array('Content-Type: text/html; charset=UTF-8');
 	foreach ($client_email_addresses as $cea) {
 		$categoryCheck = 0;
@@ -347,8 +348,6 @@ function edugorilla_client(){
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
 						'id' => $user_id,
-						'client_name' => $_client_name,
-						'email_id' => $client_email,
 						'contact_no' => $client_contact,
 						'preferences' => $notification,
                         'unsubscribe_email' => $not_email,
@@ -525,8 +524,9 @@ function do_this_weekly()
 	global $wpdb;
 	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
+	$users_table = $wpdb->prefix.'users';
 	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
-	$client_email_addresses = $wpdb->get_results("SELECT * FROM $table_name2");
+	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
 
 
 	foreach ($client_email_addresses as $client) {
@@ -582,8 +582,9 @@ function do_this_daily()
 	global $wpdb;
 	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
+	$users_table = $wpdb->prefix.'users';
 	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
-	$client_email_addresses = $wpdb->get_results("SELECT * FROM $table_name2");
+	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
 
 
 	foreach ($client_email_addresses as $client) {
@@ -640,8 +641,9 @@ function do_this_monthly()
 	global $wpdb;
 	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
+	$users_table = $wpdb->prefix.'users';
 	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
-	$client_email_addresses = $wpdb->get_results("SELECT * FROM $table_name2");
+	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
 
 
 	foreach ($client_email_addresses as $client) {
