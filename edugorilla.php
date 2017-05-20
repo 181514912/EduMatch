@@ -771,7 +771,8 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 	$categoryArray              = explode( ',', $category );
 	$locationArray              = explode( ',', $location_ids );
 	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
-	$client_email_addresses     = $wpdb->get_results( "SELECT * FROM $table_name" );
+	$users_table = $wpdb->prefix.'users';
+	$client_email_addresses     = $wpdb->get_results( "SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
 	$headers                    = array( 'Content-Type: text/html; charset=UTF-8' );
 	$preference_contact_details = array();
 	foreach ( $client_email_addresses as $cea ) {
