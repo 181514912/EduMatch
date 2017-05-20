@@ -2,13 +2,13 @@
 function client_preferences_page(){
 	global $wpdb;
 	$users_table = $wpdb->prefix.'users';
-	$table_name = $wpdb->prefix . 'edugorilla_client_preferences';
-	if($_POST['submit']){
+	$table_name = $wpdb->prefix.'edugorilla_client_preferences';
+	if(isset($_POST['submit'])){
 		if(empty($_POST['client_email'])){
 			$php_empty_error = "*This field cannot be blank";
 		} else{
 			$client_email = $_POST['client_email'];
-			$check_client = $wpdb->get_var("SELECT COUNT(ID) from $table_name WHERE email_id = '$client_email' ");
+			$check_client = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name cpt,$users_table ut WHERE cpt.id=ut.ID AND user_email = '".$client_email."' ");
             if($check_client == 0){
                 $no_client_found = "*This client does not exist in our database";
             }
@@ -59,8 +59,8 @@ function form_not_empty(){
 <br/><br/><br/>
 
 <?php
-       if($_POST['submit'] && !(empty($_POST['client_email'])) && $check_client > 0){
-         $value = $wpdb->get_row("SELECT * FROM $table_name WHERE email_id = '$client_email' ");
+       if(isset($_POST['submit']) && !(empty($_POST['client_email'])) && $check_client > 0){
+         $value = $wpdb->get_row("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id AND ut.user_email = '$client_email' ");
 		 
 		 $not_email = $value->unsubscribe_email;
 		 $not_sms = $value->unsubscribe_sms;
@@ -210,9 +210,10 @@ function form_not_empty(){
 
 		$user_id = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$client_email2' ");
 		$user_detail = get_user_meta($user_id);
+		/*not required now
 		$first_name = $user_detail['first_name'][0];
 		$last_name = $user_detail['last_name'][0];
-		$_client_name = $first_name . " " . $last_name;
+		$_client_name = $first_name . " " . $last_name;*/
 		$client_email = $user_detail['user_general_email'][0];
 		$client_contact = $user_detail['user_general_phone'][0];
 
@@ -234,8 +235,6 @@ function form_not_empty(){
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
 						'id' => $user_id,
-						'client_name' => $_client_name,
-						'email_id' => $client_email,
 						'contact_no' => $client_contact,
 						'preferences' => $notification,
 						'unsubscribe_email' => $not_email,
@@ -388,7 +387,7 @@ function form_not_empty(){
 	</form>
 </div>
 <?php
-if($_POST['submit'] && !(empty($_POST['client_email'])) && $check_client > 0){
+if(isset($_POST['submit']) && !(empty($_POST['client_email'])) && $check_client > 0){
 	echo "<script>document.getElementById('preference_form').style.display = 'block';</script>";
 }
 if ($_POST['submit_client_pref']) {
