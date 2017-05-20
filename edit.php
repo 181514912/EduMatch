@@ -109,10 +109,10 @@ function edugorilla_lead_edit(){
 				$contact_person_name = $json_result->contact_person;
 				$log_post_id         = $json_result->post_id;
 				if ( $is_promotional_lead == "yes" ) {
-					$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $contact_log_id, $contact_person_name, $log_post_id );
+					$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $contact_person_name, $contact_log_id, $log_post_id );
 
 				} else {
-					$result2 = send_mail_without_unlock( "LockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $contact_log_id, $contact_person_name, $log_post_id );
+					$result2 = send_mail_without_unlock( "LockedEmail : " . $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $contact_person_name, $contact_log_id, $log_post_id );
 				}
 			}
 

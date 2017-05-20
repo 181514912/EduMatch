@@ -94,19 +94,27 @@ $(document).on('click','#edugorilla_filter',function(){
          		success: function(data) 
             	{
 		            $("#edugorilla_institute_datas").val(JSON.stringify(data['postingDetails']));
-                	
-                	 if($("#edu_name").val() !== "" && $("#edu_email").val() !== "" && $("#edu_contact_no").val() !== "" && $("#edu_query").val() !== "" && $("#edugorilla_institute_datas").val() !== "")
+		            $("#edugorilla_subscibed_instant_datas").val(JSON.stringify(data['subscriptionPreferenceDetails']));
+
+		            var eduName = $("#edu_name").val();
+		            var eduEmail = $("#edu_email").val();
+		            var eduContactNo = $("#edu_contact_no").val();
+		            var eduQuery = $("#edu_query").val();
+		            var eduInstituteDatas = $("#edugorilla_institute_datas").val();
+		            var eduSubscriptionDatas = $("#edu_email").val();
+		            if (eduName !== "" && eduEmail !== "" && eduContactNo !== "" && eduQuery !== "")
                     {
-                    	$('#save_details_button').removeAttr("disabled");
-	                    //We should be showing modal in any case.
-	                    // if ($("#is_promotional_lead").is(":checked")) {
-                        	$('#save_details_button').attr("rel","modal:open");
-	                    // } else {
-	                    //    $('#save_details_button').attr("onclick", "document.details.submit();");
-	                    // }
+	                    if (eduInstituteDatas !== "" || eduSubscriptionDatas !== "") {
+		                    $('#save_details_button').removeAttr("disabled");
+		                    //We should be showing modal in any case.
+		                    // if ($("#is_promotional_lead").is(":checked")) {
+		                    $('#save_details_button').attr("rel", "modal:open");
+		                    // } else {
+		                    //    $('#save_details_button').attr("onclick", "document.lead_capture_details.submit();");
+		                    // }
+	                    }
                     }
-            
-                
+
                 var address = $("#edugorilla_location option:selected").text().replace("->","");
               	
                 var geocoder =  new google.maps.Geocoder();
@@ -125,9 +133,9 @@ $(document).on('click','#edugorilla_filter',function(){
                 	points = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
                 	zoom = 5;
                 }
-    
-          
-          		var cnfbox = "<table class='widefat fixed' align='center' width='100%' border=1><tr><th>Institude Name</th><th>Email(s)</th><th>SMS(s)</th><th>Flag</th></tr>";
+
+
+	    var cnfbox = "<table class='widefat fixed' align='center' width='100%' border=1><tr><th>Send</th><th>Institude Name</th><th>Email(s)</th><th>SMS(s)</th><th>Flag</th></tr>";
         			 	var map = new google.maps.Map(document.getElementById('map'), {
          					 zoom: zoom,
         				 	center: points
@@ -138,7 +146,7 @@ $(document).on('click','#edugorilla_filter',function(){
 	    if ($("#is_promotional_lead").is(":checked")) {
 		    $.each(data['postingDetails'], function (i, v) {
 
-			    cnfbox += "<tr><td><a href='" + v.listing_url + "'>" + v.title + "</a></td><td>" + v.emails + "</td><td>" + v.phones + "</td><td>" + v.flag + "</td></tr>";
+			    cnfbox += "<tr id=" + v.post_id + "><td><input type='checkbox' class='confirmSendPostingDetails' checked='true'/></td><td><a href='" + v.listing_url + "'>" + v.title + "</a></td><td>" + v.emails + "</td><td>" + v.phones + "</td><td>" + v.flag + "</td></tr>";
 
 			    var marker = new google.maps.Marker({
 				    position: new google.maps.LatLng(v.lat, v.long),
@@ -154,16 +162,15 @@ $(document).on('click','#edugorilla_filter',function(){
 	    }
 
 	    $.each(data['subscriptionPreferenceDetails'], function (i, v) {
-		    cnfbox += "<tr><td>Subscribed Client : </td><td>" + v.emailDetails + "</td><td>" + v.phoneDetails + "</td></tr>";
+		    cnfbox += "<tr id=" + v.userId + "><td><input type='checkbox' class='confirmSendPrefDetails' checked='true'/></td><td>Subscribed Client : </td><td class='emailPrefDetails'>" + v.emailDetails + "</td><td class='phonePrefDetails'>" + v.phoneDetails + "</td></tr>";
 	    });
-         
-					cnfbox += "</table><center><button id='confirm' onclick='document.details.submit();'>Confirm</button></center>";
+
+	    cnfbox += "</table><center><button id='confirm' onclick='document.lead_capture_details.submit();'>Confirm</button></center>";
                		$("#confirmation").html(cnfbox);
  
         });
-               
-              
-                },
+
+	            },
                 error: function(err)
             	{
                 	console.log(err);
@@ -183,6 +190,52 @@ $(document).on('click','#edugorilla_filter',function(){
   		} else {
 		    //$("#save_details_button").text('Save Details');
   		}
+	});
+
+	$(document).on('change', '.confirmSendPostingDetails', function () {
+		var postingDetails = document.getElementById('edugorilla_institute_datas').value;
+		var postingObjs = JSON.parse(postingDetails);
+		var affectedRow = event.target.parentElement.parentElement;
+		var affectedId = affectedRow.id;
+		var postingCounter = postingObjs.length;
+		var isPositive = this.checked;
+		while (postingCounter--) {
+			var postingObj = postingObjs[postingCounter];
+			var postingId = postingObj.post_id;
+			if (postingId == affectedId) {
+				if (!isPositive) {
+					postingObj.sendPostDetails = false;
+				} else {
+					postingObj.sendPostDetails = true;
+				}
+			}
+		}
+		var postingJSON = JSON.stringify(postingObjs);
+		$("#edugorilla_institute_datas").val(postingJSON);
+	});
+
+	$(document).on('change', '.confirmSendPrefDetails', function () {
+		var prefDetails = document.getElementById('edugorilla_subscibed_instant_datas').value;
+		var prefObjs = JSON.parse(prefDetails);
+		var affectedRow = event.target.parentElement.parentElement;
+		var affectedId = affectedRow.id;
+		var affectedEmails = $(affectedRow).find('.emailPrefDetails')[0].innerHTML;
+		var affectedPhoneNumbers = $(affectedRow).find('.phonePrefDetails')[0].innerHTML;
+		var prefCounter = prefObjs.length;
+		var isPositive = this.checked;
+		while (prefCounter--) {
+			var prefObj = prefObjs[prefCounter];
+			var userId = prefObj.userId;
+			if (userId == affectedId) {
+				if (!isPositive) {
+					prefObj.sendPrefDetails = false;
+				} else {
+					prefObj.sendPrefDetails = true;
+				}
+			}
+		}
+		var prefJSON = JSON.stringify(prefObjs);
+		$("#edugorilla_subscibed_instant_datas").val(prefJSON);
 	});
     
 	

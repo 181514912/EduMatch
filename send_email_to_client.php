@@ -91,6 +91,8 @@ function send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_bod
 
 function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $contact_name, $post_id, $contact_log_id ) {
 	global $wpdb;
+	$institute_emails_status = [];
+	$institute_sms_status    = [];
 	foreach ( $institute_emails as $institute_email ) {
 		add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
 

@@ -69,7 +69,7 @@ function create_edugorilla_lead_table()
 	dbDelta($sql2);
 	dbDelta($sql3);
 	dbDelta($sql4);
-	dbDelta($sql5);
+	//dbDelta($sql5);
 
 }
 
@@ -246,16 +246,20 @@ function edugorilla()
 
 	if ($caller == "self") {
 		/** Get Data From Form **/
-		$name = $_POST['name'];
-		$contact_no = $_POST['contact_no'];
-		$keyword = $_POST['keyword'];
-		$email = $_POST['email'];
-		$listing_type = $_POST['listing_type'];
-		$query = $_POST['query'];
-		$category_id = $_POST['category_id'];
-		$location_id = $_POST['location'];
-		$edugorilla_institute_datas = $_POST['edugorilla_institute_datas'];
-		$is_promotional_lead = $_POST['is_promotional_lead'];
+		$name                          = $_POST['name'];
+		$contact_no                    = $_POST['contact_no'];
+		$keyword                       = $_POST['keyword'];
+		$email                         = $_POST['email'];
+		$listing_type                  = $_POST['listing_type'];
+		$query                         = $_POST['query'];
+		$category_id                   = $_POST['category_id'];
+		$location_id                   = $_POST['location'];
+		$edugorilla_institute_datas    = $_POST['edugorilla_institute_datas_name'];
+		$edugorilla_subscription_datas = $_POST['edugorilla_subscibed_instant_datas_name'];
+		$is_promotional_lead           = $_POST['is_promotional_lead'];
+
+		//echo "<h2>Edugorilla Institute Datas : $edugorilla_institute_datas</h2><br>";
+		//echo "<h2>Edugorilla Subscription Datas : $edugorilla_subscription_datas</h2><br><br>";
 
 		/** Error Checking **/
 		$errors = array();
@@ -281,7 +285,8 @@ function edugorilla()
 			if (empty($location_id)) $location_id = "-1";
 			if(empty($is_promotional_lead)) $is_promotional_lead = "no";
 
-			$json_results = json_decode(stripslashes($edugorilla_institute_datas));
+			$institute_applicable_datas    = json_decode( stripslashes( $edugorilla_institute_datas ) );
+			$subscription_applicable_datas = json_decode( stripslashes( $edugorilla_subscription_datas ) );
 
 			$edugorilla_email = get_option('edugorilla_email_setting1');
 
@@ -344,61 +349,45 @@ function edugorilla()
 				foreach ( $email_template_datas as $var => $email_template_data ) {
 					$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
 				}
-				$resultCount              = count( $json_results );
-				//echo( "<h1>It looks json_result is $resultCount($edugorilla_institute_datas)</h1>" );
-				//foreach ( $json_results as $json_result ) {
-				//	$json = json_decode( $json_results );
-				//	echo json_encode( $json, JSON_PRETTY_PRINT );
-				//}
-				send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, false );
+
+				foreach ( $subscription_applicable_datas as $subscription_data_applicable ) {
+					$subscription_emails_applicable = $subscription_data_applicable->emailDetails;
+					$subscription_phones_applicable = $subscription_data_applicable->phoneDetails;
+					$subscription_applicable_emails = explode( ",", $subscription_emails_applicable );
+					$subscription_applicable_phones = explode( ",", $subscription_phones_applicable );
+					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
+					if ( $subscription_send_applicable ) {
+						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $subscription_applicable_emails, $subscription_applicable_phones, null, $lead_id, "-1" );
+					}
+				}
 			}
-			foreach ($json_results as $json_result) {
-				$edugorilla_email_subject = str_replace("{category}", $json_result->contact_category, $edugorilla_email['subject']);
-					$email_template_datas = array("{Contact_Person}" => $json_result->contact_person, "{category}" => $json_result->contact_category, "{location}" => $json_result->contact_location, "{listing_URL}" => $json_result->listing_url, "{name}" => $name, "{contact no}" => $contact_no, "{email address}" => $email, "{query}" => $query);
+			foreach ( $institute_applicable_datas as $institute_data_applicable ) {
+				$edugorilla_email_subject = str_replace( "{category}", $institute_data_applicable->contact_category, $edugorilla_email['subject'] );
+				$email_template_datas     = array(
+					"{Contact_Person}" => $institute_data_applicable->contact_person,
+					"{category}"       => $institute_data_applicable->contact_category,
+					"{location}"       => $institute_data_applicable->contact_location,
+					"{listing_URL}"    => $institute_data_applicable->listing_url,
+					"{name}"           => $name,
+					"{contact no}"     => $contact_no,
+					"{email address}"  => $email,
+					"{query}"          => $query
+				);
 
 					foreach ($email_template_datas as $var => $email_template_data) {
 						$edugorilla_email_body = str_replace($var, $email_template_data, $edugorilla_email_body);
 					}
 
 				if ($is_promotional_lead == "yes") {
-					$institute_send_emails_status = send_mail_with_unlock( $edugorilla_email_subject . ".", $edugorilla_email_body, $lead_card, true );
-
-					$institute_emails = explode(",", $json_result->emails);
-					$client_pref_database = new ClientEmailPref_Helper();
-					$institute_emails = $client_pref_database->removeUnsubscribedEmails($institute_emails);
-
-					foreach ($institute_emails as $institute_email) {
-						add_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
-
-						$is_email_sending_required = 1;
-						if (!empty($institute_email) && $is_email_sending_required == 1)
-							$institute_emails_status[$institute_email] = wp_mail($institute_email, $edugorilla_email_subject, ucwords($edugorilla_email_body));
-
-						remove_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
+					$institute_emails            = explode( ",", $institute_data_applicable->emails );
+					$institute_phones            = explode( ",", $institute_data_applicable->phones );
+					$client_pref_database        = new ClientEmailPref_Helper();
+					$institute_emails            = $client_pref_database->removeUnsubscribedEmails($institute_emails);
+					$log_post_id                 = $institute_data_applicable->post_id;
+					$should_send_posting_details = $institute_data_applicable->sendPostDetails;
+					if ( $should_send_posting_details ) {
+						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, null, $lead_id, $log_post_id );
 					}
-					$institute_phones = explode(",", $json_result->phones);
-					include_once plugin_dir_path(__FILE__) . "api/gupshup.api.php";
-					foreach ($institute_phones as $institute_phone) {
-						$smsapi = get_option("smsapi");
-						$msg = str_replace("{Contact_Person}", $json_result->contact_person, $smsapi['message']);
-						$institute_sms_status[$institute_phone] = send_sms($smsapi['username'],$smsapi['password'],$institute_phone,$msg);
-					}
-
-					$contact_log_id = $wpdb->insert_id;
-
-					$result2 = $wpdb->insert(
-						$wpdb->prefix . 'edugorilla_lead_contact_log',
-						array(
-							'contact_log_id' => $contact_log_id,
-							'post_id' => $json_result->post_id,
-							'email_status' => json_encode($institute_emails_status),
-							'sms_status' => json_encode($institute_sms_status),
-							'date_time' => current_time('mysql')
-						)
-					);
-
-				} else {
-					send_mail_with_unlock( $edugorilla_email_subject . ";", $edugorilla_email_body, $lead_card, false );
 				}
 			}
 
@@ -458,7 +447,7 @@ function edugorilla()
 			<?php
 		}
 		?>
-		<form name=details method="post">
+		<form name="lead_capture_details" method="post">
 			<table class="form-table">
 				<tr>
 					<th>Name<sup><font color="red">*</font></sup></th>
@@ -601,7 +590,9 @@ function edugorilla()
 				</tr>
 				<tr>
 					<th>
-						<input type="hidden" id="edugorilla_institute_datas" name="edugorilla_institute_datas">
+						<input type="hidden" id="edugorilla_institute_datas" name="edugorilla_institute_datas_name">
+						<input type="hidden" id="edugorilla_subscibed_instant_datas"
+						       name="edugorilla_subscibed_instant_datas_name">
 						<input type="hidden" name="caller" value="self">
 					</th>
 					<td>
@@ -748,7 +739,8 @@ function edugorilla_show_location()
 			$eduction_post['lat'] = get_post_meta(get_the_ID(), 'listing_map_location_latitude', true);
 			$eduction_post['long'] = get_post_meta(get_the_ID(), 'listing_map_location_longitude', true);
 
-			$eduction_posts[] = $eduction_post;
+			$eduction_post['sendPostDetails'] = "true";
+			$eduction_posts[]                 = $eduction_post;
 		}
 	}
 	wp_reset_query();
@@ -771,8 +763,8 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 	$categoryArray              = explode( ',', $category );
 	$locationArray              = explode( ',', $location_ids );
 	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table = $wpdb->prefix.'users';
-	$client_email_addresses     = $wpdb->get_results( "SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
+	$users_table                = $wpdb->prefix . 'users';
+	$client_email_addresses     = $wpdb->get_results( "SELECT ut.id AS user_id,ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
 	$headers                    = array( 'Content-Type: text/html; charset=UTF-8' );
 	$preference_contact_details = array();
 	foreach ( $client_email_addresses as $cea ) {
@@ -797,9 +789,11 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 ) {
 			//echo $cea->client_name;
-			$contactObject['emailDetails'] = $cea->email_id;
-			$contactObject['phoneDetails'] = $cea->contact_no;
-			$preference_contact_details[]  = $contactObject;
+			$contactObject['userId']          = $cea->user_id;
+			$contactObject['emailDetails']    = $cea->email_id;
+			$contactObject['phoneDetails']    = $cea->contact_no;
+			$contactObject['sendPrefDetails'] = "true";
+			$preference_contact_details[]     = $contactObject;
 		}
 	}
 
