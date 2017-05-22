@@ -15,9 +15,9 @@ function form_list()
     
     $page_size = 10;
     if ($num_rows % $page_size == 0)
-        $total_pages = $num_rows / $page_size;
+        $promotion_total_pages = $num_rows / $page_size;
     else
-        $total_pages = intval($num_rows / $page_size) + 1;
+        $promotion_total_pages = intval($num_rows / $page_size) + 1;
 
     $index = ($current_page - 1) * $page_size;
 //end of Promotion send listing
@@ -32,9 +32,9 @@ function form_list()
 	
     
     if ($total_rows % $page_size == 0)
-        $total_pages = $total_rows / $page_size;
+        $leads_total_pages = $total_rows / $page_size;
     else
-        $total_pages = intval($total_rows / $page_size) + 1;
+        $leads_total_pages = intval($total_rows / $page_size) + 1;
 
     $lead_index = ($lead_current_page - 1) * $page_size;
 //end of Leads listing
@@ -54,7 +54,7 @@ function form_list()
     $leads_datas = $wpdb->get_results($q, 'ARRAY_A');
 
     $p = '';
-    for ($i = 1; $i <= $total_pages; $i++) {
+    for ($i = 1; $i <= $promotion_total_pages; $i++) {
         if ($i == $current_page)
             $p .= "<option value='$i' selected> $i </option>";
         else
@@ -63,8 +63,8 @@ function form_list()
 
 
 	$lead_sent_p = '';
-	for ($j = 1; $j <= $total_pages; $j++) {
-        if ($j == $current_page)
+	for ($j = 1; $j <= $leads_total_pages; $j++) {
+        if ($j == $lead_current_page)
             $lead_sent_p .= "<option value='$j' selected> $j </option>";
         else
             $lead_sent_p .= "<option value='$j'>$j</option>";
