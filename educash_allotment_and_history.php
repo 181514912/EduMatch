@@ -68,12 +68,18 @@ function allocate_educash_form_page()
               if($final_total >= 0){
 		       $all_meta_for_user = get_user_meta( $client_ID_result );
 	           $client_firstname = $all_meta_for_user['user_general_first_name'][0];
+			   if(empty($client_firstname))
+				   $client_firstname = $all_meta_for_user['first_name'][0];
 	           $client_lastname = $all_meta_for_user['user_general_last_name'][0];
+			   if(empty($client_lastname))
+				   $client_lastname = $all_meta_for_user['last_name'][0];
 	           $client_street = $all_meta_for_user['user_address_street_and_number'][0];
 	           $client_city = $all_meta_for_user['user_address_city'][0];
 	           $client_postal_code = $all_meta_for_user['user_address_postal_code'][0];
 	           $client_phone_number = $all_meta_for_user['user_general_phone'][0];
 	           $client_country = $all_meta_for_user['user_address_country'][0];
+			   if(empty($client_country))
+				   $client_country = "India";
                }
 		}
 		}
@@ -210,13 +216,13 @@ function allocate_educash_form_page()
 <table class = "form-table">
 
 				<tr>
-					<th>Street and number<sup><font color="red">*</font></sup></th>
+					<th>Street Address<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' name = 'client_street' class = 'compulsory_popup_field' value = "<?php echo $client_street; ?>" maxlength = '100'>
 						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
 					</td>
 					<td></td>
-					<th>Client Firstname<sup><font color="red">*</font></sup></th>
+					<th>First Name<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' name = 'client_firstname' class = 'compulsory_popup_field' value = "<?php echo $client_firstname;?>" maxlength = '100'>
 						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
@@ -229,7 +235,7 @@ function allocate_educash_form_page()
 						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
 					</td>
 					<td></td>
-					<th>Client Lastname<sup><font color="red">*</font></sup></th>
+					<th>Last Name<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' name = 'client_lastname' class = 'compulsory_popup_field' value = "<?php echo $client_lastname; ?>" maxlength = '100'>
 						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
@@ -262,10 +268,10 @@ function allocate_educash_form_page()
 					</td>
 				</tr>
 				<tr>
-					<th>Country<sup><font color="red">*</font></sup></th>
+					<th>Country</th>
 					<td>
-						<input type = 'text' name = 'client_country' class = 'compulsory_popup_field' value = "<?php echo $client_country; ?>" maxlength = '100'>
-						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
+						<input type = 'text' name = 'client_country' class = 'popup_input_field' value = "<?php echo $client_country; ?>" maxlength = '100'>
+						
 					</td>
 					<td></td>
 					<th>Amount (Amount paid by client)</th>
