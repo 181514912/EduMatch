@@ -351,9 +351,39 @@ function form_not_empty(){
 				<td>
 					<?php $location = get_terms('locations', array('hide_empty' => false)); ?>
 					<datalist id="location_list">
-						<?php foreach ($location as $value) { ?>
-						<option value="<?php echo $value->name; ?>">
-							<?php } ?>
+						<option value="">Select</option>
+							<?php
+							$templocationarray = array();
+
+							foreach ($location as $clients_location) {
+								$templocationarray[$clients_location->parent][$clients_location->term_id] = $clients_location->name;
+							}
+
+							foreach ($templocationarray as $var => $vals) {
+
+								?>
+
+								<option value="<?php echo $var; ?>">
+									<?php
+									$d = get_term_by('id', $var, 'locations');
+									echo $d->name;
+									?>
+								</option>
+
+								<?php
+								foreach ($vals as $index => $val) {
+									?>
+
+									<option value="<?php echo $index; ?>">
+										<?php echo "->" . $val; ?>
+									</option>
+									<?php
+								}
+								?>
+
+								<?php
+							}
+							?>
 					</datalist>
 					<div id="get_location">
 						<input list="location_list" name="location0" size="30" value="<?php echo $location_select_val?>">
