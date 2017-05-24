@@ -177,6 +177,7 @@ function form_not_empty(){
 		}
 		foreach ($location as $location_value) {
 			$location_value =  str_replace("&","&amp;",$location_value);
+			$location_value = str_replace("->","",$location_value);
 			foreach ($location_list as $loc_value) {
 				if (strcmp($location_value , $loc_value->name) == 0) {
 					# code...
@@ -360,23 +361,17 @@ function form_not_empty(){
 							}
 
 							foreach ($templocationarray as $var => $vals) {
+								$d = get_term_by('id', $var, 'locations');
 
 								?>
 
-								<option value="<?php echo $var; ?>">
-									<?php
-									$d = get_term_by('id', $var, 'locations');
-									echo $d->name;
-									?>
-								</option>
+								<option value="<?php echo $d->name; ?>">
 
 								<?php
 								foreach ($vals as $index => $val) {
 									?>
 
-									<option value="<?php echo $index; ?>">
-										<?php echo "->" . $val; ?>
-									</option>
+									<option value="<?php echo "->" . $val; ?>">
 									<?php
 								}
 								?>
