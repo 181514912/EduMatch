@@ -8,7 +8,7 @@ function client_preferences_page(){
 			$php_empty_error = "*This field cannot be blank";
 		} else{
 			$client_email = $_POST['client_email'];
-			$check_client = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name cpt,$users_table ut WHERE cpt.id=ut.ID AND user_email = '".$client_email."' ");
+			$check_client = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name cpt,$users_table ut WHERE cpt.id=ut.ID AND ut.user_email = '".$client_email."' ");
             if($check_client == 0){
                 $no_client_found = "*This client does not exist in our database";
             }
@@ -211,10 +211,10 @@ function form_not_empty(){
 
 		$user_id = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$client_email2' ");
 		$user_detail = get_user_meta($user_id);
-		/*not required now
+		/*not required now*/
 		$first_name = $user_detail['first_name'][0];
 		$last_name = $user_detail['last_name'][0];
-		$_client_name = $first_name . " " . $last_name;*/
+		$_client_name = $first_name . " " . $last_name;
 		$client_email = $user_detail['user_general_email'][0];
 		$client_contact = $user_detail['user_general_phone'][0];
 
@@ -236,6 +236,8 @@ function form_not_empty(){
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
 						'id' => $user_id,
+						'client_name' => $_client_name,
+						'email_id' => $client_email,
 						'contact_no' => $client_contact,
 						'preferences' => $notification,
 						'unsubscribe_email' => $not_email,
@@ -340,7 +342,7 @@ function form_not_empty(){
 			<tr>
 				<td colspan="2"><input type="checkbox" id="notification" name="not_sms"
 				                       value="1" <?php echo $unsub_sms_val ?>>Unsubscribe
-					SMS<br/>
+					SMS
 				</td>
 			</tr>
 			<tr>
