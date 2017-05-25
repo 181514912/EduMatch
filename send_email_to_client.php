@@ -6,7 +6,9 @@ function table_for_client()
 	$table_name6 = $wpdb->prefix.'edugorilla_client_preferences'; //client preferences
 	$users_table = $wpdb->prefix.'users';
 	$sql6 = "CREATE TABLE $table_name6 (
-				                            id bigint(20) unsigned NOT NULL,				                     
+				                            id bigint(20) unsigned NOT NULL,
+											client_name varchar(200) NOT NULL,
+											email_id varchar(200) NOT NULL,
 											contact_no varchar(50) NOT NULL,
 											preferences varchar(100) NOT NULL,
 											location varchar(100) NOT NULL,
@@ -14,6 +16,7 @@ function table_for_client()
 											unsubscribe_sms boolean DEFAULT 0,
 											unsubscribe_email boolean DEFAULT 0,
 											unlock_lead boolean DEFAULT 0,
+											related_leads boolean DEFAULT 0,
 											PRIMARY KEY id (id),
 											FOREIGN KEY (id) REFERENCES $users_table(id)
 				  					    ) $charset_collate;";
