@@ -431,7 +431,7 @@ function form_not_empty(){
 				<td>Automatically Unlock the Lead :</td>
 				<td><input type="checkbox" name="unlock_lead" value="1" <?php echo $unlock_val ?>></td>
 			</tr>
-			<tr><td><input type="submit" name="submit_client_pref"/></td></tr>
+			<tr><td><input type="submit" name="submit_client_pref" value="Save"/></td></tr>
 		</table>
 	</form>
 </div>
