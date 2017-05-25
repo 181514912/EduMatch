@@ -65,6 +65,13 @@ function form_not_empty(){
 		 $not_email = $value->unsubscribe_email;
 		 $not_sms = $value->unsubscribe_sms;
 		 $is_lead_unlocked = $value->unlock_lead;
+		 $not_related = $value->related_leads;
+		 
+		 if($not_related  == 1){
+			 $related_lead_val = "checked";
+		 } else{
+			 $related_lead_val = "";
+		 }
 		 
 		 if($not_email == 1){
 			 $unsub_email_val = "checked";
@@ -116,6 +123,7 @@ function form_not_empty(){
 		$categories_list = get_terms('listing_categories', array('hide_empty' => false));
 		$location_list = get_terms('locations', array('hide_empty' => false));
 		$unlock_lead_ = $_POST['unlock_lead'];
+		$related_leads_ = $_POST['related_leads'];
 		$client_email2 = $_POST['client_email2'];
 		$notification_all = $_POST['notification'];
 		if (!empty($notification_all)) {
@@ -208,6 +216,13 @@ function form_not_empty(){
 			$unlock_lead_ = 0;
 		}else
 			$unlock_val = "checked";
+		
+		if ($related_leads_ != 1) {
+			# code...
+			$related_lead_val = "";
+			$related_leads_ = 0;
+		}else
+			$related_lead_val = "checked";
 
 		$user_id = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$client_email2' ");
 		$user_detail = get_user_meta($user_id);
@@ -224,6 +239,7 @@ function form_not_empty(){
 						'preferences' => $notification,
 						'location' => $all_loc,
 						'unlock_lead' => $unlock_lead_,
+						'related_leads' => $related_leads_,
 						'unsubscribe_email' => $not_email,
 						'unsubscribe_sms' => $not_sms,
 						'category' => $all_cat
@@ -242,6 +258,7 @@ function form_not_empty(){
 						'preferences' => $notification,
 						'unsubscribe_email' => $not_email,
 						'unsubscribe_sms' => $not_sms,
+						'related_leads' => $related_leads_,
 						'location' => $all_loc,
 						'unlock_lead' => $unlock_lead_,
 						'category' => $all_cat
@@ -343,6 +360,11 @@ function form_not_empty(){
 				<td colspan="2"><input type="checkbox" id="notification" name="not_sms"
 				                       value="1" <?php echo $unsub_sms_val ?>>Unsubscribe
 					SMS
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="1">Leads Related to them?<sup><font color="red">*</font></sup> :</td>
+				<td><input type="checkbox" name="related_leads" value="1" <?php echo $related_lead_val ?>><br/></td>
 				</td>
 			</tr>
 			<tr>
