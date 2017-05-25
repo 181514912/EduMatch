@@ -423,7 +423,7 @@ function allocate_educash_form_page()
 
        if($educash_added > 0){
 			$table_name6 = $wpdb->prefix.'edugorilla_client_preferences';
-			$check_client_notifications = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name6 cpt,$users_table ut WHERE cpt.id=ut.ID AND user_email = '".$clientName."' ");
+			$check_client_notifications = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name6 cpt,$users_table ut WHERE cpt.id=ut.ID AND ut.user_email = '".$clientName."' ");
 
 			if($check_client_notifications == 0){
 				$user_id = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
