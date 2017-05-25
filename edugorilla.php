@@ -139,24 +139,6 @@ function create_edugorilla_menus()
 	);
 
 	add_submenu_page(
-		'edugorilla',
-		'Lead Marketplace | Template of Email',
-		'Email Templates',
-		'read',
-		'edugorilla-email-setting',
-		'edugorilla_email_setting'
-	);
-
-	add_submenu_page(
-		'edugorilla',
-		'Lead Marketplace | Template of SMS',
-		'SMS Templates',
-		'read',
-		'edugorilla-sms-setting',
-		'edugorilla_sms_setting'
-	);
-
-	add_submenu_page(
 		'',
 		'Lead Marketplace | Edit Lead',
 		'Promotion Sent Edit',
@@ -209,6 +191,15 @@ function create_edugorilla_menus()
 		'conversion-tables',
 		'conversion_tables'
 	);
+	
+	add_submenu_page(
+		'edugorilla',
+		'Lead Marketplace | Categories',
+		'Categories',
+		'read',
+		'edu-categories',
+		'edu_categories'
+	);
 
     add_submenu_page(
 		'edugorilla',
@@ -217,6 +208,24 @@ function create_edugorilla_menus()
 		'manage_options',
 		'edugorilla-settings',
 		'edugorilla_settings'
+	);
+	
+	add_submenu_page(
+		'edugorilla',
+		'Lead Marketplace | Template of Email',
+		'Email Templates',
+		'read',
+		'edugorilla-email-setting',
+		'edugorilla_email_setting'
+	);
+
+	add_submenu_page(
+		'edugorilla',
+		'Lead Marketplace | Template of SMS',
+		'SMS Templates',
+		'read',
+		'edugorilla-sms-setting',
+		'edugorilla_sms_setting'
 	);
 }
 
@@ -237,6 +246,7 @@ include_once plugin_dir_path(__FILE__) . 'database/class-UserMeta-Helper.php'; /
 include_once plugin_dir_path(__FILE__) . "send_email_to_client.php";
 
 include_once plugin_dir_path(__FILE__) . "manage_leads.php";
+include_once plugin_dir_path(__FILE__) . "categories.php";
 
 
 
@@ -481,6 +491,13 @@ function edugorilla()
 				</tr>
 				<tr>
 					<th>Is it a promotional lead?</th>
+					<td>
+						<input name="is_promotional_lead" id="is_promotional_lead" type="checkbox"
+						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
+					</td>
+				</tr>
+				<tr>
+					<th>Is Interested in Specific Institute?</th>
 					<td>
 						<input name="is_promotional_lead" id="is_promotional_lead" type="checkbox"
 						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
