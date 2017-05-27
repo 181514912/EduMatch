@@ -574,7 +574,7 @@ function edugorilla()
 							}
 
 							foreach ($templocationarray as $var => $vals) {
-
+								if($var!=0){
 								?>
 
 								<option value="<?php echo $var; ?>">
@@ -592,7 +592,20 @@ function edugorilla()
 										<?php echo "->" . $val; ?>
 									</option>
 									<?php
-								}
+								}}
+								else {
+								foreach ($vals as $index => $val) {
+								if(!array_key_exists($index,$templocationarray)){
+
+								?>
+
+								<option value="<?php echo $index; ?>">
+										<?php echo $val; ?>
+									</option>
+
+								<?php
+								}}
+							}
 								?>
 
 								<?php
