@@ -252,8 +252,6 @@ function form_not_empty(){
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
 						'id'                => $user_id,
-						'client_name'       => $_client_name,
-						'email_id'          => $client_email2,
 						'contact_no'        => $client_contact,
 						'preferences'       => $notification,
 						'unsubscribe_email' => $not_email,

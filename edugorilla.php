@@ -794,7 +794,7 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 	$locationArray              = explode( ',', $location_ids );
 	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
 	$users_table                = $wpdb->prefix . 'users';
-	$client_email_addresses     = $wpdb->get_results( "SELECT ut.id AS user_id,ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
+	$client_email_addresses     = $wpdb->get_results( "SELECT ut.id AS user_id,ut.display_name AS user_name,ut.user_email AS user_email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
 	$headers                    = array( 'Content-Type: text/html; charset=UTF-8' );
 	$preference_contact_details = array();
 //	echo "Got Category : ";
@@ -836,8 +836,8 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 ) {
 			//echo $cea->client_name;
 			$contactObject['userId']          = $cea->user_id;
-			$contactObject['userName']        = $cea->client_name;
-			$contactObject['emailDetails']    = $cea->email_id;
+			$contactObject['userName']        = $cea->user_name;
+			$contactObject['emailDetails']    = $cea->user_email_id;
 			$contactObject['phoneDetails']    = $cea->contact_no;
 			$contactObject['sendPrefDetails'] = "true";
 			$preference_contact_details[]     = $contactObject;

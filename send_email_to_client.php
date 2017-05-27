@@ -7,8 +7,6 @@ function table_for_client()
 	$users_table = $wpdb->prefix.'users';
 	$sql6 = "CREATE TABLE $table_name6 (
 				                            id bigint(20) unsigned NOT NULL,
-											client_name varchar(200) NOT NULL,
-											email_id varchar(200) NOT NULL,
 											contact_no varchar(50) NOT NULL,
 											preferences varchar(100) NOT NULL,
 											location varchar(100) NOT NULL,
@@ -359,8 +357,6 @@ function edugorilla_client(){
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
 						'id'                => $user_id,
-						'client_name'       => $_client_name,
-						'email_id'          => $_client_email,
 						'contact_no'        => $client_contact,
 						'preferences'       => $notification,
 						'unsubscribe_email' => $not_email,
@@ -593,11 +589,11 @@ function do_this_daily()
 	$edugorilla_email = get_option('email_setting_form_daily');
 	$edugorilla_email_body = stripslashes($edugorilla_email['body']);
 	global $wpdb;
-	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
-	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table = $wpdb->prefix.'users';
-	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
-	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
+	$table_name1            = $wpdb->prefix . 'edugorilla_lead_details';
+	$table_name2            = $wpdb->prefix . 'edugorilla_client_preferences';
+	$users_table            = $wpdb->prefix.'users';
+	$lead_details           = $wpdb->get_results("SELECT * FROM $table_name1");
+	$client_email_addresses = $wpdb->get_results( "SELECT ut.display_name AS user_name,ut.user_email AS user_email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id" );
 
 
 	foreach ($client_email_addresses as $client) {
@@ -631,7 +627,11 @@ function do_this_daily()
 			}
 			$edugorilla_email_subject = str_replace("{category}", $category_val,
 				$edugorilla_email['subject']);
-			$email_template_datas = array("{Contact_Person}" => $client->client_name, "{category}" => $category_val,"{location}" => $location_val, "{category_location_lead_count}" => $category_location_lead_count);
+			$email_template_datas     = array( "{Contact_Person}"               => $client->user_name,
+			                                   "{category}"                     => $category_val,
+			                                   "{location}"                     => $location_val,
+			                                   "{category_location_lead_count}" => $category_location_lead_count
+			);
 			foreach ($email_template_datas as $var => $email_template_data) {
 				$edugorilla_email_body = str_replace($var, $email_template_data, $edugorilla_email_body);
 			}
@@ -652,12 +652,11 @@ function do_this_monthly()
 	$edugorilla_email = get_option('email_setting_form_monthly');
 	$edugorilla_email_body = stripslashes($edugorilla_email['body']);
 	global $wpdb;
-	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
-	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table = $wpdb->prefix.'users';
-	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
-	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
-
+	$table_name1            = $wpdb->prefix . 'edugorilla_lead_details';
+	$table_name2            = $wpdb->prefix . 'edugorilla_client_preferences';
+	$users_table            = $wpdb->prefix.'users';
+	$lead_details           = $wpdb->get_results("SELECT * FROM $table_name1");
+	$client_email_addresses = $wpdb->get_results( "SELECT ut.display_name AS user_name,ut.user_email AS user_email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id" );
 
 	foreach ($client_email_addresses as $client) {
 		# code...
@@ -690,14 +689,18 @@ function do_this_monthly()
 			}
 			$edugorilla_email_subject = str_replace("{category}", $category_val,
 				$edugorilla_email['subject']);
-			$email_template_datas = array("{Contact_Person}" => $client->client_name, "{category}" => $category_val,"{location}" => $location_val, "{category_location_lead_count}" => $category_location_lead_count);
+			$email_template_datas     = array( "{Contact_Person}"               => $client->user_name,
+			                                   "{category}"                     => $category_val,
+			                                   "{location}"                     => $location_val,
+			                                   "{category_location_lead_count}" => $category_location_lead_count
+			);
 			foreach ($email_template_datas as $var => $email_template_data) {
 				$edugorilla_email_body = str_replace($var, $email_template_data, $edugorilla_email_body);
 			}
 
 			$headers = "";
 			add_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
-			$institute_emails_status = wp_mail($client->email_id, $edugorilla_email_subject, ucwords($edugorilla_email_body), $headers);
+			$institute_emails_status = wp_mail( $client->user_email_id, $edugorilla_email_subject, ucwords( $edugorilla_email_body ), $headers );
 			remove_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
 		}
 	}
