@@ -372,6 +372,7 @@ function form_not_empty(){
 				<td>Location</td>
 				<td>Category</td>
 			</tr>
+		
 			<tr>
 				<td>
 					<?php $location = get_terms('locations', array('hide_empty' => false)); ?>
@@ -383,8 +384,9 @@ function form_not_empty(){
 							foreach ($location as $clients_location) {
 								$templocationarray[$clients_location->parent][$clients_location->term_id] = $clients_location->name;
 							}
-
+							
 							foreach ($templocationarray as $var => $vals) {
+								if($var!=0){
 								$d = get_term_by('id', $var, 'locations');
 
 								?>
@@ -393,14 +395,27 @@ function form_not_empty(){
 
 								<?php
 								foreach ($vals as $index => $val) {
+									
 									?>
 
 									<option value="<?php echo "->" . $val; ?>">
 									<?php
-								}
+									}
 								?>
 
 								<?php
+							}
+							else {
+								foreach ($vals as $index => $val) {
+								if(!array_key_exists($index,$templocationarray)){
+
+								?>
+
+								<option value="<?php echo $val; ?>">
+
+								<?php
+								}}
+							}
 							}
 							?>
 					</datalist>
