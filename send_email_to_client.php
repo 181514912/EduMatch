@@ -145,9 +145,11 @@ function get_category_current_user($user_id, $client_data)
 		if($client_data){
 		$count = 1;
 		$more_category = "";
+		$cat_arr=explode(",",$client_data->category);
+		foreach ($cat_arr as $client_) {
 		foreach ($categories_list as $category_) {
 			# code...
-			if (preg_match('/'.$category_->term_id.'/', $client_data->category)) {
+			if (preg_match('/'.$category_->term_id.'/', $client_)) {
 				# code...
 				$category_name = "category".$count;
 				$category_data = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="' . $category_->name . '">';
@@ -156,6 +158,7 @@ function get_category_current_user($user_id, $client_data)
 				$count         = $count+1;
 				
 			}
+		}
 		}
 }
 $category_result = array();
@@ -172,15 +175,18 @@ function get_location_current_user($user_id , $client_data)
 		if($client_data){
 		$count2 = 1;
 			$more_location = "";
+			$loc_arr=explode(",",$client_data->location);
+		foreach ($loc_arr as $client_) {
 		foreach ($location_list as $location_) {
 			# code...
-			if (preg_match('/'.$location_->term_id.'/', $client_data->location)) {
+			if (preg_match('/'.$location_->term_id.'/', $client_)) {
 				# code...
 				$location_name = "location" . $count2;
 				$more_location = $more_location . '<br name="br' . $location_name . '"/><input list="location_list" name="' . $location_name . '" size="30" value="' . $location_->name . '">';
 				$count2        = $count2+1;
 				
 			}
+		}
 		}
 
 }
