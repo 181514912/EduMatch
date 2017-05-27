@@ -540,7 +540,7 @@ function transaction_history_form_page()
                                            IF('$client_Name' != '', client_id = '$client_ID_result', 1=1)");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1)");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash: <b>" . $total . "</b></span>";
             echo "<p>The history of transactions is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
@@ -566,7 +566,7 @@ function transaction_history_form_page()
                                            IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN '$date' AND '2050-12-31' ");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN '$date' AND '2050-12-31' ");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash: <b>" . $total . "</b></span>";
             echo "<p>The history of transactions is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
@@ -592,7 +592,7 @@ function transaction_history_form_page()
                                            IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN 'TRUE' AND '$date2' ");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN 'TRUE' AND '$date2' ");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash: <b>" . $total . "</b></span>";
             echo "<p>The history of transactions is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
@@ -615,7 +615,7 @@ function transaction_history_form_page()
             else{
             $results = $wpdb->get_results("SELECT * FROM $table_name3 WHERE DATE(time) BETWEEN '$date' AND '2050-12-31' ");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE DATE(time) BETWEEN '$date' AND '2050-12-31' ");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash:<b>" . $total . "</b></span>";
             echo "<p>The history of transactions done from ".$_POST['date']." is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
@@ -638,7 +638,7 @@ function transaction_history_form_page()
             else{
             $results = $wpdb->get_results("SELECT * FROM $table_name3 WHERE DATE(time) BETWEEN 'TRUE' AND '$date2' ");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE DATE(time) BETWEEN 'TRUE' AND '$date2' ");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash: <b>" . $total . "</b></span>";
             echo "<p>The history of transactions done till ".$_POST['date2']." is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
@@ -661,7 +661,7 @@ function transaction_history_form_page()
             else{
             $results = $wpdb->get_results("SELECT * FROM $table_name3 WHERE DATE(time) BETWEEN '$date' AND '$date2' ");
             $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE DATE(time) BETWEEN '$date' AND '$date2' ");
-            echo "<span style='color:green;'>Total EduCash transactions are <b>" . $total . "</b></span>";
+            echo "<span style='color:green; float:right; font-size:32px'>Current EduCash: <b>" . $total . "</b></span>";
             echo "<p>The history of transactions done from ".$_POST['date']." to ".$_POST['date2']." is:</p>";
             echo "<center><table class='widefat fixed' cellspacing='0'><tr><th>Id</th><th>Admin Email</th><th>Client Email</th><th>EduCash transaction</th><th>Amount</th><th>Time</th><th>Comments</th></tr>";
             foreach ($results as $r) {
