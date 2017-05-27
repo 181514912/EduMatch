@@ -76,6 +76,7 @@ $(document).on('click','#edugorilla_filter',function(){
 		var keyword = $('#edugorilla_keyword').val();
 		var location = $('#edugorilla_location').val();
 		var category = $("#edugorilla_category").val();
+	var categoryString = JSON.stringify(category);
 		
     		$.ajax({
             	url: ajaxurl,
@@ -85,7 +86,7 @@ $(document).on('click','#edugorilla_filter',function(){
             			'ptype': ptype,
                 		'term': keyword,
                         'address' : location,
-                		'category': category
+		            'category': categoryString
           			  },
                 dataType: 'json',
                 beforeSend: function()
@@ -162,7 +163,7 @@ $(document).on('click','#edugorilla_filter',function(){
 	    }
 
 	    $.each(data['subscriptionPreferenceDetails'], function (i, v) {
-		    cnfbox += "<tr id=" + v.userId + "><td><input type='checkbox' class='confirmSendPrefDetails' checked='true'/></td><td>Subscribed Client : </td><td class='emailPrefDetails'>" + v.emailDetails + "</td><td class='phonePrefDetails'>" + v.phoneDetails + "</td></tr>";
+		    cnfbox += "<tr id=" + v.userId + "><td><input type='checkbox' class='confirmSendPrefDetails' checked='true'/></td><td>" + v.userName + "</td><td class='emailPrefDetails'>" + v.emailDetails + "</td><td class='phonePrefDetails'>" + v.phoneDetails + "</td></tr>";
 	    });
 
 	    cnfbox += "</table><center><button id='confirm' onclick='document.lead_capture_details.submit();'>Confirm</button></center>";

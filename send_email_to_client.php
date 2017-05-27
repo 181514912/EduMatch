@@ -330,11 +330,11 @@ function edugorilla_client(){
 		
 		$user_id = get_current_user_id();
 		echo $user_id;
-		$user_detail = get_user_meta($user_id);
-		$first_name = $user_detail['first_name'][0];
-		$last_name = $user_detail['last_name'][0];
-		$_client_name = $first_name . " " . $last_name;
-		$client_email = $user_detail['user_general_email'][0];
+		$user_detail    = get_user_meta($user_id);
+		$first_name     = $user_detail['first_name'][0];
+		$last_name      = $user_detail['last_name'][0];
+		$_client_name   = $first_name . " " . $last_name;
+		$_client_email  = $user_detail['user_general_email'][0];
 		$client_contact = $user_detail['user_general_phone'][0];
  
 		//Insert Data to table
@@ -358,14 +358,16 @@ function edugorilla_client(){
 				$client_result = $wpdb->insert(
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
-						'id' => $user_id,
-						'contact_no' => $client_contact,
-						'preferences' => $notification,
-                        'unsubscribe_email' => $not_email,
-						'unsubscribe_sms' => $not_sms,
-						'location' => $all_loc,
-						'unlock_lead' => $unlock_lead_,
-						'category' => $all_cat
+						'id'                => $user_id,
+						'client_name'       => $_client_name,
+						'email_id'          => $_client_email,
+						'contact_no'        => $client_contact,
+						'preferences'       => $notification,
+						'unsubscribe_email' => $not_email,
+						'unsubscribe_sms'   => $not_sms,
+						'location'          => $all_loc,
+						'unlock_lead'       => $unlock_lead_,
+						'category'          => $all_cat
 					)
 				);
 			}

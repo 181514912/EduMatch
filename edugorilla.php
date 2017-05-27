@@ -688,10 +688,10 @@ add_action('admin_enqueue_scripts', 'script', 2000);
 
 function edugorilla_show_location()
 {
-	$term = strtolower($_REQUEST['term']);
-	$ptype = strtolower($_REQUEST['ptype']);
-	$address = $_REQUEST['address'];
-	$category = $_REQUEST['category'];
+	$term     = strtolower($_REQUEST['term']);
+	$ptype    = strtolower($_REQUEST['ptype']);
+	$address  = $_REQUEST['address'];
+	$category = json_decode( stripslashes( $_REQUEST['category'] ) );
 
 	$args = array();
 	$args['posts_per_page'] = -1;
@@ -790,36 +790,53 @@ add_action('wp_ajax_nopriv_edugorilla_show_location', 'edugorilla_show_location'
 
 function edugorilla_show_pref_details( $location_ids, $category ) {
 	global $wpdb;
-	$categoryArray              = explode( ',', $category );
+	$categoryArray              = $category;
 	$locationArray              = explode( ',', $location_ids );
 	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
 	$users_table                = $wpdb->prefix . 'users';
 	$client_email_addresses     = $wpdb->get_results( "SELECT ut.id AS user_id,ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id" );
 	$headers                    = array( 'Content-Type: text/html; charset=UTF-8' );
 	$preference_contact_details = array();
+//	echo "Got Category : ";
+//	foreach($category as $d){
+//		echo $d;
+//	}
+//	echo "..Got Location : $location_ids";
 	foreach ( $client_email_addresses as $cea ) {
 		$categoryCheck = 0;
 		$locationCheck = 0;
 		if ( empty( $cea->category ) ) {
 			$categoryCheck = 1;
+		} else {
+			$givenCategoryArray = explode( ',', $cea->category );
+			//echo "..Given Category : $cea->category";
+			foreach ( $categoryArray as $currentCategory ) {
+				foreach ( $givenCategoryArray as $givenCategory ) {
+					if ( $givenCategory == $currentCategory ) {
+						$categoryCheck = 1;
+					}
+				}
+			}
 		}
 		if ( empty( $cea->location ) ) {
 			$locationCheck = 1;
-		}
-		foreach ( $categoryArray as $currentCategory ) {
-			if ( preg_match( '/' . $currentCategory . '/', $cea->category ) ) {
-				$categoryCheck = 1;
+		} else {
+			$givenLocationArray = explode( ',', $cea->location );
+			//echo "..Given Location : $cea->location";
+			foreach ( $locationArray as $currentLocation ) {
+				foreach ( $givenLocationArray as $givenLocation ) {
+					if ( $givenLocation == $currentLocation ) {
+						$locationCheck = 1;
+					}
+				}
 			}
 		}
-		foreach ( $locationArray as $currentLocation ) {
-			if ( preg_match( '/' . $currentLocation . '/', $cea->location ) ) {
-				$locationCheck = 1;
-			}
-		}
+
 		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 ) {
 			//echo $cea->client_name;
 			$contactObject['userId']          = $cea->user_id;
+			$contactObject['userName']        = $cea->client_name;
 			$contactObject['emailDetails']    = $cea->email_id;
 			$contactObject['phoneDetails']    = $cea->contact_no;
 			$contactObject['sendPrefDetails'] = "true";

@@ -251,17 +251,17 @@ function form_not_empty(){
 				$client_result = $wpdb->insert(
 					$wpdb->prefix . 'edugorilla_client_preferences',
 					array(
-						'id' => $user_id,
-						'client_name' => $_client_name,
-						'email_id' => $client_email,
-						'contact_no' => $client_contact,
-						'preferences' => $notification,
+						'id'                => $user_id,
+						'client_name'       => $_client_name,
+						'email_id'          => $client_email2,
+						'contact_no'        => $client_contact,
+						'preferences'       => $notification,
 						'unsubscribe_email' => $not_email,
-						'unsubscribe_sms' => $not_sms,
-						'related_leads' => $related_leads_,
-						'location' => $all_loc,
-						'unlock_lead' => $unlock_lead_,
-						'category' => $all_cat
+						'unsubscribe_sms'   => $not_sms,
+						'related_leads'     => $related_leads_,
+						'location'          => $all_loc,
+						'unlock_lead'       => $unlock_lead_,
+						'category'          => $all_cat
 					)
 				);
 			}
