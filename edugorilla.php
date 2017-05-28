@@ -349,13 +349,14 @@ function edugorilla()
 				foreach ( $subscription_applicable_datas as $subscription_data_applicable ) {
 					$subscription_emails_applicable = $subscription_data_applicable->emailDetails;
 					$subscription_phones_applicable = $subscription_data_applicable->phoneDetails;
+					$auto_unlock_lead               = $subscription_data_applicable->autoUnlockLead;
 					$subscription_applicable_emails = explode( ",", $subscription_emails_applicable );
 					$subscription_applicable_phones = explode( ",", $subscription_phones_applicable );
 					$subscription_user_id           = $subscription_data_applicable->userId;
 					$subscription_user_name         = $subscription_data_applicable->userName;
 					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
 					if ( $subscription_send_applicable ) {
-						$result2 = send_mail_with_unlock( $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
+						$result2 = send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 					}
 				}
 			}
@@ -827,6 +828,7 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 			$contactObject['userName']        = $cea->user_name;
 			$contactObject['emailDetails']    = $cea->user_email_id;
 			$contactObject['phoneDetails']    = $cea->contact_no;
+			$contactObject['autoUnlockLead']  = $cea->unlock_lead;
 			$contactObject['sendPrefDetails'] = "true";
 			$preference_contact_details[]     = $contactObject;
 		}

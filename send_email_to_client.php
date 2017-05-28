@@ -29,11 +29,15 @@ function table_for_client()
 //end pluginUninstall function
 //Populate the Client Data
 
-function send_mail_with_unlock( $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $my_lead )
+function send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $my_lead )
 {
 	$category_name = "TestCategory";
 	$eduLeadHelper = new EduLead_Helper();
-	$query_status  = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
+	if ( $auto_unlock_lead == 1 ) {
+		$query_status = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
+	} else {
+		$query_status = "Did not execute!";
+	}
 	if ( str_starts_with( $query_status, "Success" ) ) {
 		$edugorilla_email         = get_option( 'edugorilla_email_setting1' );
 		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
