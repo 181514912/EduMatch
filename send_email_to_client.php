@@ -39,7 +39,7 @@ function send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emai
 		$query_status = "Did not execute!";
 	}
 	if ( str_starts_with( $query_status, "Success" ) ) {
-		$edugorilla_email         = get_option( 'edugorilla_email_setting1' );
+		$edugorilla_email         = get_option( 'edugorilla_email_setting4' );
 		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
 		$edugorilla_email_subject = str_replace( "{category}", $category_name, $edugorilla_email['subject'] );
 		write_log( "Sending email to client with subject:" . $edugorilla_email_subject );

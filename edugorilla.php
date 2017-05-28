@@ -320,8 +320,8 @@ function edugorilla()
 				)
 			);
 
-			$lead_id = $wpdb->insert_id;
-			$lead_card = new Lead_Card($lead_id, $name, $contact_no, $email, $query, $category, $location_id, current_time('mysql'));
+			$lead_id    = $wpdb->insert_id;
+			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_id, $location_id, current_time( 'mysql' ) );
 			$user_login = str_replace(" ", "_", $name);
 
 			$uid = email_exists($email);
