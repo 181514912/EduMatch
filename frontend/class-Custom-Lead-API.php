@@ -91,8 +91,12 @@ class Custom_Lead_API extends WP_REST_Controller
 			return new WP_Error("User($userId) is not logged in");
 		}
 		$eduLeadHelper = new EduLead_Helper();
-		$dbStatus = $eduLeadHelper->set_card_unlock_status_to_db($userId, $lead_id, $unlock_status);
-		return $dbStatus;
+		$dbStatus      = $eduLeadHelper->set_card_unlock_status_to_db($userId, $lead_id, $unlock_status);
+		$data_object   = array();
+		$data_object[] = $dbStatus;
+		$response      = new WP_REST_Response( $data_object );
+
+		return $response;
 	}
 
 	/**

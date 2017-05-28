@@ -29,63 +29,51 @@ function table_for_client()
 //end pluginUninstall function
 //Populate the Client Data
 
-function send_mail_with_unlock( $edugorilla_email_subject, $edugorilla_email_body, $lead_card, $isPromotional )
+function send_mail_with_unlock( $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $my_lead )
 {
-	write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
-	global $wpdb;
-	$location_ids = $lead_card->getLocationList();
-	$category = $lead_card->getCategoryList();
-	$lead_id = $lead_card->getId();
-	$categoryArray = explode(',', $category);
-	$locationArray = explode(',', $location_ids);
-	$table_name = $wpdb->prefix .'edugorilla_client_preferences';
-	$users_table = $wpdb->prefix.'users';
-	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id");
-	$headers = array('Content-Type: text/html; charset=UTF-8');
-	foreach ($client_email_addresses as $cea) {
-		$categoryCheck = 0;
-		$locationCheck = 0;
-		if ( empty( $cea->category ) ) {
-			$categoryCheck = 1;
-		}
-		if ( empty( $cea->location ) ) {
-			$locationCheck = 1;
-		}
-		foreach ($categoryArray as $currentCategory) {
-			if (preg_match('/' . $currentCategory . '/', $cea->category)) {
-				$categoryCheck = 1;
-			}
-		}
-		foreach ($locationArray as $currentLocation) {
-			if (preg_match('/' . $currentLocation . '/', $cea->location)) {
-				$locationCheck = 1;
-			}
-		}
-		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
-		if (preg_match('/Instant_Notifications/', $cea->preferences) AND $categoryCheck == 1 AND $locationCheck == 1) {
-			//echo $cea->client_name;
-			if ( $isPromotional ) {
-				$eduLeadHelper = new EduLead_Helper();
-				$query_status  = $eduLeadHelper->set_card_unlock_status_to_db( $cea->email_id, $lead_id, 1 );
-				if ( str_starts_with( $query_status, "Success" ) ) {
-					$lead_card->setUnlocked( true );
-					add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
-					$institute_emails_status = wp_mail( $cea->email_id, $edugorilla_email_subject, ucwords( $edugorilla_email_body ), $headers );
-					remove_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
-				}
-			} else {
-				add_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
-				$institute_emails_status = wp_mail($cea->email_id, $edugorilla_email_subject, ucwords($edugorilla_email_body), $headers);
-				remove_filter('wp_mail_content_type', 'edugorilla_html_mail_content_type');
-			}
+	$category_name = "TestCategory";
+	$eduLeadHelper = new EduLead_Helper();
+	$query_status  = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
+	if ( str_starts_with( $query_status, "Success" ) ) {
+		$edugorilla_email         = get_option( 'edugorilla_email_setting1' );
+		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
+		$edugorilla_email_subject = str_replace( "{category}", $category_name, $edugorilla_email['subject'] );
+		write_log( "Sending email to client with subject:" . $edugorilla_email_subject );
 
-			//echo "<h2>PHP is sending wp_mail json_encode($query_status)!</h2>";
+		$email_template_datas = array(
+			"{Contact_Person}" => $subscription_user_name,
+			"{category}"       => $my_lead->getCategoryName(),
+			"{location}"       => $my_lead->getLocationName(),
+			"{name}"           => $my_lead->getName(),
+			"{contact no}"     => $my_lead->getContactNo(),
+			"{email address}"  => $my_lead->getEmail(),
+			"{query}"          => $my_lead->getQuery()
+		);
 
+		foreach ( $email_template_datas as $var => $email_template_data ) {
+			$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
 		}
+		$institute_emails_status = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $my_lead->getId(), "-1" );
+	} else {
+		$edugorilla_email         = get_option( 'edugorilla_email_setting_instant' );
+		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
+		$edugorilla_email_subject = str_replace( "{category}", $category_name, $edugorilla_email['subject'] );
+		$lead_unlock_URL          = $_SERVER['HTTP_HOST'] . "/manage_leads/#edugorilla_leads_sh";
+		$email_template_datas     = array(
+			"{Contact_Person}"  => $subscription_user_name,
+			"{category}"        => $category_name,
+			"{lead_unlock_URL}" => $lead_unlock_URL
+		);
+
+		foreach ( $email_template_datas as $var => $email_template_data ) {
+			$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
+		}
+		$institute_emails_status = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $my_lead->getId(), "-1" );
 	}
+	//echo "<h2>PHP is sending wp_mail json_encode($query_status)!</h2>";
 	if ($institute_emails_status) {
 		# code...
-		//echo "Mail send";
+		//echo "Mail sent";
 	}
 	return $institute_emails_status;
 }

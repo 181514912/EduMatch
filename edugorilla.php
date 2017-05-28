@@ -346,28 +346,16 @@ function edugorilla()
 				}
 			}
 			if ( $is_promotional_lead != "yes" ) {
-				$edugorilla_email         = get_option( 'edugorilla_email_setting_instant' );
-				$edugorilla_email_subject = str_replace( "{category}", $category, $edugorilla_email['subject'] );
-				$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
-				$lead_unlock_URL          = $_SERVER['HTTP_HOST'] . "/manage_leads/#edugorilla_leads_sh";
-				$email_template_datas     = array( "{Contact_Person}"  => $name,
-				                                   "{category}"        => $category,
-				                                   "{location}"        => $location_id,
-				                                   "{lead_unlock_URL}" => $lead_unlock_URL
-				);
-
-				foreach ( $email_template_datas as $var => $email_template_data ) {
-					$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
-				}
-
 				foreach ( $subscription_applicable_datas as $subscription_data_applicable ) {
 					$subscription_emails_applicable = $subscription_data_applicable->emailDetails;
 					$subscription_phones_applicable = $subscription_data_applicable->phoneDetails;
 					$subscription_applicable_emails = explode( ",", $subscription_emails_applicable );
 					$subscription_applicable_phones = explode( ",", $subscription_phones_applicable );
+					$subscription_user_id           = $subscription_data_applicable->userId;
+					$subscription_user_name         = $subscription_data_applicable->userName;
 					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
 					if ( $subscription_send_applicable ) {
-						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $subscription_applicable_emails, $subscription_applicable_phones, null, $lead_id, "-1" );
+						$result2 = send_mail_with_unlock( $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 					}
 				}
 			}
@@ -396,7 +384,7 @@ function edugorilla()
 					$log_post_id                 = $institute_data_applicable->post_id;
 					$should_send_posting_details = $institute_data_applicable->sendPostDetails;
 					if ( $should_send_posting_details ) {
-						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, null, $lead_id, $log_post_id );
+						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $institute_data_applicable->contact_person, $lead_id, $log_post_id );
 					}
 				}
 			}
