@@ -289,8 +289,11 @@ function edugorilla()
 			$institute_emails_status = array();
 			$institute_sms_status = array();
 
-			if (!empty($category_id)) $category = implode(",", $category_id);
-			else $category = "-1";
+			if ( ! empty( $category_id ) ) {
+				$category_str = implode( ",", $category_id );
+			} else {
+				$category_str = "-1";
+			}
 
 			if (empty($location_id)) $location_id = "-1";
 			if(empty($is_promotional_lead)) $is_promotional_lead = "no";
@@ -307,21 +310,21 @@ function edugorilla()
 			$result1 = $wpdb->insert(
 				$wpdb->prefix . 'edugorilla_lead_details',
 				array(
-					'name' => $name,
-					'contact_no' => $contact_no,
-					'email' => $email,
-					'query' => $query,
+					'name'           => $name,
+					'contact_no'     => $contact_no,
+					'email'          => $email,
+					'query'          => $query,
 					'is_promotional' => $is_promotional_lead,
-					'listing_type' => $listing_type,
-					'keyword' => $keyword,
-					'category_id' => $category,
-					'location_id' => $location_id,
-					'date_time' => current_time('mysql')
+					'listing_type'   => $listing_type,
+					'keyword'        => $keyword,
+					'category_id'    => $category_str,
+					'location_id'    => $location_id,
+					'date_time'      => current_time('mysql')
 				)
 			);
 
 			$lead_id    = $wpdb->insert_id;
-			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_id, $location_id, current_time( 'mysql' ) );
+			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_str, $location_id, current_time( 'mysql' ) );
 			$user_login = str_replace(" ", "_", $name);
 
 			$uid = email_exists($email);
@@ -356,6 +359,7 @@ function edugorilla()
 					$subscription_user_name         = $subscription_data_applicable->userName;
 					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
 					if ( $subscription_send_applicable ) {
+						echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
 						$result2 = send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 					}
 				}

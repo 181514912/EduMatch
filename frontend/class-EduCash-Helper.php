@@ -114,12 +114,13 @@ class EduCash_Helper
 		if ($newEduCashValue > 0) {
 			$insertion_status = $databaseHelper->add_educash_transaction($user_id, $transaction_cost, "Unlocked a lead");
 
-            $user = get_user_by( 'id', $user_id );
-            $full_name = $user->first_name." ".$user->last_name;
-            $email = $user->user_email;
-            $url = get_home_url();
-            $eduCashHelper = new EduCash_Helper();
-            $current_count = $eduCashHelper->getEduCashForUser($user_id) - $amount;
+            $user           = get_user_by( 'id', $user_id );
+            $full_name      = $user->first_name." ".$user->last_name;
+            $email          = $user->user_email;
+			$contact_number = $user->user_general_phone;
+            $url            = get_home_url();
+            $eduCashHelper  = new EduCash_Helper();
+            $current_count  = $eduCashHelper->getEduCashForUser($user_id) - $amount;
 
             $email_setting_options = get_option('edugorilla_email_setting3');
             $email_subject = stripslashes($email_setting_options['subject']);
@@ -132,7 +133,9 @@ class EduCash_Helper
 
             $to = $email;
             $headers = array('Content-Type: text/html; charset=UTF-8');
-            $value = wp_mail($to,$email_subject,$email_body,$headers);
+			//Do Not send email when educash has been deducted!
+			//send_mail_without_unlock( $email_subject, $email_body, $to, $contact_number, $full_name, "-1", "-1" );
+			//$value = wp_mail($to,$email_subject,$email_body,$headers);
             return "Success : $insertion_status";
 		}
 		return "Insufficient Funds : $newEduCashValue";
