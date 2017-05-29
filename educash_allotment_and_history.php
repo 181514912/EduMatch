@@ -434,6 +434,8 @@ function allocate_educash_form_page()
 					$table_name6,
 					array(
 						'id' => $user_id,
+                        'client_name' => $_client_name,
+						'email_id' => $clientName,
 						'contact_no' => $phone_number,
 						'preferences' => $notification,
                         'unsubscribe_email' => 0,
