@@ -359,7 +359,7 @@ function edugorilla()
 					$subscription_user_name         = $subscription_data_applicable->userName;
 					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
 					if ( $subscription_send_applicable ) {
-						echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
+						//echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
 						$result2 = send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 					}
 				}

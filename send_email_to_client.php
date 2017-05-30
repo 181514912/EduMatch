@@ -34,22 +34,24 @@ function send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emai
 	$eduLeadHelper = new EduLead_Helper();
 	if ( $auto_unlock_lead == 1 ) {
 		$query_status = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
-		echo "Executed unlock command :$query_status";
+		//echo "Executed unlock command :$query_status";
 	} else {
 		$query_status = "Did not execute unlock command!";
-		echo $query_status;
+		//echo $query_status;
 	}
 	if ( str_starts_with( $query_status, "Success" ) ) {
-		$edugorilla_email         = get_option( 'edugorilla_email_setting4' );
-		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
-		$edugorilla_email_subject = str_replace( "{category}", $my_lead->getCategoryName(), $edugorilla_email['subject'] );
+		$email_setting_options4 = get_option( 'edugorilla_email_setting4' );
+		//echo "<br>email_setting_options4 : $email_setting_options4<br>";
+		$edugorilla_email_body     = stripslashes( $email_setting_options4['body'] );
+		$edugorilla_email_subject4 = stripslashes( $email_setting_options4['subject'] );
+		$edugorilla_email_subject  = str_replace( "{category}", $my_lead->getCategoryList(), $edugorilla_email_subject4 );
 		write_log( "Sending email to client with subject :" . $edugorilla_email_subject );
-		echo "<br>Sending email to client with subject : $edugorilla_email_subject";
+		//echo "<br>Sending email to client with subject : $edugorilla_email_subject";
 
 		$email_template_datas = array(
 			"{Contact_Person}" => $subscription_user_name,
-			"{category}"       => $my_lead->getCategoryName(),
-			"{location}"       => $my_lead->getLocationName(),
+			"{category}"       => $my_lead->getCategoryList(),
+			"{location}"       => $my_lead->getLocationList(),
 			"{name}"           => $my_lead->getName(),
 			"{contact no}"     => $my_lead->getContactNo(),
 			"{email address}"  => $my_lead->getEmail(),
@@ -63,11 +65,11 @@ function send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emai
 	} else {
 		$edugorilla_email         = get_option( 'edugorilla_email_setting_instant' );
 		$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
-		$edugorilla_email_subject = str_replace( "{category}", $my_lead->getCategoryName(), $edugorilla_email['subject'] );
+		$edugorilla_email_subject = str_replace( "{category}", $my_lead->getCategoryList(), $edugorilla_email['subject'] );
 		$lead_unlock_URL          = $_SERVER['HTTP_HOST'] . "/manage_leads/#edugorilla_leads_sh";
 		$email_template_datas     = array(
 			"{Contact_Person}"  => $subscription_user_name,
-			"{category}"        => $my_lead->getCategoryName(),
+			"{category}"        => $my_lead->getCategoryList(),
 			"{lead_unlock_URL}" => $lead_unlock_URL
 		);
 
@@ -88,14 +90,13 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 	global $wpdb;
 	$institute_emails_status = [];
 	$institute_sms_status    = [];
-	echo "Sending mails to id : ";
-	echo implode( ";", $institute_emails );
+	//echo "Sending mails to id : " . implode( ";", $institute_emails );
 	foreach ( $institute_emails as $institute_email ) {
 		add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
 
 		if ( ! empty( $institute_email ) ) {
-			echo "<br>Sending mail to id : $institute_email";
 			$headers                                     = array( 'Content-Type: text/html; charset=UTF-8' );
+			//echo "<br>Sending mail to id : '$institute_email' with sub '$edugorilla_email_subject' and body '$edugorilla_email_body'<br>";
 			$institute_emails_status[ $institute_email ] = wp_mail( $institute_email, $edugorilla_email_subject, ucwords( $edugorilla_email_body ), $headers );
 		}
 
