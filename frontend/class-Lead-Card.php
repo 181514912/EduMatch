@@ -4,11 +4,11 @@ $appear = '';
 class Lead_Card implements JsonSerializable
 {
 
-	private $id, $name, $contact_no, $email, $query, $category_list, $category, $location_list, $location, $date_time, $isUnlocked, $isHidden;
+	private $id, $name, $contact_no, $email, $query, $category_list, $category, $location_list, $location, $date_time, $isPromotional, $isUnlocked, $isHidden;
 
-	function __construct($id, $name, $contact_no, $email, $query, $category, $location, $date_time, $isUnlocked = false, $isHidden = false)
+	function __construct($id, $name, $contact_no, $email, $query, $category, $location, $date_time, $lead_is_promotional, $isUnlocked = false, $isHidden = false)
 	{
-		$this->create_card($id, $name, $contact_no, $email, $query, $category, $location, $date_time, $isUnlocked ? true : false, $isHidden ? true : false);
+		$this->create_card($id, $name, $contact_no, $email, $query, $category, $location, $date_time, $lead_is_promotional, $isUnlocked ? true : false, $isHidden ? true : false);
 	}
 
 	public function isHidden()
@@ -29,6 +29,16 @@ class Lead_Card implements JsonSerializable
 	public function setUnlocked($x)
 	{
 		$this->isUnlocked = $x;
+	}
+
+	public function isPromotional()
+	{
+		return $this->isPromotional;
+	}
+
+	public function setPromotional($x)
+	{
+		$this->isPromotional = $x;
 	}
 
 	public function getId()
@@ -161,7 +171,7 @@ class Lead_Card implements JsonSerializable
 		$this->date_time = $x;
 	}
 
-	private function create_card($_id, $_name, $_contact_no, $_email, $_query, $_category, $_location, $_date_time, $_isUnlocked, $_isHidden)
+	private function create_card($_id, $_name, $_contact_no, $_email, $_query, $_category, $_location, $_date_time, $lead_is_promotional, $_isUnlocked, $_isHidden)
 	{
 		$this->setId($_id);
 		$this->setName($_name);
@@ -171,6 +181,7 @@ class Lead_Card implements JsonSerializable
 		$this->setCategory($_category);
 		$this->setLocation($_location);
 		$this->setDateTime($_date_time);
+		$this->setPromotional($lead_is_promotional);
 		$this->setUnlocked($_isUnlocked);
 		$this->setHidden($_isHidden);
 	}
@@ -200,6 +211,7 @@ class Lead_Card implements JsonSerializable
 				'categoryList' => $this->getCategoryList(),
 				'locationList' => $this->getLocationList(),
 				'date_time' => $this->getDateTime(),
+				'isPromotional' => $this->isPromotional(),
 				'isUnlocked' => $this->isUnlocked(),
 				'isHidden' => $this->isHidden()
 			]
@@ -208,7 +220,7 @@ class Lead_Card implements JsonSerializable
 
 }
 
-$shrt_code1 = new Lead_Card('Rohit', 'Lucknow', 'CEO', 'Nirvana', '', '', '', '');
+$shrt_code1 = new Lead_Card('Rohit', 'Lucknow', 'CEO', 'Nirvana', '', '', '', '', 'no');
 //$shrt_code2 = new Lead_Card('Anantharam', 'Chennai', 'CTO', 'Life');
 add_shortcode('edugorilla_leads', array($shrt_code1, 'edu_shortcode'));
 

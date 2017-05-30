@@ -29,7 +29,7 @@ class DataBase_Helper
 		update_user_meta($client_ID, 'user_address_country', $country);
 	}
 
-	public function add_educash_transaction($client_id, $educash, $adminComment)
+	public function add_educash_transaction($client_id, $lead_id, $educash, $adminComment)
 	{
 		global $wpdb;
 		$transaction_table = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
@@ -39,6 +39,7 @@ class DataBase_Helper
 			'time' => $time,
 			'admin_id' => $adminName->ID,
 			'client_id' => $client_id,
+			'lead_id' => $lead_id,
 			'transaction' => $educash,
 			'comments' => $adminComment
 		));

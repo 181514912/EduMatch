@@ -16,7 +16,7 @@ class EduLead_Helper
 		if ($unlock_status == '1') {
 			$eduCashHelper = new EduCash_Helper();
 			$eduCashCostForLead = $out['rate'];  // fetched from meta table
-			$query_status = $eduCashHelper->removeEduCashFromUser($client_id, $eduCashCostForLead);
+			$query_status = $eduCashHelper->removeEduCashFromUser($client_id, $lead_id, $eduCashCostForLead);
 			if (!$this->str_starts_with($query_status, "Success")) {
 				return new WP_Error('EduCashError', $query_status . " for $client_id");
 			}
@@ -83,7 +83,38 @@ class EduLead_Helper
 				$lead_is_unlocked = $card_unlock_status;
 				$lead_is_hidden = 0;
 			}
-			$db_card = new Lead_Card($lead_id, $lead_name, $lead_email, $lead_contact_no, $lead_query, $lead_category, $lead_location, $lead_date_time, $lead_is_unlocked, $lead_is_hidden);
+			$db_card = new Lead_Card($lead_id, $lead_name, $lead_email, $lead_contact_no, $lead_query, $lead_category, $lead_location, $lead_date_time, $lead_is_promotional, $lead_is_unlocked, $lead_is_hidden);
+			$cards_object[] = $db_card;
+		}
+
+		return $cards_object;
+	}
+
+	/**
+	 * Get details of all the leads table from database
+	 *
+	 */
+	public function get_lead_details_for_id($lead_id)
+	{
+		global $wpdb;
+		//$card1 = new Lead_Card('Rohit', 'Lucknow', 'CEO', 'Nirvana');
+		//$card2 = new Lead_Card('Anantharam', 'Chennai', 'CTO', 'Relationship');
+		$cards_object = array();
+		$lead_detail_table = $wpdb->prefix . 'edugorilla_lead_details';
+
+		$detail_query = "select * from $lead_detail_table where id=$lead_id";
+		$leads_details = $wpdb->get_results($detail_query, 'ARRAY_A');
+		foreach ($leads_details as $leads_detail) {
+			$lead_id = $leads_detail['id'];
+			$lead_name = $leads_detail['name'];
+			$lead_email = $leads_detail['contact_no'];
+			$lead_contact_no = $leads_detail['email'];
+			$lead_query = $leads_detail['query'];
+			$lead_category = $leads_detail['category_id'];
+			$lead_location = $leads_detail['location_id'];
+			$lead_date_time = $leads_detail['date_time'];
+			$lead_is_promotional = $leads_detail['is_promotional'];
+			$db_card = new Lead_Card($lead_id, $lead_name, $lead_email, $lead_contact_no, $lead_query, $lead_category, $lead_location, $lead_date_time, $lead_is_promotional);
 			$cards_object[] = $db_card;
 		}
 

@@ -79,10 +79,10 @@ class EduCash_Helper
         echo "</table></center><br/><br/>";
 	}
 
-	public function removeEduCashFromCurrentUser($amount)
+	public function removeEduCashFromCurrentUser($lead_id, $amount)
 	{
 		$userId = wp_get_current_user()->ID;
-		return $this->removeEduCashFromUser($userId, $amount);
+		return $this->removeEduCashFromUser($userId, $lead_id, $amount);
 	}
 
 	public function getEduCashForCurrentUser()
@@ -98,29 +98,30 @@ class EduCash_Helper
 		$newEduCashValue = $currentEduCashValue + $amount;
 		$transaction_cost = $amount;
 		if ($newEduCashValue > 0) {
-			$insertion_status = $databaseHelper->add_educash_transaction($userId, $transaction_cost, $transactionMessage);
+			$insertion_status = $databaseHelper->add_educash_transaction($userId, "-7", $transaction_cost, $transactionMessage);
 			return "Success : $insertion_status";
 		}
 		return "Insufficient Funds : $newEduCashValue";
 	}
 
-	public function removeEduCashFromUser($user_id, $amount)
+	public function removeEduCashFromUser($user_id, $lead_id, $amount)
 	{
         global $wpdb;
 		$databaseHelper = new DataBase_Helper();
-		$currentEduCashValue = $databaseHelper->get_educash_for_user($user_id);
-		$newEduCashValue = $currentEduCashValue - $amount;
+		//$currentEduCashValue = $databaseHelper->get_educash_for_user($user_id);
+		$eduCashHelper  = new EduCash_Helper();
+		$currentEduCashValue  = $eduCashHelper->getEduCashForUser($user_id);
 		$transaction_cost = -$amount;
-		if ($newEduCashValue > 0) {
-			$insertion_status = $databaseHelper->add_educash_transaction($user_id, $transaction_cost, "Unlocked a lead");
+		$newEduCashValue = $currentEduCashValue + $transaction_cost;
+		if ($newEduCashValue >= 0) {
+			$insertion_status = $databaseHelper->add_educash_transaction($user_id, $lead_id, $transaction_cost, "Unlocked lead $lead_id");
 
             $user           = get_user_by( 'id', $user_id );
             $full_name      = $user->first_name." ".$user->last_name;
             $email          = $user->user_email;
 			$contact_number = $user->user_general_phone;
             $url            = get_home_url();
-            $eduCashHelper  = new EduCash_Helper();
-            $current_count  = $eduCashHelper->getEduCashForUser($user_id) - $amount;
+            $current_count  = $newEduCashValue;
 
             $email_setting_options = get_option('edugorilla_email_setting3');
             $email_subject = stripslashes($email_setting_options['subject']);

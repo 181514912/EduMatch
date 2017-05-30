@@ -45,6 +45,7 @@ function create_edugorilla_lead_table()
                                             id mediumint(9) NOT NULL AUTO_INCREMENT,
                                             admin_id int(9) NOT NULL,
                                             client_id int(9) NOT NULL,
+                                            lead_id int(15) NOT NULL,
                                             transaction int(9) DEFAULT 0 NOT NULL,
                                             amount int(9) DEFAULT 0 NOT NULL,
                                             time datetime NOT NULL,
@@ -327,7 +328,7 @@ function edugorilla()
 			);
 
 			$lead_id    = $wpdb->insert_id;
-			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_str, $location_id, current_time( 'mysql' ) );
+			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_str, $location_id, current_time( 'mysql' ), $is_promotional_lead );
 			$user_login = str_replace(" ", "_", $name);
 
 			$uid = email_exists($email);
