@@ -103,6 +103,14 @@ add_action("admin_menu", "create_edugorilla_menus");
 
 function create_edugorilla_menus()
 {
+	global $name,$label;
+	$taxonomies = get_taxonomies( array(), 'objects' );
+	foreach ( $taxonomies as $taxonomy ) {
+			if ( $taxonomy->name == 'edu_categories' ) {
+				$name = $taxonomy->name;
+				$label = $taxonomy->label;
+			}
+	}
 	add_object_page(
 		'Lead Marketplace',
 		'Lead Marketplace',
@@ -194,11 +202,11 @@ function create_edugorilla_menus()
 	
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Categories',
-		'Categories',
-		'read',
-		'edu-categories',
-		'edu_categories'
+		'Lead Marketplace | '.$label,
+		$label,
+		'edit_posts',
+		'edit-tags.php?taxonomy=' . $name,
+		false
 	);
 
     add_submenu_page(
@@ -246,7 +254,7 @@ include_once plugin_dir_path(__FILE__) . 'database/class-UserMeta-Helper.php'; /
 include_once plugin_dir_path(__FILE__) . "send_email_to_client.php";
 
 include_once plugin_dir_path(__FILE__) . "manage_leads.php";
-include_once plugin_dir_path(__FILE__) . "categories.php";
+require_once plugin_dir_path(__FILE__) . 'frontend/taxonomies/class-edugorilla-taxonomy-edu-categories.php';
 
 
 
