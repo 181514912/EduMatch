@@ -301,11 +301,6 @@ function edugorilla()
 			$institute_applicable_datas    = json_decode( stripslashes( $edugorilla_institute_datas ) );
 			$subscription_applicable_datas = json_decode( stripslashes( $edugorilla_subscription_datas ) );
 
-			$edugorilla_email = get_option('edugorilla_email_setting1');
-
-			$edugorilla_email_body = stripslashes($edugorilla_email['body']);
-
-
 			global $wpdb;
 			$result1 = $wpdb->insert(
 				$wpdb->prefix . 'edugorilla_lead_details',
@@ -348,40 +343,40 @@ function edugorilla()
 					add_user_meta($user_id, 'user_general_email', $email);
 				}
 			}
-			if ( $is_promotional_lead != "yes" ) {
-				foreach ( $subscription_applicable_datas as $subscription_data_applicable ) {
-					$subscription_emails_applicable = $subscription_data_applicable->emailDetails;
-					$subscription_phones_applicable = $subscription_data_applicable->phoneDetails;
-					$auto_unlock_lead               = $subscription_data_applicable->autoUnlockLead;
-					$subscription_applicable_emails = explode( ",", $subscription_emails_applicable );
-					$subscription_applicable_phones = explode( ",", $subscription_phones_applicable );
-					$subscription_user_id           = $subscription_data_applicable->userId;
-					$subscription_user_name         = $subscription_data_applicable->userName;
-					$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
-					if ( $subscription_send_applicable ) {
-						//echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
-						$result2 = send_mail_with_unlock( $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
-					}
+			foreach ( $subscription_applicable_datas as $subscription_data_applicable ) {
+				$subscription_emails_applicable = $subscription_data_applicable->emailDetails;
+				$subscription_phones_applicable = $subscription_data_applicable->phoneDetails;
+				$auto_unlock_lead               = $subscription_data_applicable->autoUnlockLead;
+				$subscription_applicable_emails = explode( ",", $subscription_emails_applicable );
+				$subscription_applicable_phones = explode( ",", $subscription_phones_applicable );
+				$subscription_user_id           = $subscription_data_applicable->userId;
+				$subscription_user_name         = $subscription_data_applicable->userName;
+				$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
+				if ( $subscription_send_applicable ) {
+					//echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
+					$result2 = send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 				}
 			}
 			foreach ( $institute_applicable_datas as $institute_data_applicable ) {
-				$edugorilla_email_subject = str_replace( "{category}", $institute_data_applicable->contact_category, $edugorilla_email['subject'] );
-				$email_template_datas     = array(
-					"{Contact_Person}" => $institute_data_applicable->contact_person,
-					"{category}"       => $institute_data_applicable->contact_category,
-					"{location}"       => $institute_data_applicable->contact_location,
-					"{listing_URL}"    => $institute_data_applicable->listing_url,
-					"{name}"           => $name,
-					"{contact no}"     => $contact_no,
-					"{email address}"  => $email,
-					"{query}"          => $query
-				);
+				if ( $is_promotional_lead == "yes" ) {
+					$edugorilla_email         = get_option( 'edugorilla_email_setting1' );
+					$edugorilla_email_body    = stripslashes( $edugorilla_email['body'] );
+					$edugorilla_email_subject = str_replace( "{category}", $institute_data_applicable->contact_category, $edugorilla_email['subject'] );
+					$email_template_datas     = array(
+						"{Contact_Person}" => $institute_data_applicable->contact_person,
+						"{category}"       => $institute_data_applicable->contact_category,
+						"{location}"       => $institute_data_applicable->contact_location,
+						"{listing_URL}"    => $institute_data_applicable->listing_url,
+						"{name}"           => $name,
+						"{contact no}"     => $contact_no,
+						"{email address}"  => $email,
+						"{query}"          => $query
+					);
 
 					foreach ($email_template_datas as $var => $email_template_data) {
 						$edugorilla_email_body = str_replace($var, $email_template_data, $edugorilla_email_body);
 					}
 
-				if ($is_promotional_lead == "yes") {
 					$institute_emails            = explode( ",", $institute_data_applicable->emails );
 					$institute_phones            = explode( ",", $institute_data_applicable->phones );
 					$client_pref_database        = new ClientEmailPref_Helper();
@@ -484,13 +479,6 @@ function edugorilla()
 				</tr>
 				<tr>
 					<th>Is it a promotional lead?</th>
-					<td>
-						<input name="is_promotional_lead" id="is_promotional_lead" type="checkbox"
-						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
-					</td>
-				</tr>
-				<tr>
-					<th>Is Interested in Specific Institute?</th>
 					<td>
 						<input name="is_promotional_lead" id="is_promotional_lead" type="checkbox"
 						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
