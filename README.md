@@ -39,10 +39,12 @@ Show the details of all the fetched Leads :
 6. The proportion between how many leads you can buy with one EduCash should be configurable. By default,one EduCash can buy one lead. UI to unlock leads from using EduCash. 
 
 ### Requirements For Email (Step 3):
-1. Send email to every available user for promotional leads
+1. Send email to every available user (users with listing & subscribed users) for promotional leads using promotional template
 2. Send email only to subscribed users for non-promotional leads
-3. Email the user whenever they unlock a lead.
-4. Email the users whenever EduCash is added to their account with relevent invoice.
+	2.a. Use locked lead template if the user has auto unlock unticked.
+	2.b. Use locked lead template if the user doesn't have enough Educash.
+	2.c. Use unlocked lead template if the user has autounlocked ticked and has enough Educash balance.
+3. Email the users whenever EduCash is added (not removed) to their account with relevent invoice.
 
 # Technology:
 

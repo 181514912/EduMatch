@@ -27,7 +27,8 @@ class EduLead_Helper
 		$update_query = "UPDATE $lead_table SET is_unlocked = '$unlock_status' WHERE $lead_table.lead_id = $lead_id AND $lead_table.client_id = $client_id";
 		$wpdb->get_results($update_query);
 
-		$response = "Successfully updated unlock_status to the database : $result_status_string";
+		$response      = "Successfully updated unlock_status to the database : $result_status_string";
+		$cards_objects = $this->get_lead_details_for_id( $lead_id );
 		return $response;
 	}
 
