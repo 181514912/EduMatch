@@ -85,6 +85,45 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+					  <tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>3. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>4. {listing_URL} :</th>
+								<td>Client's listing URL</td>
+								</tr>
+								<tr>
+									<th>5. {name} :</th>
+								<td>Lead's Contact Name</td>
+								</tr>
+								<tr>
+									<th>6. {contact no} :</th>
+								<td>Lead's Contact Number</td>
+								</tr>
+								<tr>
+									<th>7. {email address} :</th>
+								<td>Lead's Email Address</td>
+								</tr>
+								<tr>
+									<th>8. {query} :</th>
+								<td>Lead's Query</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
@@ -156,7 +195,43 @@ function edugorilla_email_setting()
                               <input type="hidden" name="email_setting_form4" value="self">
                               <input type="submit" class="button button-primary" value="Save">
                           </td>
+					</tr>
+					<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>3. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>4. {name} :</th>
+								<td>Lead's Contact Name</td>
+								</tr>
+								<tr>
+									<th>5. {contact no} :</th>
+								<td>Lead's Contact Number</td>
+								</tr>
+								<tr>
+									<th>6. {email address} :</th>
+								<td>Lead's Email Address</td>
+								</tr>
+								<tr>
+									<th>7. {query} :</th>
+								<td>Lead's Query</td>
+								</tr>
+							  </table>
+                          </td>
                       </tr>
+						  
                   </table>
               </form>
         </div>
@@ -228,6 +303,29 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {ReceivedCount} :</th>
+								<td>EduCash Given to Client</td>
+								</tr>
+								<tr>
+									<th>3. {EduCashCount} :</th>
+								<td>Total EduCash of Client</td>
+								</tr>
+								<tr>
+									<th>4. {EduCashUrl} :</th>
+								<td>Edugorilla Website</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
@@ -294,6 +392,29 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {ReceivedCount} :</th>
+								<td>EduCash Deducted from Client</td>
+								</tr>
+								<tr>
+									<th>3. {EduCashCount} :</th>
+								<td>Total EduCash of Client</td>
+								</tr>
+								<tr>
+									<th>4. {EduCashUrl} :</th>
+								<td>Edugorilla Website</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
@@ -366,6 +487,29 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>3. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>4. {lead_unlock_URL} :</th>
+								<td>Lead's unlock URL</td>
+								</tr>								
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
             </div>
@@ -438,6 +582,33 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category_location_lead_count} :</th>
+								<td>Number of Clients at {location} and {category}</td>
+								</tr>
+								<tr>
+									<th>3. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>4. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>5. {listing_URL} :</th>
+								<td>Client's listing URL</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
             </div>
@@ -500,6 +671,33 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category_location_lead_count} :</th>
+								<td>Number of Clients at {location} and {category}</td>
+								</tr>
+								<tr>
+									<th>3. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>4. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>5. {listing_URL} :</th>
+								<td>Client's listing URL</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
             </div>
@@ -563,6 +761,33 @@ function edugorilla_email_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {Contact_Person} :</th>
+								<td>Client's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {category_location_lead_count} :</th>
+								<td>Number of Clients at {location} and {category}</td>
+								</tr>
+								<tr>
+									<th>3. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>4. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>5. {listing_URL} :</th>
+								<td>Client's listing URL</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
             </div>
