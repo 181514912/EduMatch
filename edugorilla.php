@@ -652,7 +652,7 @@ function script()
 {
 	wp_enqueue_style('select2-css', plugins_url('/libs/select2/select2.css', __FILE__));
 	wp_enqueue_style('modal-css', plugins_url('/css/jquery.modal.css', __FILE__));
-	wp_enqueue_style('jquery-ui-styles', "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css");
+	wp_enqueue_style('jquery-ui-styles', "//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css");
 
 	wp_enqueue_script(
 		'select2-script',                         // Handle
