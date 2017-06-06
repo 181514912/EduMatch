@@ -1,5 +1,5 @@
 <?php
-
+$sms_template_datas =array();
 function table_for_client()
 {
 	global $wpdb;
@@ -31,6 +31,7 @@ function table_for_client()
 
 function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $my_lead )
 {
+	set_lead_data($my_lead->getName(),$my_lead->getContactNo(),$my_lead->getCategoryList(),$my_lead->getEmail(),$my_lead->getLocationList());
 	$eduLeadHelper = new EduLead_Helper();
 	if ( $auto_unlock_lead == 1 ) {
 		$query_status = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
@@ -131,11 +132,15 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 
 	include_once plugin_dir_path( __FILE__ ) . "api/gupshup.api.php";
 	foreach ( $institute_phones as $institute_phone ) {
-		$sms_setting_options1 = get_option( 'edugorilla_sms_setting1' );
+		$sms_setting_options1 = get_option( 'edugorilla_sms_setting4' );
 		$edugorilla_sms_body1 = stripslashes( $sms_setting_options1['body'] );
 
 		$credentials                              = get_option( "ghupshup_credentials" );
-		$msg                                      = str_replace( "{Contact_Person}", $contact_name, $edugorilla_sms_body1 );
+		global $sms_template_datas;
+			foreach ($sms_template_datas as $var => $sms_template_data) {
+				$edugorilla_sms_body1 = str_replace($var, $sms_template_data, $edugorilla_sms_body1);
+			}
+		$msg                                      = $edugorilla_sms_body1;
 		$institute_sms_status[ $institute_phone ] = send_sms( $credentials['user_id'], $credentials['password'], $institute_phone, $msg );
 	}
 
@@ -153,7 +158,11 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 
 	return $result2;
 }
-
+function set_lead_data($name,$contact_no,$category,$email,$location)
+{
+    global $sms_template_datas;
+	$sms_template_datas = array("{name}" => $name,"{contact no}" => $contact_no,"{email address}" => $email,"{category}" => $category,"{location}" => $location);
+}
 function str_starts_with($haystack, $needle)
 {
 	if(!is_string($haystack)) {
