@@ -381,7 +381,7 @@ function edugorilla()
 						"{email address}"  => $email,
 						"{query}"          => $query
 					);
-
+					set_lead_data($name,$contact_no,$institute_data_applicable->contact_category,$email,$institute_data_applicable->contact_location);
 					foreach ($email_template_datas as $var => $email_template_data) {
 						$edugorilla_email_body = str_replace($var, $email_template_data, $edugorilla_email_body);
 					}
