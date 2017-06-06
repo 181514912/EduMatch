@@ -9,7 +9,7 @@ function edugorilla_otp()
         if (empty($error)) {
         	include_once plugin_dir_path(__FILE__) . "api/gupshup.api.php";
         	$otp = rand(1000,9999);
-        	$msg = "Your OTP is".$otp.".";
+        	$msg = "Your OTP for EduGorilla Live Chat is ".$otp.".";
         	$credentials = get_option("smsapi");
         	$response = send_sms($credentials['username'],$credentials['password'],$edugorilla_mno,$msg);
 
