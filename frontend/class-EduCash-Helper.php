@@ -10,7 +10,7 @@ class EduCash_Helper
 	{
 		global $wpdb;
         $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-        $users_table = $wpdb->prefix.users;
+        $users_table = $wpdb->users;
 
         $client_ID = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientEmail' ");
 		$current_educash = $this->get_educash($client_ID);
@@ -31,7 +31,7 @@ class EduCash_Helper
 	{
 		global $wpdb;
         $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-        $users_table = $wpdb->prefix.'users';
+        $users_table = $wpdb->users;
 
         $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE client_id = '$client_ID' ");
 		return $total;
