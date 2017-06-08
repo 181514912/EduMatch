@@ -6,7 +6,7 @@ function allocate_educash_form_page()
 {
     global $wpdb;
     $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-    $users_table = $wpdb->prefix.'users';
+    $users_table = $wpdb->users;
 
 //Checking if the admin has filled adequate information to submit the form to allot educash and inserting the legal values in table
 
@@ -460,7 +460,7 @@ function transaction_history_form_page()
 {
     global $wpdb;
     $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-    $users_table = $wpdb->prefix.users;
+    $users_table = $wpdb->users;
 
 //Checking if the admin has filled atleast one field to submit the form to see history
 
