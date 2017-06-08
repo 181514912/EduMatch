@@ -569,7 +569,7 @@ function do_this_weekly()
 	global $wpdb;
 	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2 = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table = $wpdb->prefix.'users';
+	$users_table = $wpdb->users;
 	$lead_details = $wpdb->get_results("SELECT * FROM $table_name1");
 	$client_email_addresses = $wpdb->get_results("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id");
 
@@ -627,7 +627,7 @@ function do_this_daily()
 	global $wpdb;
 	$table_name1            = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2            = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table            = $wpdb->prefix.'users';
+	$users_table            = $wpdb->users;
 	$lead_details           = $wpdb->get_results("SELECT * FROM $table_name1");
 	$client_email_addresses = $wpdb->get_results( "SELECT ut.display_name AS user_name,ut.user_email AS user_email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id" );
 
@@ -690,7 +690,7 @@ function do_this_monthly()
 	global $wpdb;
 	$table_name1            = $wpdb->prefix . 'edugorilla_lead_details';
 	$table_name2            = $wpdb->prefix . 'edugorilla_client_preferences';
-	$users_table            = $wpdb->prefix.'users';
+	$users_table            = $wpdb->users;
 	$lead_details           = $wpdb->get_results("SELECT * FROM $table_name1");
 	$client_email_addresses = $wpdb->get_results( "SELECT ut.display_name AS user_name,ut.user_email AS user_email_id,cpt.* FROM $table_name2 cpt,$users_table ut WHERE ut.ID=cpt.id" );
 
