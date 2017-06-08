@@ -7,7 +7,7 @@ class DataBase_Helper
 	{
 		global $wpdb;
         $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-        $users_table = $wpdb->prefix.users;
+        $users_table = $wpdb->users;
 
         $adminName = wp_get_current_user();
 		$time = current_time('mysql');
