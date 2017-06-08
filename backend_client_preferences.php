@@ -1,7 +1,7 @@
 <?php
 function client_preferences_page(){
 	global $wpdb;
-	$users_table = $wpdb->prefix.'users';
+	$users_table = $wpdb->users;
 	$table_name = $wpdb->prefix.'edugorilla_client_preferences';
 	if(isset($_POST['submit'])){
 		if(empty($_POST['client_email'])){
