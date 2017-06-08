@@ -4,7 +4,7 @@ function table_for_client()
 {
 	global $wpdb;
 	$table_name6 = $wpdb->prefix.'edugorilla_client_preferences'; //client preferences
-	$users_table = $wpdb->prefix.'users';
+	$users_table = $wpdb->users;
 	$sql6 = "CREATE TABLE $table_name6 (
 				                            id bigint(20) unsigned NOT NULL,
 											contact_no varchar(50) NOT NULL,
