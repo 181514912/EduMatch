@@ -49,8 +49,8 @@ class EduCash_Helper
         $arr2 = array($firstname." ".$lastname, $educash_added, $total, "https://edugorilla.com/");
         $positive_email_body = str_replace($arr1, $arr2, $edugorilla_email_datas['body']);
         $message =  $positive_email_body;
-
-		wp_mail( $to, $subject, $message, "Content-type: text/html; charset=iso-8859-1", $attachment);
+        $header = array("Content-type: text/html; charset=iso-8859-1","Cc: hello@edugorilla.com");
+		wp_mail( $to, $subject, $message, $header, $attachment);
 
 		}
         else{
