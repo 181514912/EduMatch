@@ -4,6 +4,7 @@ function send_sms($user_id,$pwd,$mobile_no, $msg)
 {
 	$request =""; //initialise the request variable
 	$param[method]= "sendMessage";
+    $mobile_no = ltrim($mobile_no, '0'); //in case of zero before the number.
 	$param[send_to] = "91".$mobile_no;
 	$param[msg] = $msg;
 	$param[msg_type] = "TEXT"; //Can be "FLASH”/"UNICODE_TEXT"/”BINARY”
