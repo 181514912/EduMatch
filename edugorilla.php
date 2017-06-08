@@ -498,6 +498,9 @@ function edugorilla()
 					<td>
 						<select name="listing_type" id="edugorilla_listing_type">
 							<option value="">Select</option>
+                            <option value="loan">Loan (0)</option>
+							<option value="course">Course (31)</option>
+							<option value="coaching">Coaching and Traing Institutes (56635)</option>
 						</select>
 					</td>
 				</tr>
