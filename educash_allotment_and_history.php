@@ -398,9 +398,9 @@ function allocate_educash_form_page()
         $pdf->addLineFormat( $cols);
         $pdf->addLineFormat($cols);
         $y    = 165;
-		$educash_rate = get_option("current_rate");
+		$educash_rate = $money/$educash_added;
         $line = array( "Item"      => "EduCash",
-                       "Rate"      => $educash_rate['rate'],
+                       "Rate"      => $educash_rate,
                        "Quantity"  => $educash_added,
                        "Amount"    => "Rs. ".$money."/-");
         $size = $pdf->addLine( $y, $line );
