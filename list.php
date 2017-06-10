@@ -200,6 +200,7 @@ function form_list()
                         <th id="columnname" class="manage-column column-columnname" scope="col">Lead's Query</th>
                      	<th id="columnname" class="manage-column column-columnname" scope="col">Lead's Category</th>
                     	<th id="columnname" class="manage-column column-columnname" scope="col">Lead's Location</th>
+	                    <th id="columnname" class="manage-column column-columnname" scope="col">Added By</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Date Time</th>
                     </tr>
                     </thead>
@@ -214,6 +215,7 @@ function form_list()
                         <th id="columnname" class="manage-column column-columnname" scope="col">Lead's Query</th>
                     	<th id="columnname" class="manage-column column-columnname" scope="col">Lead's Category</th>
                     	<th id="columnname" class="manage-column column-columnname" scope="col">Lead's Location</th>
+	                    <th id="columnname" class="manage-column column-columnname" scope="col">Added By</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Date Time</th>
                     </tr>
                     </tfoot>
@@ -223,6 +225,9 @@ function form_list()
                     	$leads_details = $wpdb->get_results($q1, 'ARRAY_A');
 						foreach($leads_details as $leads_detail)
                         {
+	                        $admin_owner_id   = $leads_detail['admin_id'];
+	                        $user_meta_helper = new UserMeta_Helper();
+	                        $admin_owner_name = $user_meta_helper->getUserNameForUserId( $admin_owner_id );
  							if(!empty($leads_detail['category_id']))
         					{
         						$category_names = array();
@@ -263,6 +268,7 @@ function form_list()
                         	<td class="column-columnname"><?php echo $leads_detail['query']; ?></td>
                         	<th class="manage-column column-columnname"><?php echo $leads_category; ?></th>
                     		<th class="manage-column column-columnname"><?php echo $leads_location; ?></th>
+	                        <td class="column-columnname"><?php echo $admin_owner_name; ?></td>
                             <td class="column-columnname"><?php echo $leads_detail['date_time']; ?></td>
                         </tr>
                     <?php } ?>

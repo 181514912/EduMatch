@@ -2,6 +2,16 @@
 
 class UserMeta_Helper
 {
+	public function getUserNameForUserId( $user_id ) {
+		$userObject = get_userdata( $user_id );
+		if ( ! $userObject ) {
+			return "Automatic Lead";
+		}
+		$user_name = $userObject->data->display_name;
+
+		return $user_name;
+	}
+
 	public function getMetaDetails($user_id, $key)
 	{
 

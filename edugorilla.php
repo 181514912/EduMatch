@@ -14,6 +14,7 @@ function create_edugorilla_lead_table()
 	$table_name1 = $wpdb->prefix . 'edugorilla_lead_details'; //The table containing all the leads.
 	$sql1 = "CREATE TABLE $table_name1 (
                                             id int(11) NOT NULL AUTO_INCREMENT,
+                                            admin_id int(11)  DEFAULT 0 NOT NULL,
                                             name varchar(200) NOT NULL,
                                             contact_no varchar(50) NOT NULL,
                                             email varchar(200) NOT NULL,
@@ -318,10 +319,14 @@ function edugorilla()
 			$institute_applicable_datas    = json_decode( stripslashes( $edugorilla_institute_datas ) );
 			$subscription_applicable_datas = json_decode( stripslashes( $edugorilla_subscription_datas ) );
 
+			$adminObject = wp_get_current_user();
+			$adminId     = $adminObject->ID;
+
 			global $wpdb;
 			$result1 = $wpdb->insert(
 				$wpdb->prefix . 'edugorilla_lead_details',
 				array(
+					'admin_id'       => $adminId,
 					'name'           => $name,
 					'contact_no'     => $contact_no,
 					'email'          => $email,
