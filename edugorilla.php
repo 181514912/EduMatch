@@ -801,7 +801,6 @@ add_action('wp_ajax_nopriv_edugorilla_show_location', 'edugorilla_show_location'
 
 function edugorilla_show_pref_details( $location_ids, $category ) {
 	global $wpdb;
-	$table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
 	$categoryArray              = $category;
 	$locationArray              = explode( ',', $location_ids );
 	$table_name                 = $wpdb->prefix . 'edugorilla_client_preferences';
@@ -815,8 +814,6 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 //	}
 //	echo "..Got Location : $location_ids";
 	foreach ( $client_email_addresses as $cea ) {
-	    $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE client_id = $cea->user_id");
-		 if (((int)$total) >0){
 		$categoryCheck = 0;
 		$locationCheck = 0;
 		if ( empty( $cea->category ) ) {
@@ -857,7 +854,6 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 			$contactObject['sendPrefDetails'] = "true";
 			$preference_contact_details[]     = $contactObject;
 		}
-	}
 	}
 
 	return $preference_contact_details;
