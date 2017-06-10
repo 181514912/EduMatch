@@ -376,16 +376,7 @@ function form_not_empty(){
 
 								<option value="<?php echo $d->name; ?>">
 
-								<?php
-								foreach ($vals as $index => $val) {
-									
-									?>
-
-									<option value="<?php echo "->" . $val; ?>">
-									<?php
-									}
-								?>
-
+							
 								<?php
 							}
 							else {
