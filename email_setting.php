@@ -121,6 +121,10 @@ function edugorilla_email_setting()
 									<th>8. {query} :</th>
 								<td>Lead's Query</td>
 								</tr>
+	                              <tr>
+		                              <th>9. {lead_id} :</th>
+		                              <td>Lead's Backend Id</td>
+	                              </tr>
 							  </table>
                           </td>
                       </tr>
@@ -228,6 +232,10 @@ function edugorilla_email_setting()
 									<th>7. {query} :</th>
 								<td>Lead's Query</td>
 								</tr>
+	                              <tr>
+		                              <th>8. {lead_id} :</th>
+		                              <td>Lead's Backend Id</td>
+	                              </tr>
 							  </table>
                           </td>
                       </tr>
@@ -506,7 +514,11 @@ function edugorilla_email_setting()
 								<tr>
 									<th>4. {lead_unlock_URL} :</th>
 								<td>Lead's unlock URL</td>
-								</tr>								
+								</tr>
+	                              <tr>
+		                              <th>5. {lead_id} :</th>
+		                              <td>Lead's Backend Id</td>
+	                              </tr>
 							  </table>
                           </td>
                       </tr>

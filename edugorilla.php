@@ -285,16 +285,24 @@ function edugorilla()
 		if (empty($name)) $errors['name'] = "Empty";
 		elseif (!preg_match("/([A-Za-z]+)/", $name)) $errors['name'] = "Invalid";
 
-		if (empty($contact_no)) $errors['contact_no'] = "Empty";
-		elseif (!preg_match("/([0-9]{10}+)/", $contact_no)) $errors['contact_no'] = "Invalid";
+		if ( empty( $contact_no ) && empty( $email ) ) {
+			$errors['contact_no'] = "Empty Contact field";
+			$errors['email']      = "Empty Email field";
+		}
 
-		if (empty($email)) $errors['email'] = "Empty";
-		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) $errors['email'] = "Invalid";
+		if ( ! empty( $contact_no ) && ! preg_match( "/([0-9]{10}+)/", $contact_no ) ) {
+			$errors['contact_no'] = "Invalid";
+		}
+
+		if ( ! empty( $email ) && ( filter_var( $email, FILTER_VALIDATE_EMAIL ) === false ) ) {
+			$errors['email'] = "Invalid";
+		}
 
 		if (empty($query)) $errors['query'] = "Empty";
 
 
-		if (empty($errors)) {
+		if (empty($errors) ) {
+			$lead_contact_status     = array();
 			$institute_emails_status = array();
 			$institute_sms_status = array();
 
@@ -363,6 +371,7 @@ function edugorilla()
 				$subscription_send_applicable   = $subscription_data_applicable->sendPrefDetails;
 				if ( $subscription_send_applicable ) {
 					//echo "Emails : $subscription_emails_applicable AND phones : $subscription_phones_applicable";
+					$lead_contact_status[] = $subscription_user_name;
 					$result2 = send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $lead_card );
 				}
 			}
@@ -376,6 +385,7 @@ function edugorilla()
 						"{category}"       => $institute_data_applicable->contact_category,
 						"{location}"       => $institute_data_applicable->contact_location,
 						"{listing_URL}"    => $institute_data_applicable->listing_url,
+						"{lead_id}"        => $lead_id,
 						"{name}"           => $name,
 						"{contact no}"     => $contact_no,
 						"{email address}"  => $email,
@@ -393,15 +403,18 @@ function edugorilla()
 					$log_post_id                 = $institute_data_applicable->post_id;
 					$should_send_posting_details = $institute_data_applicable->sendPostDetails;
 					if ( $should_send_posting_details ) {
+						$lead_contact_status[] = $name;
 						$result2 = send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_body, $institute_emails, $institute_phones, $institute_data_applicable->contact_person, $lead_id, $log_post_id );
 					}
 				}
 			}
 
-			if ($result1) {
-				$success = "Saved Successfully.";
-			} elseif ($result2) $success = "Saved and Message Send Successfully.";
-			else $success = $result1;
+			if ($result1 ) {
+				$lead_contact_status_str = implode( ', ', $lead_contact_status );
+				$success                 = "Saved Successfully and contacted : $lead_contact_status_str";
+			} else {
+				$success = "Unable to save the leads successfully.";
+			}
 
 			//  foreach($_REQUEST as $var=>$val)$$var="";
 		}

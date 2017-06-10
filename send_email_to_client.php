@@ -31,7 +31,7 @@ function table_for_client()
 
 function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscription_applicable_emails, $subscription_applicable_phones, $subscription_user_name, $subscription_user_id, $my_lead )
 {
-	set_lead_data($my_lead->getName(),$my_lead->getContactNo(),$my_lead->getCategoryList(),$my_lead->getEmail(),$my_lead->getLocationList());
+	set_lead_data( $my_lead->getId(), $my_lead->getName(), $my_lead->getContactNo(), $my_lead->getCategoryList(), $my_lead->getEmail(), $my_lead->getLocationList(), $my_lead->getQuery() );
 	$eduLeadHelper = new EduLead_Helper();
 	if ( $auto_unlock_lead == 1 ) {
 		$query_status = $eduLeadHelper->set_card_unlock_status_to_db( $subscription_user_id, $my_lead->getId(), 1 );
@@ -53,6 +53,7 @@ function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscr
 			"{Contact_Person}" => $subscription_user_name,
 			"{category}"       => $my_lead->getCategoryList(),
 			"{location}"       => $my_lead->getLocationList(),
+			"{lead_id}"        => $my_lead->getId(),
 			"{name}"           => $my_lead->getName(),
 			"{contact no}"     => $my_lead->getContactNo(),
 			"{email address}"  => $my_lead->getEmail(),
@@ -76,6 +77,7 @@ function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscr
 			"{Contact_Person}" => $subscription_user_name,
 			"{category}"       => $my_lead->getCategoryList(),
 			"{location}"       => $my_lead->getLocationList(),
+			"{lead_id}"        => $my_lead->getId(),
 			"{name}"           => $my_lead->getName(),
 			"{contact no}"     => $my_lead->getContactNo(),
 			"{email address}"  => $my_lead->getEmail(),
@@ -95,6 +97,7 @@ function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscr
 
 		$email_template_datas     = array(
 			"{Contact_Person}"  => $subscription_user_name,
+			"{lead_id}"         => $my_lead->getId(),
 			"{category}"        => $my_lead->getCategoryList(),
 			"{lead_unlock_URL}" => $lead_unlock_URL
 		);
@@ -158,10 +161,19 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 
 	return $result2;
 }
-function set_lead_data($name,$contact_no,$category,$email,$location)
+
+function set_lead_data( $leadId, $name, $contact_no, $category, $email, $location, $lead_query )
 {
     global $sms_template_datas;
-	$sms_template_datas = array("{name}" => $name,"{contact no}" => $contact_no,"{email address}" => $email,"{category}" => $category,"{location}" => $location);
+	$sms_template_datas = array(
+		"{lead_id}"       => $leadId,
+		"{name}"          => $name,
+		"{contact no}"    => $contact_no,
+		"{email address}" => $email,
+		"{query}"         => $lead_query,
+		"{category}"      => $category,
+		"{location}"      => $location
+	);
 }
 function str_starts_with($haystack, $needle)
 {
