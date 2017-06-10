@@ -19,31 +19,41 @@ function allocate_educash_form_page()
             echo '<script>alert("The field of educash cannot be blank");</script>';
             }
 			else {
-            $clientName	= $_POST['clientName'];
-            $check_client = $wpdb->get_var("SELECT COUNT(ID) from $users_table WHERE user_email = '$clientName' ");
-            if($check_client == 0){
-                echo '<script>alert("This client does not exist in our database");</script>';
-            }
-			else{
-				$educash_added = $_POST['educash'];
-				$adminName = wp_get_current_user();
-				$time = current_time('mysql');
-				$money = $_POST['money'];
-				$adminComment = $_POST['adminComment'];
-				
-				$firstname = $_POST['client_firstname'];
-				$lastname = $_POST['client_lastname'];
-				$street = $_POST['client_street'];
-				$city = $_POST['client_city'];
-				$postalcode = $_POST['client_postalcode'];
-				$phone_number = $_POST['client_phone_number'];
-				$country = $_POST['client_country'];
-				
-				$initiate_transaction = new EduCash_Helper();
-				$make_transaction = $initiate_transaction->add_educash($clientName, $educash_added, $money, $adminComment, $firstname, $lastname, $street, $city, $postalcode, $phone_number, $country);
-           }
-        }
-		}
+				$clientEmail  = $_POST['clientName'];
+				$check_client = $wpdb->get_var( "SELECT COUNT(ID) from $users_table WHERE user_email = '$clientEmail' " );
+				if ( $check_client == 0 ) {
+					echo '<script>alert("This client does not exist in our database");</script>';
+				} else {
+					$educash_added = $_POST['educash'];
+					$adminName     = wp_get_current_user();
+					$time          = current_time( 'mysql' );
+					$money         = $_POST['money'];
+					$adminComment  = $_POST['adminComment'];
+
+					$firstname    = $_POST['client_firstname'];
+					$lastname     = $_POST['client_lastname'];
+					$street       = $_POST['client_street'];
+					$city         = $_POST['client_city'];
+					$postalcode   = $_POST['client_postalcode'];
+					$phone_number = $_POST['client_phone_number'];
+					$country      = $_POST['client_country'];
+
+					$user_meta_helper = new UserMeta_Helper();
+					$client_ID        = $user_meta_helper->getUserIdFromEmail( $clientEmail );
+
+					update_user_meta( $client_ID, 'user_general_first_name', $firstname );
+					update_user_meta( $client_ID, 'user_general_last_name', $lastname );
+					update_user_meta( $client_ID, 'user_address_street_and_number', $street );
+					update_user_meta( $client_ID, 'user_address_city', $city );
+					update_user_meta( $client_ID, 'user_address_postal_code', $postalcode );
+					update_user_meta( $client_ID, 'user_general_phone', $phone_number );
+					update_user_meta( $client_ID, 'user_address_country', $country );
+
+					$initiate_transaction = new EduCash_Helper();
+					$make_transaction     = $initiate_transaction->addEduCashToUser( $client_ID, $educash_added, $educash_added );
+				}
+			}
+			}
 		}
 
 		if ($_POST['SUBMIT']) {
@@ -60,11 +70,11 @@ function allocate_educash_form_page()
                 $invalid_client = "<span style='color:red'>This client does not exist in our database</span>";
              }
              else {
-			 $educash_added = $_POST['educash1'];
-			 $client_ID_result = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
+			 $educash_added     = $_POST['educash1'];
+			 $client_ID_result  = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
 			 $check_transaction = new EduCash_Helper();
-			 $total = $check_transaction->get_educash($client_ID_result);
-             $final_total = $total + $educash_added;
+	             $total         = $check_transaction->getEduCashForUser( $client_ID_result );
+             $final_total       = $total + $educash_added;
               if($final_total >= 0){
 		       $all_meta_for_user = get_user_meta( $client_ID_result );
 	           $client_firstname = $all_meta_for_user['user_general_first_name'][0];
@@ -412,8 +422,8 @@ function allocate_educash_form_page()
 		$attachment = array($file_name);
 
 		$client_ID_result = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
-	    $total_educash = new EduCash_Helper();
-		$total = $total_educash->get_educash($client_ID_result);
+	    $total_educash    = new EduCash_Helper();
+	        $total        = $total_educash->getEduCashForUser( $client_ID_result );
 
 		$send_email_for_transaction = new EduCash_Helper();
 		$send_email_for_transaction->send_email($firstname, $lastname, $total, $clientName, $educash_added, $attachment);
@@ -446,9 +456,9 @@ function allocate_educash_form_page()
 		}
 
    } else{
-	   $client_ID_result = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
+	   $client_ID_result  = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientName' ");
 	   $check_transaction = new EduCash_Helper();
-	   $total = $check_transaction->get_educash($client_ID_result);
+	        $total        = $check_transaction->getEduCashForUser( $client_ID_result );
 
 	   echo "<center><span style='color:red;'>The total balance that the client ".$_POST['clientName']." has
                  is ".$total.". Your entry will leave this client with negative amount of educash which is not allowed.</span></center>";

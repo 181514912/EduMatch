@@ -12,9 +12,9 @@ class EduCash_Helper
         $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
         $users_table = $wpdb->users;
 
-        $client_ID = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientEmail' ");
-		$current_educash = $this->get_educash($client_ID);
-        $final_total = $current_educash + $educash;
+        $client_ID       = $wpdb->get_var("SELECT ID FROM $users_table WHERE user_email = '$clientEmail' ");
+		$current_educash = $this->getEduCashForUser( $client_ID );
+        $final_total     = $current_educash + $educash;
         if($final_total >= 0){
 			$add_to_database = new DataBase_Helper();
 			$add_to_database->addvaluetodatabase($client_ID, $educash, $money, $comment, $firstname, $lastname, $street, $city, $postalcode, $phone_number, $country);
@@ -25,16 +25,6 @@ class EduCash_Helper
 		}
 
 		return $transaction_done;
-	}
-
-	public function get_educash($client_ID)
-	{
-		global $wpdb;
-        $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-        $users_table = $wpdb->users;
-
-        $total = $wpdb->get_var("SELECT sum(transaction) FROM $table_name3 WHERE client_id = '$client_ID' ");
-		return $total;
 	}
 
 	public function send_email($firstname, $lastname, $total, $clientName, $educash_added, $attachment)
@@ -91,14 +81,16 @@ class EduCash_Helper
 		return $this->getEduCashForUser($userId);
 	}
 
-	public function addEduCashToUser($userId, $amount, $transactionMessage)
+	public function addEduCashToUser( $userId, $transaction_cost, $transactionMessage )
 	{
-        $databaseHelper = new DataBase_Helper();
+        $databaseHelper      = new DataBase_Helper();
 		$currentEduCashValue = $databaseHelper->get_educash_for_user($userId);
-		$newEduCashValue = $currentEduCashValue + $amount;
-		$transaction_cost = $amount;
+		$newEduCashValue     = $currentEduCashValue + $transaction_cost;
 		if ($newEduCashValue > 0) {
-			$insertion_status = $databaseHelper->add_educash_transaction($userId, "-7", $transaction_cost, $transactionMessage);
+			$educash_rate      = get_option( "current_rate" );
+			$conversion_factor = $educash_rate['rate'];
+			$amount_in_rupees  = $conversion_factor * $transaction_cost;
+			$insertion_status  = $databaseHelper->add_educash_transaction( $userId, "-7", $transaction_cost, $amount_in_rupees, $transactionMessage );
 			return "Success : $insertion_status";
 		}
 		return "Insufficient Funds : $newEduCashValue";
@@ -114,7 +106,7 @@ class EduCash_Helper
 		$transaction_cost = -$amount;
 		$newEduCashValue = $currentEduCashValue + $transaction_cost;
 		if ($newEduCashValue >= 0) {
-			$insertion_status = $databaseHelper->add_educash_transaction($user_id, $lead_id, $transaction_cost, "Unlocked lead $lead_id");
+			$insertion_status = $databaseHelper->add_educash_transaction( $user_id, $lead_id, $transaction_cost, 0, "Unlocked lead $lead_id" );
 
             $user           = get_user_by( 'id', $user_id );
             $full_name      = $user->first_name." ".$user->last_name;
@@ -135,7 +127,7 @@ class EduCash_Helper
             $to = $email;
             $headers = array('Content-Type: text/html; charset=UTF-8');
 			//Do Not send email when educash has been deducted!
-			//send_mail_without_unlock( $email_subject, $email_body, explode(',', $to), explode(',', $contact_number), $full_name, "-1", "-1" );
+			send_mail_without_unlock( $email_subject, $email_body, explode( ',', $to ), explode( ',', $contact_number ), $full_name, "-1", "-1" );
 			//$value = wp_mail($to,$email_subject,$email_body,$headers);
             return "Success : $insertion_status";
 		}
@@ -147,36 +139,20 @@ class EduCash_Helper
 	    $current_user = $userId;
   	    global $wpdb;
   	    $current_educash = 0;
-		$out = get_option("user_educash_count");
-	    if($out['users_id']!= $userId){
-		  //echo "calledthis";
+		$educash_cache   = get_option( "user_educash_count" );
+		//if($educash_cache['users_id']!= $userId){
 	  	  $current_user_id = $userId;
 
-	  	  $table_name2 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-	  	  $sql = "SELECT * FROM $table_name2 WHERE client_id = $current_user_id";
-	  	  $total_cash = $wpdb->get_results($sql);
-	  	  $i = 0;
-	  	  if(count($total_cash)>0)
-	  	  {
-	  		foreach ($total_cash as $cash)
-	  		{
-	  			 $date = $cash->time;
-	  			 $consumption[$i]['date']= $date;
-	  			 $consumption[$i]['spent'] = $cash->transaction;
-	  			 $consumption[$i]['val'] = 0;
-	  			 $i=$i+1;
-			    $current_educash = $current_educash + ($cash->transaction);
-	  	  	}
-	  	  }
-
-	  	  if($current_educash<0)
-	  		 $current_educash = 0;
+		$table_transaction = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
+		$educash_sql       = "SELECT sum(transaction) FROM $table_transaction WHERE client_id = $current_user_id";
+		$current_educash   = $wpdb->get_var( $educash_sql );
 
 		  $user_cash = array("user_educash"=>$current_educash,"users_id"=>$current_user_id);
 	  	  update_option("user_educash_count",$user_cash);
-	   }
-	   $out = get_option("user_educash_count");
-	   return $out['user_educash'];
+		//}
+		$educash_cache = get_option( "user_educash_count" );
+
+		return $educash_cache['user_educash'];
 	}
 
 }

@@ -3,45 +3,20 @@
 class DataBase_Helper
 {
 
-    public function addvaluetodatabase($client_ID, $educash, $money, $comment, $firstname, $lastname, $street, $city, $postalcode, $phone_number, $country)
-	{
-		global $wpdb;
-        $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
-        $users_table = $wpdb->users;
-
-        $adminName = wp_get_current_user();
-		$time = current_time('mysql');
-
-		$wpdb->insert($table_name3, array(
-                'time' => $time,
-                'admin_id' => $adminName->ID,
-                'client_id' => $client_ID,
-                'transaction' => $educash,
-                'amount' => $money,
-                'comments' => $comment
-            ));
-		update_user_meta($client_ID, 'user_general_first_name', $firstname);
-		update_user_meta($client_ID, 'user_general_last_name', $lastname);
-		update_user_meta($client_ID, 'user_address_street_and_number', $street);
-		update_user_meta($client_ID, 'user_address_city', $city);
-		update_user_meta($client_ID, 'user_address_postal_code', $postalcode);
-		update_user_meta($client_ID, 'user_general_phone', $phone_number);
-		update_user_meta($client_ID, 'user_address_country', $country);
-	}
-
-	public function add_educash_transaction($client_id, $lead_id, $educash, $adminComment)
+	public function add_educash_transaction( $client_id, $lead_id, $educash, $money, $adminComment )
 	{
 		global $wpdb;
 		$transaction_table = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
 		$time = current_time('mysql');
 		$adminName = wp_get_current_user();
 		$insert_status = $wpdb->insert($transaction_table, array(
-			'time' => $time,
-			'admin_id' => $adminName->ID,
-			'client_id' => $client_id,
-			'lead_id' => $lead_id,
+			'time'        => $time,
+			'admin_id'    => $adminName->ID,
+			'client_id'   => $client_id,
+			'lead_id'     => $lead_id,
 			'transaction' => $educash,
-			'comments' => $adminComment
+			'amount'      => $money,
+			'comments'    => $adminComment
 		));
 		return $insert_status;
 	}

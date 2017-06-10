@@ -99,6 +99,7 @@ function send_mail_with_unlock( $is_promotional_lead, $auto_unlock_lead, $subscr
 			"{Contact_Person}"  => $subscription_user_name,
 			"{lead_id}"         => $my_lead->getId(),
 			"{category}"        => $my_lead->getCategoryList(),
+			"{location}"        => $my_lead->getLocationList(),
 			"{lead_unlock_URL}" => $lead_unlock_URL
 		);
 

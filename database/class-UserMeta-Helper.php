@@ -12,6 +12,14 @@ class UserMeta_Helper
 		return $user_name;
 	}
 
+	public function getUserIdFromEmail( $clientEmail ) {
+		global $wpdb;
+		$users_table = $wpdb->users;
+		$client_ID   = $wpdb->get_var( "SELECT ID FROM $users_table WHERE user_email = '$clientEmail' " );
+
+		return $client_ID;
+	}
+
 	public function getMetaDetails($user_id, $key)
 	{
 

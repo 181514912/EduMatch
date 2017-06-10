@@ -46,7 +46,7 @@ function create_edugorilla_lead_table()
                                             id mediumint(9) NOT NULL AUTO_INCREMENT,
                                             admin_id int(9) NOT NULL,
                                             client_id int(9) NOT NULL,
-                                            lead_id int(15) NOT NULL,
+                                            lead_id DEFAULT 0 int(15) NOT NULL,
                                             transaction int(9) DEFAULT 0 NOT NULL,
                                             amount int(9) DEFAULT 0 NOT NULL,
                                             time datetime NOT NULL,
@@ -58,7 +58,7 @@ function create_edugorilla_lead_table()
 		$sql4 = "CREATE TABLE $table_name4 (
 				                            id int(15) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 											client_id int(15) NOT NULL,
-											lead_id int(15) NOT NULL,
+											lead_id DEFAULT 0 int(15) NOT NULL,
 											is_unlocked boolean DEFAULT 0 NOT NULL,
                                             is_hidden boolean DEFAULT 0 NOT NULL,
 						                    date_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -73,6 +73,9 @@ function create_edugorilla_lead_table()
 	dbDelta($sql4);
 	//dbDelta($sql5);
 
+	//Schema updates
+	$lead_table_add_column_sql = "ALTER TABLE $table_name1 ADD admin_id INT(11) NOT NULL DEFAULT '0' AFTER id;";
+	dbDelta( $lead_table_add_column_sql );
 }
 
 register_activation_hook(__FILE__, 'create_edugorilla_lead_table');
