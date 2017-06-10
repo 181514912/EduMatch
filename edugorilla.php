@@ -459,14 +459,14 @@ function edugorilla()
 				<tr>
 					<th>Name<sup><font color="red">*</font></sup></th>
 					<td>
-						<input id="edu_name" name="name" value="<?php echo $name; ?>" placeholder="Type name here...">
+						<input id="edu_name" name="name" value="" placeholder="Type name here...">
 						<font color="red"><?php echo $errors['name']; ?></font>
 					</td>
 				</tr>
 				<tr>
 					<th>Contact No.<sup><font color="red">*</font></sup></th>
 					<td>
-						<input id="edu_contact_no" name="contact_no" value="<?php echo $contact_no; ?>"
+						<input id="edu_contact_no" name="contact_no" value=""
 						       placeholder="Type contact number here">
 						<font color="red"><?php echo $errors['contact_no']; ?></font>
 					</td>
@@ -474,7 +474,7 @@ function edugorilla()
 				<tr>
 					<th>Email<sup><font color="red">*</font></sup></th>
 					<td>
-						<input id="edu_email" name="email" value="<?php echo $email; ?>" placeholder="Type email here">
+						<input id="edu_email" name="email" value="" placeholder="Type email here">
 						<font color="red"><?php echo $errors['email']; ?></font>
 					</td>
 				</tr>
@@ -482,7 +482,7 @@ function edugorilla()
 					<th>Query<sup><font color="red">*</font></sup></th>
 					<td>
                         <textarea id="edu_query" name="query" rows="4" cols="65"
-                                  placeholder="Type your query here"><?php echo $query; ?></textarea>
+                                  placeholder="Type your query here"></textarea>
 						<font color="red"><?php echo $errors['query']; ?></font>
 					</td>
 				</tr>
@@ -490,7 +490,7 @@ function edugorilla()
 					<th>Is it a promotional lead?</th>
 					<td>
 						<input name="is_promotional_lead" id="is_promotional_lead" type="checkbox"
-						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
+						       value="yes">
 					</td>
 				</tr>
 				<tr>
