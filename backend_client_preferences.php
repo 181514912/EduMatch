@@ -378,6 +378,12 @@ function form_not_empty(){
 
 							
 								<?php
+
+								foreach ( $vals as $index => $val ) {
+									?>
+									<!-------Use sub locations here to expand locations------>
+									<?php
+								}
 							}
 							else {
 								foreach ($vals as $index => $val) {

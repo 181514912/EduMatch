@@ -127,7 +127,7 @@ class EduCash_Helper
             $to = $email;
             $headers = array('Content-Type: text/html; charset=UTF-8');
 			//Do Not send email when educash has been deducted!
-			send_mail_without_unlock( $email_subject, $email_body, explode( ',', $to ), explode( ',', $contact_number ), $full_name, "-1", "-1" );
+			//send_mail_without_unlock( $email_subject, $email_body, explode( ',', $to ), explode( ',', $contact_number ), $full_name, "-1", "-1" );
 			//$value = wp_mail($to,$email_subject,$email_body,$headers);
             return "Success : $insertion_status";
 		}

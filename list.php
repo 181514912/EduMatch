@@ -71,7 +71,7 @@ function form_list()
     }
     ?>
     <div class="wrap">
-        <h1>Promotional Leads List <a href="admin.php?page=edugorilla" class="button button-primary">Add</a></h1>
+	    <h1>Leads <a href="admin.php?page=edugorilla" class="button button-primary">Add</a></h1>
         
         <div id="list-tabs">
           <ul>

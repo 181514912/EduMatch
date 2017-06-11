@@ -230,7 +230,7 @@ function edugorilla_lead_edit(){
 						       value="yes" <?php if ($is_promotional_lead == "yes") echo "checked"; ?>>
 					</td>
 				</tr>
-				<tr>
+				<tr id="listing_type_row">
 					<th>Listing Type<sup><font color="red">*</font></sup></th>
 					<td>
 						<select name="listing_type" id="edugorilla_listing_type">

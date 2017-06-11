@@ -67,7 +67,9 @@ $(document).on('click','a[id^=edugorilla_leads_view]', function(){
     	});
 });
 
-
+	$(document).on('click', '#edugorilla_add_location', function () {
+		window.location = "/wp-admin/edit-tags.php?taxonomy=locations";
+	});
 
 $(document).on('click','#edugorilla_filter',function(){
 		var institute_data;
@@ -103,7 +105,7 @@ $(document).on('click','#edugorilla_filter',function(){
 		            var eduQuery = $("#edu_query").val();
 		            var eduInstituteDatas = $("#edugorilla_institute_datas").val();
 		            var eduSubscriptionDatas = $("#edu_email").val();
-		            if (eduName !== "" && eduEmail !== "" && eduContactNo !== "" && eduQuery !== "")
+		            if (eduName !== "" && (eduEmail !== "" || eduContactNo !== "") && eduQuery !== "")
                     {
 	                    if (eduInstituteDatas !== "" || eduSubscriptionDatas !== "") {
 		                    $('#save_details_button').removeAttr("disabled");
@@ -188,10 +190,19 @@ $(document).on('click','#edugorilla_filter',function(){
 	$(document).on('click','#is_promotional_lead',function() {
   		if ($(this).is(':checked')) {
     		$("#save_details_button").text('Send Details');
+		    $('#listing_type_row').show();
+		    $('#map').show();
   		} else {
-		    //$("#save_details_button").text('Save Details');
+		    $("#save_details_button").text('Save Details');
+		    var listing_type_select_box = document.getElementById('edugorilla_listing_type');
+		    listing_type_select_box.value = "education";
+		    $(listing_type_select_box).trigger("change");
+		    $('#listing_type_row').hide();
+		    $('#map').hide();
   		}
 	});
+	$('#is_promotional_lead').trigger("click");
+	$('#is_promotional_lead').trigger("click");
 
 	$(document).on('change', '.confirmSendPostingDetails', function () {
 		var postingDetails = document.getElementById('edugorilla_institute_datas').value;

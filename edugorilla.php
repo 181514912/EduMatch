@@ -304,7 +304,16 @@ function edugorilla()
 
 		if (empty($query)) $errors['query'] = "Empty";
 
+		/** Default Values */
+		if ( empty( $contact_no ) ) {
+			$contact_no = "N/A";
+		}
 
+		if ( empty( $email ) ) {
+			$email = "N/A";
+		}
+
+		/** Store Leads and alert as necessary */
 		if (empty($errors) ) {
 			$lead_contact_status     = array();
 			$institute_emails_status = array();
@@ -514,7 +523,7 @@ function edugorilla()
 						       value="yes">
 					</td>
 				</tr>
-				<tr>
+				<tr id="listing_type_row">
 					<th>Listing Type<sup><font color="red">*</font></sup></th>
 					<td>
 						<select name="listing_type" id="edugorilla_listing_type">
@@ -599,6 +608,11 @@ function edugorilla()
 								</option>
 
 								<?php
+									foreach ( $vals as $index => $val ) {
+										?>
+										<!-------Use sub locations here to expand locations------>
+										<?php
+									}
 								}
 								else {
 								foreach ($vals as $index => $val) {
@@ -618,7 +632,10 @@ function edugorilla()
 								<?php
 							}
 							?>
-						</select><br><br>
+						</select>
+						<input type="button" class="button button-secondary" id="edugorilla_add_location"
+						       value="Add New Location">
+						<br><br>
 						<input type="button" class="button button-secondary" id="edugorilla_filter"
 						       value="Filter"><br><br>
 
