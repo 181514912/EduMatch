@@ -210,11 +210,14 @@ function allocate_educash_form_page()
         document.getElementById('errmsgf3').innerHTML = "* This field cannot be negative";
 		return false;
     }
-	if (w != 10){
-		document.getElementById('errmsgf4').innerHTML = "* Mobile Number must be of 10 digits";
+	if (w > 10){
+		document.getElementById('errmsgf4').innerHTML = "* Mobile Number must not exceed 10 digits";
 		return false;
 	}
-		
+	if (w < 10){
+		document.getElementById('errmsgf4').innerHTML = "* Not a valid Mobile Number";
+		return false;
+	}	
 	for( i = 0; i < 7; i++ ){
 		if(document.getElementsByClassName('compulsory_popup_field')[i].value == ""){
 			document.getElementsByClassName('compulsory_popup_field_error')[i].innerHTML = "* This field cannot be blank";
