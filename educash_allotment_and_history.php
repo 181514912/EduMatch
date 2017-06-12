@@ -34,6 +34,8 @@ function allocate_educash_form_page()
 					$lastname     = $_POST['client_lastname'];
 					$street       = $_POST['client_street'];
 					$city         = $_POST['client_city'];
+					$state		  = $_POST['client_state'];
+					$companyname  = $_POST['client_companyname'];
 					$postalcode   = $_POST['client_postalcode'];
 					$phone_number = $_POST['client_phone_number'];
 					$country      = $_POST['client_country'];
@@ -43,8 +45,10 @@ function allocate_educash_form_page()
 
 					update_user_meta( $client_ID, 'user_general_first_name', $firstname );
 					update_user_meta( $client_ID, 'user_general_last_name', $lastname );
+					update_user_meta( $client_ID, 'user_general_company_name', $companyname );
 					update_user_meta( $client_ID, 'user_address_street_and_number', $street );
 					update_user_meta( $client_ID, 'user_address_city', $city );
+					update_user_meta( $client_ID, 'user_address_state', $state );
 					update_user_meta( $client_ID, 'user_address_postal_code', $postalcode );
 					update_user_meta( $client_ID, 'user_general_phone', $phone_number );
 					update_user_meta( $client_ID, 'user_address_country', $country );
@@ -83,6 +87,8 @@ function allocate_educash_form_page()
 	           $client_lastname = $all_meta_for_user['user_general_last_name'][0];
 			   if(empty($client_lastname))
 				   $client_lastname = $all_meta_for_user['last_name'][0];
+			   $client_companyname = $all_meta_for_user['user_general_company_name'][0];
+			   $client_state = $all_meta_for_user['user_address_state'][0];
 	           $client_street = $all_meta_for_user['user_address_street_and_number'][0];
 	           $client_city = $all_meta_for_user['user_address_city'][0];
 	           $client_postal_code = $all_meta_for_user['user_address_postal_code'][0];
@@ -262,6 +268,19 @@ function allocate_educash_form_page()
 					<td>
 						<input type = 'text' id = 'clientName22' class = 'popup_input_field' name = 'clientName' value = "<?php echo $_POST['clientName1']; ?>" maxlength = '100'>
 						<span style = 'color:red;' id = 'errmsgf1'></span>
+					</td>
+				</tr>
+				<tr>
+					<th>Name of state<sup><font color="red">*</font></sup></th>
+					<td>
+						<input type = 'text'  name = 'client_state' class = 'compulsory_popup_field' value = "<?php echo $client_state; ?>" maxlength = '100'>
+						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
+					</td>
+					<td></td>
+					<th>Company name<sup><font color="red">*</font></sup></th>
+					<td>
+						<input type = 'text' name = 'client_companyname' class = 'compulsory_popup_field' value = "<?php echo $client_companyname; ?>" maxlength = '100'>
+						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
 					</td>
 				</tr>
 				<tr>
