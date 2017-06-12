@@ -191,6 +191,7 @@ function allocate_educash_form_page()
     var x = document.getElementById("clientName22").value;
     var y = document.getElementById("educash22").value;
     var z = document.getElementById("money22").value;
+	var w = document.getElementById("clientMobile22").value.toString().length;
 	
     if (x == "" && (y == "" || y == 0)) {
         document.getElementById('errmsgf1').innerHTML = "* This field cannot be blank";
@@ -209,13 +210,18 @@ function allocate_educash_form_page()
         document.getElementById('errmsgf3').innerHTML = "* This field cannot be negative";
 		return false;
     }
+	if (w != 10){
+		document.getElementById('errmsgf4').innerHTML = "* Mobile Number must be of 10 digits";
+		return false;
+	}
+		
 	for( i = 0; i < 7; i++ ){
 		if(document.getElementsByClassName('compulsory_popup_field')[i].value == ""){
 			document.getElementsByClassName('compulsory_popup_field_error')[i].innerHTML = "* This field cannot be blank";
 			return false;
 		}
 	}
-	if(x != "" && y != 0 && z >= 0){
+	if(x != "" && y != 0 && z >= 0 && w == 10){
 		return confirm("Are you sure you want to submit this entry ?");
 		}
 }
@@ -284,10 +290,10 @@ function allocate_educash_form_page()
 					</td>
 				</tr>
 				<tr>
-					<th>Phone No.<sup><font color="red">*</font></sup></th>
+					<th>Mobile No.<sup><font color="red">*</font></sup></th>
 					<td>
-						<input type = 'number' name = 'client_phone_number' class = 'compulsory_popup_field' value = "<?php echo $client_phone_number; ?>" maxlength = '100'>
-						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
+						<input type = 'number' id = 'clientMobile22' name = 'client_phone_number' class = 'popup_input_field' value = "<?php echo $client_phone_number; ?>" maxlength = '10'>
+						<span style = 'color:red;' id = 'errmsgf4'></span>
 					</td>
 					<td></td>
 					<th>EduCash (Enter EduCash to be allotted)<sup><font color="red">*</font></sup></th>
