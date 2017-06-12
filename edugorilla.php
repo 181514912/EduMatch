@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Lead Gen
  * Description: A platform to manage all the leads on Website.
- * Version: Alpha release
+ * Version: 1.0
  * Author: EduGorilla Tech Team
- * Author URI: https://github.com/EduGorilla/lead-marketplace
+ * Author URI: https://github.com/EduGorilla/lead-gen
  **/
 
 function create_edugorilla_lead_table()
@@ -66,19 +66,30 @@ function create_edugorilla_lead_table()
 				  					    ) $charset_collate;";
 
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	//Creating a table in cureent wordpress
+	//Creating a table in current wordpress
 	dbDelta($sql1);
 	dbDelta($sql2);
 	dbDelta($sql3);
 	dbDelta($sql4);
 	//dbDelta($sql5);
 
-	//Schema updates
-	$lead_table_add_column_sql = "ALTER TABLE $table_name1 ADD admin_id INT(11) NOT NULL DEFAULT '0' AFTER id;";
-	dbDelta( $lead_table_add_column_sql );
+}
+
+function update_edugorilla_database_schema() {
+	global $wpdb;
+	$lead_details_table        = $wpdb->prefix . 'edugorilla_lead_details';
+	$lead_table_add_column_sql = "ALTER TABLE $lead_details_table ADD admin_id INT(11) NOT NULL DEFAULT '0' AFTER id";
+	$leadDetailsAdmin          = $wpdb->get_row( "SELECT * FROM $lead_details_table" );
+	//Add column if not present.
+	if ( ! isset( $leadDetailsAdmin->admin_id ) ) {
+		$wpdb->query( $lead_table_add_column_sql );
+		//echo "Ran the SQL command : $lead_table_add_column_sql";
+	}
 }
 
 register_activation_hook(__FILE__, 'create_edugorilla_lead_table');
+
+register_activation_hook(__FILE__, 'update_edugorilla_database_schema');
 
 register_activation_hook(__FILE__,'my_email_activation');
 
@@ -240,6 +251,7 @@ function create_edugorilla_menus()
 		'edugorilla-sms-setting',
 		'edugorilla_sms_setting'
 	);
+
 }
 
 include_once plugin_dir_path(__FILE__) . "view.php";
