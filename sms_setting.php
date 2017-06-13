@@ -70,6 +70,37 @@ function edugorilla_sms_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+							  <tr>
+									<th>1. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>2. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+								<tr>
+									<th>3. {name} :</th>
+								<td>Lead's Contact Name</td>
+								</tr>
+								<tr>
+									<th>4. {contact no} :</th>
+								<td>Lead's Contact Number</td>
+								</tr>
+								<tr>
+									<th>5. {query} :</th>
+								<td>Lead's Query</td>
+								</tr>
+	                             <tr>
+									<th>6. {listing_URL} :</th>
+								<td>Client's listing URL</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
@@ -125,6 +156,33 @@ function edugorilla_sms_setting()
                           <td>
                               <input type="hidden" name="sms_setting_form4" value="self">
                               <input type="submit" class="button button-primary" value="Save">
+                          </td>
+                      </tr>
+					  <tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {name} :</th>
+								<td>Lead's Contact Name</td>
+								</tr>
+								<tr>
+									<th>2. {contact no} :</th>
+								<td>Lead's Contact Number</td>
+								</tr>
+								<tr>
+									<th>3. {email address} :</th>
+								<td>Lead's Email Address</td>
+								</tr>
+								<tr>
+									<th>4. {category} :</th>
+								<td>Client's Category</td>
+								</tr>
+								<tr>
+									<th>5. {location} :</th>
+								<td>Client's Location</td>
+								</tr>
+							  </table>
                           </td>
                       </tr>
                   </table>
@@ -183,6 +241,21 @@ function edugorilla_sms_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {ReceivedCount} :</th>
+								<td>EduCash Given to Client</td>
+								</tr>
+								<tr>
+									<th>2. {EduCashCount} :</th>
+								<td>Total EduCash of Client</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
@@ -235,6 +308,21 @@ function edugorilla_sms_setting()
                                 <input type="submit" class="button button-primary" value="Save">
                             </td>
                         </tr>
+						<tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {ReceivedCount} :</th>
+								<td>EduCash Deducted from Client</td>
+								</tr>
+								<tr>
+									<th>2. {EduCashCount} :</th>
+								<td>Total EduCash of Client</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                     </table>
                 </form>
           </div>
