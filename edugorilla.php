@@ -270,6 +270,8 @@ include_once plugin_dir_path(__FILE__) . 'database/class-ClientEmailPref-Helper.
 include_once plugin_dir_path(__FILE__) . 'database/class-UserMeta-Helper.php'; /*Utility class used for dealing with Meta information */
 include_once plugin_dir_path(__FILE__) . "send_email_to_client.php";
 
+include_once plugin_dir_path( __FILE__ ) . "cross_selling/advertisement_template.php";
+
 include_once plugin_dir_path(__FILE__) . "manage_leads.php";
 require_once plugin_dir_path(__FILE__) . 'frontend/taxonomies/class-edugorilla-taxonomy-edu-categories.php';
 
