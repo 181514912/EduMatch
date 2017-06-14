@@ -34,11 +34,11 @@ function form_not_empty(){
 </script>
 
 <div class = "wrap">
- <h1>Enter the Email-Id of the client whose preferences you want to know</h1>
+ <h1>Enter the Email-Id of the subscriber whose preferences you want to know</h1>
   <form method = 'post' onsubmit = 'return form_not_empty()' action = "<?php echo $_SERVER['REQUEST_URI'];?>">
    <table class = "form-table">
 				<tr>
-					<th>Client's Email<sup><font color="red">*</font></sup></th>
+					<th>Subscriber's Email<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' id = 'client_email' name = 'client_email' value = "<?php echo $_POST['client_email']; ?>" placeholder = 'Type email here...' maxlength = '100'>
 						<font color = "red"><span id = 'js_empty_error'></span><?php echo $php_empty_error.$no_client_found; ?></font>
