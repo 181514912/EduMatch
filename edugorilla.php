@@ -90,7 +90,7 @@ function update_edugorilla_database_schema() {
 	add_action( 'show_user_profile', 'users_extra_fields' );
 	add_action( 'edit_user_profile', 'users_extra_fields' );
 	function users_extra_fields(){ 
-    global $user_ID;
+   $user_ID = $_REQUEST['user_id'];
     $com_add = get_user_meta($user_ID, "user_general_company_name");
     if(is_array($com_add))
         $comadd = $com_add[0];
@@ -113,7 +113,7 @@ function update_edugorilla_database_schema() {
 	add_action( 'personal_options_update', 'users_save_fields' );
 	add_action( 'edit_user_profile_update', 'users_save_fields' );
 	function users_save_fields(){
-    global $user_ID;
+    $user_ID = $_REQUEST['user_id'];
 	if ( current_user_can( 'edit_user', $user_ID ) ) {
     update_user_meta($user_ID, "user_general_company_name",$_POST['user_general_company_name']); 
 	}
