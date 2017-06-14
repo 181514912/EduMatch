@@ -14,6 +14,7 @@ function table_for_client()
 											unsubscribe_sms boolean DEFAULT 0,
 											unsubscribe_email boolean DEFAULT 0,
 											unlock_lead boolean DEFAULT 0,
+											is_active boolean DEFAULT 1,
 											related_leads boolean DEFAULT 0,
 											PRIMARY KEY id (id),
 											FOREIGN KEY (id) REFERENCES $users_table(id)
