@@ -154,7 +154,36 @@ class EduCash_Helper
 
 		return $educash_cache['user_educash'];
 	}
+	public function getEduCashEarned($userId)
+	{	
+		$current_user_id = strval($userId);
+  	    global $wpdb;
+		$table_transaction = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
+		$educash_sql       = "SELECT SUM(CASE WHEN transaction>=0 THEN transaction ELSE 0 END) FROM $table_transaction WHERE client_id = $current_user_id";
+		$current_educash   = $wpdb->get_var( $educash_sql );
+		
+		return $current_educash;
+	}
+	public function getEduCashConsumed($userId)
+	{
+		$current_user_id = strval($userId);
+  	    global $wpdb;
+		$table_transaction = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
+		$educash_sql       = "SELECT SUM(CASE WHEN transaction<0 THEN transaction ELSE 0 END) FROM $table_transaction WHERE client_id = $current_user_id";
+		$current_educash   = $wpdb->get_var( $educash_sql );
 
+		return -1*$current_educash;
+	}
+	public function getLastActive($userId)
+	{
+		$current_user_id = strval($userId);
+  	    global $wpdb;
+		$table_transaction = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
+		$educash_sql       = "SELECT MAX(time) FROM $table_transaction WHERE client_id = $current_user_id";
+		$current_educash   = $wpdb->get_var( $educash_sql );
+
+		return $current_educash;
+	}
 }
 
 ?>
