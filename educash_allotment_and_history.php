@@ -48,7 +48,7 @@ function allocate_educash_form_page()
 					update_user_meta( $client_ID, 'user_general_company_name', $companyname );
 					update_user_meta( $client_ID, 'user_address_street_and_number', $street );
 					update_user_meta( $client_ID, 'user_address_city', $city );
-					update_user_meta( $client_ID, 'user_address_state', $state );
+					update_user_meta( $client_ID, 'user_address_county', $state );
 					update_user_meta( $client_ID, 'user_address_postal_code', $postalcode );
 					update_user_meta( $client_ID, 'user_general_phone', $phone_number );
 					update_user_meta( $client_ID, 'user_address_country', $country );
@@ -88,7 +88,7 @@ function allocate_educash_form_page()
 			   if(empty($client_lastname))
 				   $client_lastname = $all_meta_for_user['last_name'][0];
 			   $client_companyname = $all_meta_for_user['user_general_company_name'][0];
-			   $client_state = $all_meta_for_user['user_address_state'][0];
+			   $client_state = $all_meta_for_user['user_address_county'][0];
 	           $client_street = $all_meta_for_user['user_address_street_and_number'][0];
 	           $client_city = $all_meta_for_user['user_address_city'][0];
 	           $client_postal_code = $all_meta_for_user['user_address_postal_code'][0];
@@ -273,7 +273,7 @@ function allocate_educash_form_page()
 						<span style = 'color:red;' class = 'compulsory_popup_field_error'></span>
 					</td>
 					<td></td>
-					<th>Client Email<sup><font color="red">*</font></sup></th>
+					<th>Subscriber Email<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' id = 'clientName22' class = 'popup_input_field' name = 'clientName' value = "<?php echo $_POST['clientName1']; ?>" maxlength = '100'>
 						<span style = 'color:red;' id = 'errmsgf1'></span>
@@ -330,12 +330,12 @@ function allocate_educash_form_page()
     </div>
 </div>
         <div class = "wrap">
-		<h1>Use this form to allocate educash to a client</h1>
+		<h1>Use this form to allocate educash to a subscriber</h1>
 		
 		<form method = 'post' onsubmit = "return validate_allotment_form()" action = "<?php echo $_SERVER['REQUEST_URI'];?>">
 			<table class = "form-table">
 				<tr>
-					<th>Client Email<sup><font color="red">*</font></sup></th>
+					<th>Subscriber Email<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type = 'text' id = 'clientName11' name = 'clientName1' value = "<?php echo $_POST['clientName1']; ?>" placeholder = 'Type email here...' maxlength = '100'>
 						<span style = 'color:red;' id = 'errmsg1'></span>

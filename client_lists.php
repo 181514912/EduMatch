@@ -45,7 +45,7 @@ function subscribers_list()
             <center><h4><?php echo $_REQUEST['success']; ?></h4></center>
                 <table class="widefat fixed" cellspacing="0">
                     <thead>
-					<label>Clients Details</label>
+					<label>Subscribers Details</label>
                     <div class="alignright actions bulkactions">
                         <form name="f10" action="admin.php">
                         	<input type="hidden" name="page" value="client-listing">
@@ -60,6 +60,7 @@ function subscribers_list()
                         	<input id="cb-select-all-1" style="margin-top:16px;" type="checkbox">
                     	</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Name</th>
+						<th id="columnname" class="manage-column column-columnname" scope="col">Status</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Company Name</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Contact No</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Earned</th>
@@ -75,6 +76,7 @@ function subscribers_list()
                         	<input id="cb-select-all-1" style="margin-top:16px;" type="checkbox">
                     	</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Name</th>
+						<th id="columnname" class="manage-column column-columnname" scope="col">Status</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Company Name</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Contact No</th>
                         <th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Earned</th>
@@ -159,6 +161,20 @@ function subscribers_list()
 								?>
                             	</div>
                             </td>
+							<td class="column-columnname">
+							<?php
+									if ($isactive == 0){
+								?>
+                                    Inactive
+								<?php
+									}
+									else {
+								?>
+									Active
+								<?php
+									}
+								?>
+							</td>
                             <td class="column-columnname"><?php echo $client_companyname; ?></td>
                             <td class="column-columnname"><?php echo $client_phone_number; ?></td>
                             <td class="column-columnname"><?php echo $earned; ?></td>
