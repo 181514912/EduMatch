@@ -6,7 +6,7 @@
      if(is_user_logged_in()){
        global $wpdb;
        $url = plugins_url('',__FILE__);
-       $url = str_replace('inc','frontend/css/lead-market-place-frontend.css',$url);
+       $url = str_replace('inc','frontend/css/edu-match-frontend.css',$url);
        function script1()
        {
        	 wp_enqueue_style('select2-css', $url);

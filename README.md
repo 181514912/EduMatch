@@ -84,7 +84,8 @@ The following shortcodes are currently supported by this project :
 The following menus will be available in the admin page after the plugin is installed : 
 
 1. Lead capture form - This is the main form that is used to add new Leads to our system
-1. Sent Leads - This form shows you Promotional/Bought leads that are sent to the customers
+1. Leads - This form shows you Promotional/Bought leads that are sent to the customers
+1. Subscribers - This page lists the details of customers
 1. OTP- This is used for debugging purposes to get the OTP to mobile number
 1. Email Templates - This is to be used by the operations team to edit the template of the email sent to customers
 1. SMS Templates - This is to be used by the operations team to edit the template of the SMS sent to customers
