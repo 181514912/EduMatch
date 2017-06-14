@@ -65,8 +65,7 @@ function subscribers_list()
                         <th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Earned</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Consumed</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Remaining</th>
-                        <th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Category</th>
-						<th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Location</th>
+                        <th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Category-Location</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Last activity date</th>
                     </tr>
                     </thead>
@@ -81,8 +80,7 @@ function subscribers_list()
                         <th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Earned</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Consumed</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Total EduCash Remaining</th>
-                        <th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Category</th>
-						<th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Location</th>
+                        <th id="columnname" class="manage-column column-columnname" scope="col">Subscribed Category-Location</th>
 						<th id="columnname" class="manage-column column-columnname" scope="col">Last activity date</th>
                     </tr>
                     </tfoot>
@@ -93,11 +91,12 @@ function subscribers_list()
 					$client_educash_helper = new EduCash_Helper();
                     foreach ($leads_datas as $leads_data) {
 						# codes...
-						$all_cat = '';
-						$all_loc = '';
+						$all_cat_loc = '';
 						$client_ID_result=$leads_data['id'];
 						$category = explode(',', $leads_data['category']);
 						$location = explode(',', $leads_data['location']);
+						$isactive = $leads_data['is_active'];
+						$count = count($category);
 						$all_meta_for_user = get_user_meta( $client_ID_result );
 						$client_firstname = $all_meta_for_user['user_general_first_name'][0];
 						if(empty($client_firstname))
@@ -112,23 +111,26 @@ function subscribers_list()
 						$client_phone_number = $all_meta_for_user['user_general_phone'][0];
 						if(empty($client_phone_number))
 							$client_phone_number = "N/A";
-						
+						for ($i = 0; $i < $count-1; $i++) {
 									foreach ($categories_list as $cat_value) {
 										//echo $categoryString;
-										if (in_array($cat_value->term_id, $category) ) {
-										$all_cat = $cat_value->name . "," . $all_cat;
+									if (strcmp($cat_value->term_id, $category[$i]) == 0 ) {
+										$all_cat_loc = $all_cat_loc.$cat_value->name;
 										}
 									}
-						if($all_cat == '')
-							$all_cat = "N/A";
+									if($location[$i] == ''){
+										$all_cat_loc = $all_cat_loc." - N/A,<br>";
+										continue;
+									}
 									foreach ($location_list as $loc_value) {
-										if (in_array($loc_value->term_id, $location) ) {
+										if (strcmp($loc_value->term_id, $location[$i]) ==0 ) {
 										# code...
-										$all_loc = $loc_value->name . "," . $all_loc;
+										$all_cat_loc = $all_cat_loc." - ".$loc_value->name . ",<br>" ;
 										}
 									}
-						if($all_loc == '')
-							$all_loc = "N/A";
+						}
+						if($all_cat_loc == '')
+							$all_cat_loc = "N/A";
 						$earned = $client_educash_helper->getEduCashEarned($client_ID_result);
 						$consumed = $client_educash_helper->getEduCashConsumed($client_ID_result);
 						$lastactivity = $client_educash_helper->getLastActive($client_ID_result);
@@ -139,8 +141,22 @@ function subscribers_list()
                                                                         value="<?php echo $client_ID_result; ?>"></th>
                             <td class="column-columnname"><?php echo $client_name; ?>
                                 <div class="row-actions">
-                                    <span><a href="admin.php?page=edugorilla-delete-client&iid=<?php echo $client_ID_result; ?>">
-                                            Delete</a> | </span>
+								<span><a href="admin.php?page=client_preferences_page<?php echo $leads_detail['id']; ?>">
+                                            Edit</a> | </span>
+								<?php
+									if ($isactive == 0){
+								?>
+                                    <span><a href="admin.php?page=edugorilla-activate-client&iid=<?php echo $client_ID_result; ?>">
+                                            Activate</a> | </span>
+								<?php
+									}
+									else {
+								?>
+									<span><a href="admin.php?page=edugorilla-deactivate-client&iid=<?php echo $client_ID_result; ?>">
+                                            Deactivate</a> | </span>
+								<?php
+									}
+								?>
                             	</div>
                             </td>
                             <td class="column-columnname"><?php echo $client_companyname; ?></td>
@@ -148,8 +164,7 @@ function subscribers_list()
                             <td class="column-columnname"><?php echo $earned; ?></td>
 							<td class="column-columnname"><?php echo $consumed; ?></td>
 							<td class="column-columnname"><?php echo $remaining; ?></td>
-							<td class="column-columnname"><?php echo $all_cat; ?></td>
-							<td class="column-columnname"><?php echo $all_loc; ?></td>
+							<td class="column-columnname"><?php echo $all_cat_loc; ?></td>
                             <td class="column-columnname"><?php echo $lastactivity; ?></td>
                         </tr>
                     <?php } ?>
