@@ -86,6 +86,39 @@ function update_edugorilla_database_schema() {
 		//echo "Ran the SQL command : $lead_table_add_column_sql";
 	}
 }
+	//Add custom field to users profile
+	add_action( 'show_user_profile', 'users_extra_fields' );
+	add_action( 'edit_user_profile', 'users_extra_fields' );
+	function users_extra_fields(){ 
+    global $user_ID;
+    $com_add = get_user_meta($user_ID, "user_general_company_name");
+    if(is_array($com_add))
+        $comadd = $com_add[0];
+		
+    ?>
+    <h3>Extra Fields</h3>
+    <table class="form-table">
+        <tr>
+            <th><label for="user_general_company_name">Company Name</label></th>
+            <td><input type="text" id="user_general_company_name" 
+
+            name="user_general_company_name" value="<?php echo esc_attr($comadd); ?>" /><br />
+            <span class="description">Enter company name here.</span></td>
+        </tr>
+    </table>
+    <?php            
+
+        }
+
+	add_action( 'personal_options_update', 'users_save_fields' );
+	add_action( 'edit_user_profile_update', 'users_save_fields' );
+	function users_save_fields(){
+    global $user_ID;
+	if ( current_user_can( 'edit_user', $user_ID ) ) {
+    update_user_meta($user_ID, "user_general_company_name",$_POST['user_general_company_name']); 
+	}
+	}
+	//custom code ends
 
 register_activation_hook(__FILE__, 'create_edugorilla_lead_table');
 
@@ -222,8 +255,8 @@ function create_edugorilla_menus()
 
     add_submenu_page(
 		'edugorilla',
-		'EduMatch | Client Preferences',
-		'Client Preferences',
+		'EduMatch | Subscriber Preferences',
+		'Subscriber Preferences',
 		'read',
 		'client_preferences_page',
 		'client_preferences_page'
