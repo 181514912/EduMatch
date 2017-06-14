@@ -306,6 +306,24 @@ function create_edugorilla_menus()
 		'edugorilla-sms-setting',
 		'edugorilla_sms_setting'
 	);
+
+	add_submenu_page(
+		'edugorilla',
+		'EduMatch | Advert Email',
+		'Advert Email Templates',
+		'manage_options',
+		'edit.php?post_type=cross_sell_email',
+		false
+	);
+
+	add_submenu_page(
+		'edugorilla',
+		'EduMatch | Advert SMS',
+		'Advert SMS Templates',
+		'manage_options',
+		'edit.php?post_type=cross_sell_sms',
+		false
+	);
 }
 
 include_once plugin_dir_path(__FILE__) . "view.php";
@@ -403,23 +421,23 @@ function edugorilla()
 			$adminObject = wp_get_current_user();
 			$adminId     = $adminObject->ID;
 
-			global $wpdb;
-			$result1 = $wpdb->insert(
-				$wpdb->prefix . 'edugorilla_lead_details',
-				array(
-					'admin_id'       => $adminId,
-					'name'           => $name,
-					'contact_no'     => $contact_no,
-					'email'          => $email,
-					'query'          => $query,
-					'is_promotional' => $is_promotional_lead,
-					'listing_type'   => $listing_type,
-					'keyword'        => $keyword,
-					'category_id'    => $category_str,
-					'location_id'    => $location_id,
-					'date_time'      => current_time('mysql')
-				)
+			$lead_detail_values = array(
+				'admin_id'       => $adminId,
+				'name'           => $name,
+				'contact_no'     => $contact_no,
+				'email'          => $email,
+				'query'          => $query,
+				'is_promotional' => $is_promotional_lead,
+				'listing_type'   => $listing_type,
+				'keyword'        => $keyword,
+				'category_id'    => $category_str,
+				'location_id'    => $location_id,
+				'date_time'      => current_time( 'mysql' )
 			);
+
+			global $wpdb;
+			$lead_detail_table = $wpdb->prefix . 'edugorilla_lead_details';
+			$result1           = $wpdb->insert( $lead_detail_table, $lead_detail_values );
 
 			$lead_id    = $wpdb->insert_id;
 			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_str, $location_id, current_time( 'mysql' ), $is_promotional_lead );
@@ -499,7 +517,8 @@ function edugorilla()
 				$lead_contact_status_str = implode( ', ', $lead_contact_status );
 				$success                 = "Saved Successfully and contacted : $lead_contact_status_str";
 			} else {
-				$success = "Unable to save the leads successfully.";
+				$lead_detail_array_values = array_values( $lead_detail_values );
+				$success                  = "Unable to save these values to leads successfully : $lead_detail_array_values";
 			}
 
 			//  foreach($_REQUEST as $var=>$val)$$var="";

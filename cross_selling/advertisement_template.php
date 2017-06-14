@@ -15,7 +15,7 @@ function create_SMS_postTypes() {
 	$labels = array(
 		'name'               => 'Edugorilla Cross Sell SMS',
 		'singular_name'      => 'EduCrossSMS',
-		'menu_name'          => 'EduCrossSell',
+		'menu_name'          => 'EduCrossSellSMS',
 		'name_admin_bar'     => 'PromotionalCrossSell',
 		'add_new'            => 'Add New SMS Template',
 		'add_new_item'       => 'Add New Template',
@@ -37,7 +37,8 @@ function create_SMS_postTypes() {
 		'public'        => true,
 		'rewrite'       => array( 'slug' => 'recipe' ),
 		'has_archive'   => true,
-		'menu_position' => 2,
+		'show_in_menu'  => false,
+		'menu_position' => 1,
 		'menu_icon'     => 'dashicons-carrot',
 		'taxonomies'    => array( 'post_tag', 'category', 'location' ),
 		'supports'      => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' )
@@ -71,6 +72,7 @@ function create_email_postTypes() {
 		'public'        => true,
 		'rewrite'       => array( 'slug' => 'recipe' ),
 		'has_archive'   => true,
+		'show_in_menu'  => false,
 		'menu_position' => 2,
 		'menu_icon'     => 'dashicons-carrot',
 		'taxonomies'    => array( 'post_tag', 'category', 'location' ),
