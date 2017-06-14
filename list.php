@@ -13,7 +13,7 @@ function form_list()
 	if(empty($cpage)) $current_page = 1;
 	else $current_page = $cpage;
     
-    $page_size = 10;
+    $page_size = 30;
     if ($num_rows % $page_size == 0)
         $promotion_total_pages = $num_rows / $page_size;
     else
@@ -75,8 +75,8 @@ function form_list()
         
         <div id="list-tabs">
           <ul>
-            <li><a href="#promotion-sent">Promotion Sent</a></li>
             <li><a href="#leads">Leads</a></li>
+            <li><a href="#promotion-sent">Promotion Sent</a></li>
           </ul>
           <div id="promotion-sent">
             <center><h4><?php echo $_REQUEST['success']; ?></h4></center>
