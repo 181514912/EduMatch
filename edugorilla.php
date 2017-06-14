@@ -191,8 +191,16 @@ function create_edugorilla_menus()
 		'Lead Marketplace | Delete Client',
 		'View Client',
 		'read',
-		'edugorilla-delete-client',
+		'edugorilla-deactivate-client',
 		'edugorilla_client_delete'
+	);
+	add_submenu_page(
+		'',
+		'Lead Marketplace | Active Client',
+		'View Client',
+		'read',
+		'edugorilla-activate-client',
+		'edugorilla_client_active'
 	);
 	add_submenu_page(
 		'edugorilla',
