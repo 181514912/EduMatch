@@ -196,7 +196,7 @@ $(document).on('click','#edugorilla_filter',function(){
   		} else {
 		    $("#save_details_button").text('Save Details');
 		    var listing_type_select_box = document.getElementById('edugorilla_listing_type');
-		    listing_type_select_box.value = "education";
+		    listing_type_select_box.value = "coaching";
 		    $(listing_type_select_box).trigger("change");
 		    $('#listing_type_row').hide();
 		    $('#map').hide();
