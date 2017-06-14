@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Lead Gen
+ * Plugin Name: EduMatch
  * Description: A platform to manage all the leads on Website.
  * Version: 1.0
  * Author: EduGorilla Tech Team
- * Author URI: https://github.com/EduGorilla/lead-gen
+ * Author URI: https://github.com/EduGorilla/EduMatch
  **/
 
 function create_edugorilla_lead_table()
@@ -128,8 +128,8 @@ function create_edugorilla_menus()
 			}
 	}
 	add_object_page(
-		'Lead Marketplace',
-		'Lead Marketplace',
+		'EduMatch',
+		'EduMatch',
 		'read',
 		'edugorilla',
 		'edugorilla'
@@ -137,7 +137,7 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Lead capture form',
+		'EduMatch | Lead capture form',
 		'Lead capture form',
 		'read',
 		'edugorilla',
@@ -146,23 +146,23 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Listing',
-		'Sent Leads',
+		'EduMatch | Listing',
+		'Leads',
 		'read',
 		'Listing',
 		'form_list'
 	);
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Client Listing',
-		'lead subscribers',
+		'EduMatch | Client Listing',
+		'Subscribers',
 		'read',
 		'client-listing',
 		'subscribers_list'
 	);
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | OTP',
+		'EduMatch | OTP',
 		'OTP',
 		'read',
 		'edugorilla-otp',
@@ -171,7 +171,7 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'',
-		'Lead Marketplace | Edit Lead',
+		'EduMatch | Edit Lead',
 		'Promotion Sent Edit',
 		'read',
 		'edugorilla-edit-lead',
@@ -180,7 +180,7 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'',
-		'Lead Marketplace | Delete Lead',
+		'EduMatch | Delete Lead',
 		'View Lead',
 		'read',
 		'edugorilla-delete-lead',
@@ -188,7 +188,7 @@ function create_edugorilla_menus()
 	);
 	add_submenu_page(
 		'',
-		'Lead Marketplace | Delete Client',
+		'EduMatch | Delete Client',
 		'View Client',
 		'read',
 		'edugorilla-deactivate-client',
@@ -196,7 +196,7 @@ function create_edugorilla_menus()
 	);
 	add_submenu_page(
 		'',
-		'Lead Marketplace | Active Client',
+		'EduMatch | Active Client',
 		'View Client',
 		'read',
 		'edugorilla-activate-client',
@@ -204,7 +204,7 @@ function create_edugorilla_menus()
 	);
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Allocate EduCash',
+		'EduMatch | Allocate EduCash',
 		'Allocate EduCash',
 		'read',
 		'allocate_educash_form_page',
@@ -213,7 +213,7 @@ function create_edugorilla_menus()
 
     add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Transaction History',
+		'EduMatch | Transaction History',
 		'Transaction History',
 		'read',
 		'transaction_history_form_page',
@@ -222,7 +222,7 @@ function create_edugorilla_menus()
 
     add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Client Preferences',
+		'EduMatch | Client Preferences',
 		'Client Preferences',
 		'read',
 		'client_preferences_page',
@@ -231,7 +231,7 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Conversion Tables',
+		'EduMatch | Conversion Tables',
 		'Conversion Tables',
 		'read',
 		'conversion-tables',
@@ -240,7 +240,7 @@ function create_edugorilla_menus()
 	
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | '.$label,
+		'EduMatch | '.$label,
 		$label,
 		'edit_posts',
 		'edit-tags.php?taxonomy=' . $name,
@@ -249,7 +249,7 @@ function create_edugorilla_menus()
 
     add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Third Party Settings',
+		'EduMatch | Third Party Settings',
 		'Settings',
 		'manage_options',
 		'edugorilla-settings',
@@ -258,7 +258,7 @@ function create_edugorilla_menus()
 	
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Template of Email',
+		'EduMatch | Template of Email',
 		'Email Templates',
 		'read',
 		'edugorilla-email-setting',
@@ -267,7 +267,7 @@ function create_edugorilla_menus()
 
 	add_submenu_page(
 		'edugorilla',
-		'Lead Marketplace | Template of SMS',
+		'EduMatch | Template of SMS',
 		'SMS Templates',
 		'read',
 		'edugorilla-sms-setting',
@@ -926,7 +926,7 @@ function edugorilla_shortcode_require()
 	wp_enqueue_script('angularAnimate', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js');
 	wp_enqueue_script('domURL', plugins_url('/libs/domurl/domurl.js', __FILE__));
 
-	wp_enqueue_style('custom_css', plugins_url('/frontend/css/lead-market-place-frontend.css', __FILE__), array(), rand(111, 9999), 'all');
+	wp_enqueue_style('custom_css', plugins_url('/frontend/css/edu-match-frontend.css', __FILE__), array(), rand(111, 9999), 'all');
 	wp_enqueue_style('custom_css', plugins_url('/frontend/css/lead-portal-animations.css', __FILE__), array(), rand(111, 9999), 'all');
 
 	wp_enqueue_script(
