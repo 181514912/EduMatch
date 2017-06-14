@@ -152,7 +152,14 @@ function create_edugorilla_menus()
 		'Listing',
 		'form_list'
 	);
-
+	add_submenu_page(
+		'edugorilla',
+		'Lead Marketplace | Client Listing',
+		'lead subscribers',
+		'read',
+		'client-listing',
+		'subscribers_list'
+	);
 	add_submenu_page(
 		'edugorilla',
 		'Lead Marketplace | OTP',
@@ -179,7 +186,14 @@ function create_edugorilla_menus()
 		'edugorilla-delete-lead',
 		'edugorilla_lead_delete'
 	);
-
+	add_submenu_page(
+		'',
+		'Lead Marketplace | Delete Client',
+		'View Client',
+		'read',
+		'edugorilla-delete-client',
+		'edugorilla_client_delete'
+	);
 	add_submenu_page(
 		'edugorilla',
 		'Lead Marketplace | Allocate EduCash',
@@ -251,13 +265,13 @@ function create_edugorilla_menus()
 		'edugorilla-sms-setting',
 		'edugorilla_sms_setting'
 	);
-
 }
 
 include_once plugin_dir_path(__FILE__) . "view.php";
 include_once plugin_dir_path(__FILE__) . "edit.php";
 include_once plugin_dir_path(__FILE__) . "delete.php";
 include_once plugin_dir_path(__FILE__) . "otp.php";
+include_once plugin_dir_path(__FILE__) . "client_lists.php";
 include_once plugin_dir_path(__FILE__) . "sms_setting.php";
 include_once plugin_dir_path(__FILE__) . "educash_allotment_and_history.php";
 include_once plugin_dir_path(__FILE__) . "backend_client_preferences.php";
