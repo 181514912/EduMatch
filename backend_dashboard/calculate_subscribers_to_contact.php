@@ -175,11 +175,16 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 				}
 			}
 		}
-		$eduCashHelper = new EduCash_Helper();
-		$cashAtHand    = $eduCashHelper->getEduCashForCurrentUser();
-		if ( $cashAtHand > 0 ) {
-			$hasMoneyCheck = 1;
+
+		if ( $cea->unlock_lead == 1 ) {
+			//Temporarily not send locked leads to anyone
+			$eduCashHelper = new EduCash_Helper();
+			$cashAtHand    = $eduCashHelper->getEduCashForCurrentUser();
+			if ( $cashAtHand > 0 ) {
+				$hasMoneyCheck = 1;
+			}
 		}
+
 
 		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
 		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 AND $hasMoneyCheck == 1 ) {
