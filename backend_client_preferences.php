@@ -3,6 +3,13 @@ function client_preferences_page(){
 	global $wpdb;
 	$users_table = $wpdb->users;
 	$table_name = $wpdb->prefix.'edugorilla_client_preferences';
+	$iid = $_REQUEST['iid'];
+	if(!empty($iid) && is_numeric($iid)){
+		$email = $wpdb->get_var("SELECT user_email from $users_table WHERE ID = ".$iid);
+		//echo $email;
+		$_POST['client_email']=$email;
+		$_POST['submit']=true;
+	}
 	if(isset($_POST['submit'])){
 		if(empty($_POST['client_email'])){
 			$php_empty_error = "*This field cannot be blank";
@@ -307,12 +314,12 @@ function form_not_empty(){
 	</script>
 
 <div id = "preference_form">
-<h2>Client Preferences</h2>
+<h2>Subscriber Preferences</h2>
 	<form action="" method="post">
 		<p><?php echo $client_success; ?></p>
 		<table>
 		    <tr>
-			    <td>Client's Email</td>
+			    <td>Subscriber's Email</td>
 			    <td><input type = "text" name = "client_email2" value = "<?php echo $client_email.$client_email2; ?>" readonly></td>
 			</tr>
 			<tr>

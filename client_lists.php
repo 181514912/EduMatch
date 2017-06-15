@@ -143,18 +143,18 @@ function subscribers_list()
                                                                         value="<?php echo $client_ID_result; ?>"></th>
                             <td class="column-columnname"><?php echo $client_name; ?>
                                 <div class="row-actions">
-								<span><a href="admin.php?page=client_preferences_page<?php echo $leads_detail['id']; ?>">
+								<span><a href="admin.php?page=client_preferences_page&iid=<?php echo $client_ID_result; ?>" target="_blank">
                                             Edit</a> | </span>
 								<?php
 									if ($isactive == 0){
 								?>
-                                    <span><a href="admin.php?page=edugorilla-activate-client&iid=<?php echo $client_ID_result; ?>">
+                                    <span><a href="admin.php?page=edugorilla-activate-client&iid=<?php echo $client_ID_result; ?>" target="_blank">
                                             Activate</a> | </span>
 								<?php
 									}
 									else {
 								?>
-									<span><a href="admin.php?page=edugorilla-deactivate-client&iid=<?php echo $client_ID_result; ?>">
+									<span><a href="admin.php?page=edugorilla-deactivate-client&iid=<?php echo $client_ID_result; ?>" target="_blank">
                                             Deactivate</a> | </span>
 								<?php
 									}
