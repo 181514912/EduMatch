@@ -97,8 +97,8 @@ function allocate_educash_form_page()
 			   if(empty($client_country))
 				   $client_country = "India";
                }
-		}
-		}
+             }
+		    }
 		}
 		}
 
