@@ -5,10 +5,12 @@ include_once plugin_dir_path( __FILE__ ) . "view.php";
 include_once plugin_dir_path( __FILE__ ) . "edit.php";
 include_once plugin_dir_path( __FILE__ ) . "delete.php";
 include_once plugin_dir_path( __FILE__ ) . "otp.php";
-include_once plugin_dir_path( __FILE__ ) . "client_lists.php";
+include_once plugin_dir_path( __FILE__ ) . "subscriber_list.php";
 include_once plugin_dir_path( __FILE__ ) . "educash_allotment_and_history.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_client_preferences.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/calculate_subscribers_to_contact.php";
+include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_capture_form/lead_capture_form.php";
+include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/sent_leads.php";
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-Lead-Card.php'; /*Cards used for displaying leads */
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-Custom-Lead-API.php'; /*API to be used for displaying leads */
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-EduCash-Helper.php'; /*Utility class used for dealing with EduCash */
@@ -57,7 +59,6 @@ function edugorilla_html_mail_content_type() {
 
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/email_setting.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/sms_setting.php";
-include_once plugin_dir_path( __FILE__ ) . "list.php";
 include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_transaction_history.php";
 include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_educash_payment.php";
 
@@ -70,6 +71,7 @@ function edugorilla_shortcode_require() {
 
 	wp_enqueue_style( 'custom_css', plugins_url( '/frontend/css/edu-match-frontend.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
 	wp_enqueue_style( 'custom_css', plugins_url( '/frontend/css/lead-portal-animations.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
+	wp_enqueue_style( 'custom_css', plugins_url( '/backend_dashboard/lead_capture_form/lead_capture_style.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
 
 	wp_enqueue_script(
 		'angular-leads-script',                         // Handle

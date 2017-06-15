@@ -148,44 +148,44 @@ function create_edugorilla_menus() {
 		}
 	}
 	add_object_page(
-		'EduMatch',
+		'EduMatchMainScreen',
 		'EduMatch',
 		'read',
-		'edugorilla',
-		'edugorilla'
+		'edumatch-main-screen',
+		'create_lead_capture_form'
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Lead capture form',
 		'Lead capture form',
 		'read',
-		'edugorilla',
-		'edugorilla'
+		'edumatch-main-screen',
+		'create_lead_capture_form'
 	);
 
 	add_submenu_page(
-		'edugorilla',
-		'EduMatch | Listing',
-		'Leads',
+		'edumatch-main-screen',
+		'EduMatch | Leads',
+		'Lead Logs',
 		'read',
-		'Listing',
-		'form_list'
+		'sent-lead-logs',
+		'log_sent_leads'
 	);
 	add_submenu_page(
-		'edugorilla',
-		'EduMatch | Client Listing',
+		'edumatch-main-screen',
+		'EduMatch | Subscriber Listing',
 		'Subscribers',
 		'read',
 		'client-listing',
 		'subscribers_list'
 	);
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | OTP',
 		'OTP',
 		'read',
-		'edugorilla-otp',
+		'edugorilla-verify-sms',
 		'edugorilla_otp'
 	);
 
@@ -223,7 +223,7 @@ function create_edugorilla_menus() {
 		'edugorilla_client_active'
 	);
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Allocate EduCash',
 		'Allocate EduCash',
 		'read',
@@ -232,7 +232,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Transaction History',
 		'Transaction History',
 		'read',
@@ -241,7 +241,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'client-listing',
 		'EduMatch | Subscriber Preferences',
 		'Subscriber Preferences',
 		'read',
@@ -250,7 +250,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Conversion Tables',
 		'Conversion Tables',
 		'read',
@@ -259,7 +259,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | ' . $label,
 		$label,
 		'edit_posts',
@@ -268,7 +268,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Third Party Settings',
 		'Settings',
 		'manage_options',
@@ -277,7 +277,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Template of Email (Leads)',
 		'Lead Email Templates',
 		'read',
@@ -286,7 +286,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Template of SMS (Leads)',
 		'Lead SMS Templates',
 		'read',
@@ -295,7 +295,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Advert Email',
 		'Cross Sell Emails',
 		'manage_options',
@@ -304,7 +304,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'edugorilla',
+		'edumatch-main-screen',
 		'EduMatch | Advert SMS',
 		'Cross Sell SMS',
 		'manage_options',

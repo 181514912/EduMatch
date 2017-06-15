@@ -17,7 +17,7 @@
     	if($pl_delete_form == "self")
         {
 	        $wpdb->delete($wpdb->prefix . 'edugorilla_lead_details', array('id' => $iid));
-        	wp_redirect(admin_url('admin.php?page=Listing', 'http')); 
+	        wp_redirect( admin_url( 'admin.php?page=sent-lead-logs', 'http' ) );
         	exit;
         }
 ?>
@@ -32,7 +32,8 @@
 					<th>Do you want to delete <?php echo $lead_name; ?> ?</th>
 				</tr>
             	<tr>
-                		<td><input type="submit"  class="button button-primary" value="Yes">   <a href="admin.php?page=Listing" class="button button-primary">No</a></td>
+		            <td><input type="submit" class="button button-primary" value="Yes"><a
+				            href="admin.php?page=sent-lead-logs" class="button button-primary">No</a></td>
             	</tr>
 				
 			</tbody>
