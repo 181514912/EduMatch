@@ -1,13 +1,29 @@
 <?php
 function log_sent_leads()
 {
+
     global $wpdb;
 //Promotion sent Listing
-	$table_name  = $wpdb->prefix . 'edugorilla_lead_contact_log ';
-	$count_query = $wpdb->get_results( "SELECT * FROM $table_name" );
-	$num_rows    = count( $count_query ); //PHP count()
+    $table_name  = $wpdb->prefix . 'edugorilla_lead_contact_log ';
+    $search_from_date_form = $_POST['search_from_date_form'];
+    $cpage       = $_POST['cpage'];
+	if(isset($_POST['btnsubmit'])){
+		$cpage=null;}
+	else{
+	$cpage       = $_POST['cpage'];
+	}
 
-	$cpage       = $_REQUEST['cpage'];
+	if ( $search_from_date_form == "self" && !empty($_POST['edugorilla_list_date_from']) && !empty($_POST['edugorilla_list_date_to'])) {
+		$edugorilla_list_date_from = $_POST['edugorilla_list_date_from'];
+		$edugorilla_list_date_to   = $_POST['edugorilla_list_date_to'];
+		$q= "select * from $table_name WHERE (date_time BETWEEN '$edugorilla_list_date_from%' AND '$edugorilla_list_date_to%')";
+		
+    } else {
+		$q = "select * from $table_name";
+    }
+	$count_query = $wpdb->get_results($q);
+	$num_rows    = count( $count_query ); //PHP count()
+	
     $list_caller = $_REQUEST['list_caller'];
 
 	if ( empty( $cpage ) ) {
@@ -48,10 +64,8 @@ function log_sent_leads()
 
 
 
-
     global $wpdb;
-    $search_from_date_form = $_POST['search_from_date_form'];
-	if ( $search_from_date_form == "self" ) {
+	if ( $search_from_date_form == "self" && !empty($_POST['edugorilla_list_date_from']) && !empty($_POST['edugorilla_list_date_to'])) {
 		$edugorilla_list_date_from = $_POST['edugorilla_list_date_from'];
 		$edugorilla_list_date_to   = $_POST['edugorilla_list_date_to'];
 		$q                         = "select * from {$wpdb->prefix}edugorilla_lead_contact_log WHERE (date_time BETWEEN '$edugorilla_list_date_from%' AND '$edugorilla_list_date_to%') order by id desc limit $index, $page_size";
@@ -93,20 +107,19 @@ function log_sent_leads()
 					<thead>
 
 					<form method="post">
-						<label>Date From</label><input name="edugorilla_list_date_from" id="edugorilla_list_date_from">
-						<label>Date To</label><input name="edugorilla_list_date_to" id="edugorilla_list_date_to">
+						<label>Date From</label><input name="edugorilla_list_date_from" id="edugorilla_list_date_from" value="<?php echo $edugorilla_list_date_from; ?>">
+						<label>Date To</label><input name="edugorilla_list_date_to" id="edugorilla_list_date_to" value="<?php echo $edugorilla_list_date_to; ?>">
 						<input type="hidden" name="search_from_date_form" value="self">
-						<input type="submit" class="button action" value="OK">
-					</form>
+						<input type="submit" name="btnsubmit" class="button action" value="OK">
+					
 					<div class="alignright actions bulkactions">
-						<form name="f10" action="admin.php">
-							<input type="hidden" name="page" value="sent-lead-logs">
 							<label>Page No. </label>
 							<select name="cpage" onchange='this.form.submit();'>
 								<?php echo $p; ?>
 							</select>
-						</form>
+						
 					</div>
+					</form>
 					<tr>
 						<th id="cb" class="manage-column column-cb check-column" scope="col">
 							<input id="cb-select-all-1" style="margin-top:16px;" type="checkbox">
