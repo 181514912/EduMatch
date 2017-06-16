@@ -69,14 +69,19 @@ function create_edugorilla_lead_table() {
 
 function update_edugorilla_database_schema() {
 	global $wpdb;
-	$lead_details_table        = $wpdb->prefix . 'edugorilla_lead_details';
-	$lead_table_add_column_sql = "ALTER TABLE $lead_details_table ADD admin_id INT(11) NOT NULL DEFAULT '0' AFTER id";
-	$leadDetailsAdmin          = $wpdb->get_row( "SELECT * FROM $lead_details_table" );
+//	$lead_details_table        = $wpdb->prefix . 'edugorilla_lead_details';
+//	$lead_table_add_column_sql = "ALTER TABLE $lead_details_table ADD admin_id INT(11) NOT NULL DEFAULT '0' AFTER id";
+//	$leadDetailsAdmin          = $wpdb->get_row( "SELECT * FROM $lead_details_table" );
 	//Add column if not present.
-	if ( ! isset( $leadDetailsAdmin->admin_id ) ) {
-		$wpdb->query( $lead_table_add_column_sql );
-		//echo "Ran the SQL command : $lead_table_add_column_sql";
-	}
+//	if ( ! isset( $leadDetailsAdmin->admin_id ) ) {
+//		$wpdb->query( $lead_table_add_column_sql );
+//		echo "Ran the SQL command : $lead_table_add_column_sql";
+//	}
+
+	//Change default value of a column.
+	$client_pref_table              = $wpdb->prefix . 'edugorilla_client_preferences';
+	$unlock_lead_default_column_sql = "ALTER TABLE $client_pref_table ADD DEFAULT 1 FOR unlock_lead";
+	$wpdb->query( $unlock_lead_default_column_sql );
 }
 
 //Add custom field to users profile
@@ -241,7 +246,7 @@ function create_edugorilla_menus() {
 	);
 
 	add_submenu_page(
-		'client-listing',
+		'edumatch-main-screen',
 		'EduMatch | Subscriber Preferences',
 		'Subscriber Preferences',
 		'read',
