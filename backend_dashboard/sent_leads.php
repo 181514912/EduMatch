@@ -100,7 +100,7 @@ function log_sent_leads()
 					</form>
 					<div class="alignright actions bulkactions">
 						<form name="f10" action="admin.php">
-							<input type="hidden" name="page" value="Listing">
+							<input type="hidden" name="page" value="sent-lead-logs">
 							<label>Page No. </label>
 							<select name="cpage" onchange='this.form.submit();'>
 								<?php echo $p; ?>
@@ -198,7 +198,7 @@ function log_sent_leads()
 					<thead>
 					<div class="alignright actions bulkactions">
 						<form name="f9" action="admin.php">
-							<input type="hidden" name="page" value="Listing">
+							<input type="hidden" name="page" value="sent-lead-logs">
 							<label>Page No. </label>
 							<select name="lead_current_page" onchange='this.form.submit();'>
 								<?php echo $lead_sent_p; ?>
