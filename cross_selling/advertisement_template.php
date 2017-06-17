@@ -41,7 +41,7 @@ function create_SMS_postTypes() {
 		'menu_position' => 1,
 		'menu_icon'     => 'dashicons-carrot',
 		'taxonomies'    => array( 'post_tag', 'category', 'location' ),
-		'supports'      => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' )
+		'supports'      => array( 'title', 'editor', 'thumbnail' )
 	);
 	register_post_type( 'cross_sell_sms', $args );
 }
@@ -76,7 +76,7 @@ function create_email_postTypes() {
 		'menu_position' => 2,
 		'menu_icon'     => 'dashicons-carrot',
 		'taxonomies'    => array( 'post_tag', 'category', 'location' ),
-		'supports'      => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' )
+		'supports'      => array( 'title', 'editor', 'thumbnail' )
 	);
 	register_post_type( 'cross_sell_email', $args );
 }
@@ -269,4 +269,5 @@ function action_custom_columns_content ( $column_id, $post_id ) {
 
    }
 }
+
 ?>
