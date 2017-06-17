@@ -1,9 +1,7 @@
 <?php
 
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/plugin_hooks.php";
-include_once plugin_dir_path( __FILE__ ) . "view.php";
-include_once plugin_dir_path( __FILE__ ) . "edit.php";
-include_once plugin_dir_path( __FILE__ ) . "delete.php";
+include_once plugin_dir_path( __FILE__ ) . "manipulate_leads.php";
 include_once plugin_dir_path( __FILE__ ) . "otp.php";
 include_once plugin_dir_path( __FILE__ ) . "subscriber_list.php";
 include_once plugin_dir_path( __FILE__ ) . "educash_allotment_and_history.php";

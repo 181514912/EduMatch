@@ -94,12 +94,12 @@ function log_sent_leads()
 	}
     ?>
 	<div class="wrap">
-		<h1>Leads <a href="admin.php?page=edugorilla" class="button button-primary">Add</a></h1>
+		<h1>Logs of Leads Sent till now <a href="admin.php?page=edugorilla" class="button button-primary">Add</a></h1>
 
 		<div id="list-tabs">
 			<ul>
-				<li><a href="#leads">Leads</a></li>
-				<li><a href="#promotion-sent">Promotion Sent</a></li>
+				<li><a href="#leads">Sent Leads</a></li>
+				<li><a href="#promotion-sent">Sent Promotions To</a></li>
 			</ul>
 			<div id="promotion-sent">
 				<center><h4><?php echo $_REQUEST['success']; ?></h4></center>
@@ -288,7 +288,7 @@ function log_sent_leads()
 							<td class="column-columnname"><?php echo $leads_detail['name']; ?>
 								<div class="row-actions">
                             	 	<span><a
-			                                href="admin.php?page=edugorilla-edit-lead&iid=<?php echo $leads_detail['id']; ?>">
+			                                href="admin.php?page=edumatch-main-screen&screenType=leadEditOption&iid=<?php echo $leads_detail['id']; ?>">
                                             Edit</a> | </span>
 									<span><a
 											href="admin.php?page=edugorilla-delete-lead&iid=<?php echo $leads_detail['id']; ?>">

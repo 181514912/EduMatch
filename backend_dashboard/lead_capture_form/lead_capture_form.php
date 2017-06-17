@@ -7,10 +7,29 @@
  */
 
 function create_lead_capture_form() {
-	$caller = $_POST['caller'];
+	$caller = $_POST['lead_capturing_form'];
+	$scType = $_REQUEST['screenType'];
 
-	if ( $caller == "self" ) {
-		/** Get Data From Form **/
+	if ( $scType == "leadEditOption" ) {
+		//Stuff to initialize when using this as edit screen.
+		$lead_id = $_REQUEST['iid'];
+		global $wpdb;
+		$q            = "select * from {$wpdb->prefix}edugorilla_lead_details where id=$lead_id";
+		$lead_details = $wpdb->get_results( $q, ARRAY_A );
+
+		foreach ( $lead_details as $lead_detail ) {
+			$name                = $lead_detail['name'];
+			$contact_no          = $lead_detail['contact_no'];
+			$email               = $lead_detail['email'];
+			$query               = $lead_detail['query'];
+			$is_promotional_lead = $lead_detail['is_promotional'];
+			$listing_type        = $lead_detail['listing_type'];
+			$category_ids        = explode( ",", $lead_detail['category_id'] );
+			$keyword             = $lead_detail['keyword'];
+			$location            = $lead_detail['location_id'];
+		}
+	} else if ( $caller == "selfFormSubmit" ) {
+		/** Form was just submitted using submit button, so get Data from the Form **/
 		$name                          = $_POST['name'];
 		$contact_no                    = $_POST['contact_no'];
 		$keyword                       = $_POST['keyword'];
@@ -180,6 +199,15 @@ function create_lead_capture_form() {
 			if ( $result1 ) {
 				$lead_contact_status_str = implode( ', ', $lead_contact_status );
 				$success                 = "Saved Successfully and contacted : $lead_contact_status_str";
+				$name                    = null;
+				$contact_no              = null;
+				$email                   = null;
+				$query                   = null;
+				$is_promotional_lead     = null;
+				$listing_type            = null;
+				$category_ids            = null;
+				$keyword                 = null;
+				$location                = null;
 			} else {
 				$lead_detail_array_values = array_values( $lead_detail_values );
 				$success                  = "Unable to save these values to leads successfully : $lead_detail_array_values";
@@ -195,11 +223,7 @@ function create_lead_capture_form() {
 		if ( $success ) {
 			?>
 			<div class="updated notice">
-				<p><?php echo $success;
-					$name       = null;
-					$contact_no = null;
-					$email      = null;
-					$query      = null; ?></p>
+				<p><?php echo $success; ?></p>
 			</div>
 			<?php
 		}
@@ -250,9 +274,7 @@ function create_lead_capture_form() {
 					<td>
 						<select name="listing_type" id="edugorilla_listing_type">
 							<option value="">Select</option>
-							<option value="loan">Loan (0)</option>
-							<option value="course">Course (31)</option>
-							<option value="coaching">Coaching and Traing Institutes (56635)</option>
+							<option value="coaching">Coaching and Training Institutes (-1)</option>
 						</select>
 					</td>
 				</tr>
@@ -271,22 +293,34 @@ function create_lead_capture_form() {
 
 							foreach ( $temparray as $var => $vals ) {
 								?>
-
-								<option value="<?php echo $var; ?>">
-									<?php
-									$d = get_term_by( 'id', $var, 'listing_categories' );
-									echo $d->name;
-									?>
-								</option>
-
+								<?php if ( in_array( $var, $category_ids ) ) { ?>
+									<option value="<?php echo $var; ?>" selected>
+										<?php
+										$d = get_term_by( 'id', $var, 'listing_categories' );
+										echo $d->name;
+										?>
+									</option>
+								<?php } else { ?>
+									<option value="<?php echo $var; ?>">
+										<?php
+										$d = get_term_by( 'id', $var, 'listing_categories' );
+										echo $d->name;
+										?>
+									</option>
+								<?php } ?>
 								<?php
 								foreach ( $vals as $index => $val ) {
 									?>
-
-									<option value="<?php echo $index; ?>">
-										<?php echo $val; ?>
-									</option>
-									<?php
+									<?php if ( in_array( $index, $category_ids ) ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo $val; ?>
+										</option>
+										<?php
+									}
 								}
 								?>
 
@@ -319,35 +353,36 @@ function create_lead_capture_form() {
 							}
 
 							foreach ( $templocationarray as $var => $vals ) {
-								if ( $var != 0 ) {
-									?>
 
+								?>
+								<?php if ( $var == $location ) { ?>
+									<option value="<?php echo $var; ?>" selected>
+										<?php
+										$d = get_term_by( 'id', $var, 'locations' );
+										echo $d->name;
+										?>
+									</option>
+								<?php } else { ?>
 									<option value="<?php echo $var; ?>">
 										<?php
 										$d = get_term_by( 'id', $var, 'locations' );
 										echo $d->name;
 										?>
 									</option>
-
+								<?php } ?>
+								<?php
+								foreach ( $vals as $index => $val ) {
+									?>
+									<?php if ( $location == $index ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo "->" . $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo "->" . $val; ?>
+										</option>
+									<?php } ?>
 									<?php
-									foreach ( $vals as $index => $val ) {
-										?>
-										<!-------Use sub locations here to expand locations------>
-										<?php
-									}
-								} else {
-									foreach ( $vals as $index => $val ) {
-										if ( ! array_key_exists( $index, $templocationarray ) ) {
-
-											?>
-
-											<option value="<?php echo $index; ?>">
-												<?php echo $val; ?>
-											</option>
-
-											<?php
-										}
-									}
 								}
 								?>
 
@@ -369,7 +404,7 @@ function create_lead_capture_form() {
 						<input type="hidden" id="edugorilla_institute_datas" name="edugorilla_institute_datas_name">
 						<input type="hidden" id="edugorilla_subscibed_instant_datas"
 						       name="edugorilla_subscibed_instant_datas_name">
-						<input type="hidden" name="caller" value="self">
+						<input type="hidden" name="lead_capturing_form" value="selfFormSubmit">
 					</th>
 					<td>
 
