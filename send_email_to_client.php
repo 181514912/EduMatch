@@ -177,6 +177,26 @@ function set_lead_data( $leadId, $name, $contact_no, $category, $email, $locatio
 		"{location}"      => $location
 	);
 }
+
+//function to send email to lead
+function send_email_to_lead($email, $subject, $body){
+	add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
+		
+		if ( ! empty( $email ) ) {
+			$headers                                     = array( 'Content-Type: text/html; charset=UTF-8' );
+			$result = wp_mail( $email, $subject, $body, $headers );
+		}
+		remove_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
+	return $result;
+}
+//function to send sms to lead
+function send_sms_to_lead($contact_no, $msg){
+	include_once plugin_dir_path( __FILE__ ) . "api/gupshup.api.php";
+	$credentials = get_option( "ghupshup_credentials" );
+	$result = send_sms( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
+	return $result;
+}
+
 function str_starts_with($haystack, $needle)
 {
 	if(!is_string($haystack)) {
