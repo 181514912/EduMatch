@@ -146,9 +146,10 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 //	}
 //	echo "..Got Location : $location_ids";
 	foreach ( $client_email_addresses as $cea ) {
-		$categoryCheck = 0;
-		$locationCheck = 0;
-		$hasMoneyCheck = 0;
+		$categoryCheck        = 0;
+		$locationCheck        = 0;
+		$hasMoneyCheck        = 0;
+		$stillSubscribedCheck = 1;
 		if ( empty( $cea->category ) ) {
 			$categoryCheck = 1;
 		} else {
@@ -185,9 +186,12 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 			}
 		}
 
+		if ( $cea->unsubscribe_email != 0 && $cea->unsubscribe_sms != 0 ) {
+			$stillSubscribedCheck = 0;
+		}
 
 		//echo "<h2>$cea->preferences AND $cea->category($categoryCheck) AND  $cea->location($locationCheck) for $cea->email_id!</h2>";
-		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 AND $hasMoneyCheck == 1 ) {
+		if ( preg_match( '/Instant_Notifications/', $cea->preferences ) AND $categoryCheck == 1 AND $locationCheck == 1 AND $hasMoneyCheck == 1 AND $stillSubscribedCheck == 1 ) {
 			//echo $cea->client_name;
 			$contactObject['userId']          = $cea->user_id;
 			$contactObject['userName']        = $cea->user_name;

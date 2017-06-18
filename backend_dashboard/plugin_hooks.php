@@ -21,7 +21,7 @@ function create_edugorilla_lead_table() {
                                         ) $charset_collate;";
 
 
-	$table_name2 = $wpdb->prefix . 'edugorilla_lead_contact_log'; //Logs when the leads were contacted.
+	$table_name2 = $wpdb->prefix . 'edugorilla_lead_contact_log'; //Logs when the subscribers were contacted.
 	$sql2        = "CREATE TABLE $table_name2 (
                                             id int(11) NOT NULL AUTO_INCREMENT,
                                             contact_log_id int(11) NOT NULL,
@@ -32,9 +32,19 @@ function create_edugorilla_lead_table() {
                                             PRIMARY KEY id (id)
                                         ) $charset_collate;";
 
+	$cross_sell_log_table = $wpdb->prefix . 'edugorilla_crosssell_contact_log'; //Logs when the leads were contacted.
+	$sql3                 = "CREATE TABLE $cross_sell_log_table (
+                                            id int(11) NOT NULL AUTO_INCREMENT,
+                                            lead_id int(11)  DEFAULT 0 NOT NULL,
+                                            email_status text NOT NULL,
+                                            sms_status text NOT NULL,
+                                            date_time varchar(200) NOT NULL,
+                                            PRIMARY KEY id (id)
+                                        ) $charset_collate;";
+
 
 	$table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions'; //Transaction history for EduCash.
-	$sql3        = "CREATE TABLE $table_name3 (
+	$sql4        = "CREATE TABLE $table_name3 (
                                             id mediumint(9) NOT NULL AUTO_INCREMENT,
                                             admin_id int(9) NOT NULL,
                                             client_id int(9) NOT NULL,
@@ -47,7 +57,7 @@ function create_edugorilla_lead_table() {
                                         ) $charset_collate;";
 
 	$table_name4 = $wpdb->prefix . 'edugorilla_lead_client_mapping'; //Mapping between client id and lead id
-	$sql4        = "CREATE TABLE $table_name4 (
+	$sql5        = "CREATE TABLE $table_name4 (
 				                            id int(15) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 											client_id int(15) NOT NULL,
 											lead_id DEFAULT 0 int(15) NOT NULL,
@@ -63,7 +73,7 @@ function create_edugorilla_lead_table() {
 	dbDelta( $sql2 );
 	dbDelta( $sql3 );
 	dbDelta( $sql4 );
-	//dbDelta($sql5);
+	dbDelta( $sql5 );
 
 }
 
@@ -82,6 +92,11 @@ function update_edugorilla_database_schema() {
 	$client_pref_table              = $wpdb->prefix . 'edugorilla_client_preferences';
 	$unlock_lead_default_column_sql = "ALTER TABLE $client_pref_table ADD DEFAULT 1 FOR unlock_lead";
 	$wpdb->query( $unlock_lead_default_column_sql );
+
+//	$table_name2 = $wpdb->prefix . 'edugorilla_lead_contact_log';
+//	$wpdb->query( "DROP TABLE IF EXISTS $table_name2" );
+
+	create_edugorilla_lead_table();
 }
 
 //Add custom field to users profile
@@ -119,9 +134,7 @@ function users_save_fields() {
 }
 
 //custom code ends
-
-register_activation_hook( __FILE__, 'create_edugorilla_lead_table' );
-
+//register_activation_hook( __FILE__, 'create_edugorilla_lead_table' );
 register_activation_hook( __FILE__, 'update_edugorilla_database_schema' );
 
 function edugorilla_lead_plugin_uninstall() {

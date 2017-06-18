@@ -121,6 +121,11 @@ function send_mail_without_unlock( $edugorilla_email_subject, $edugorilla_email_
 	global $wpdb;
 	$institute_emails_status = [];
 	$institute_sms_status    = [];
+
+	$client_pref_database = new ClientEmailPref_Helper();
+	$institute_emails     = $client_pref_database->removeUnsubscribedEmails( $institute_emails );
+	$institute_phones     = $client_pref_database->removeUnsubscribedSMSs( $institute_phones );
+
 	//echo "Sending mails to id : " . implode( ";", $institute_emails );
 	foreach ( $institute_emails as $institute_email ) {
 		add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
@@ -195,6 +200,54 @@ function send_sms_to_lead($contact_no, $msg){
 	$credentials = get_option( "ghupshup_credentials" );
 	$result = send_sms( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
 	return $result;
+}
+
+//function to send sms to lead
+function contact_lead_for_cross_sell( $lead_id, $category_str, $location_id, $lead_email_id, $lead_phone_no ) {
+	global $wpdb;
+	$custom_post_type_for_email = 'crossSellEmails';
+	$custom_post_type_for_sms   = 'crossSellSMSs';
+	$results_email              = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_email' and post_status = 'publish'", $custom_post_type_for_email ), ARRAY_A );
+	$results_sms                = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_sms' and post_status = 'publish'", $custom_post_type_for_sms ), ARRAY_A );
+	if ( ! empty( $results_email ) ) {
+		$cat_array = explode( ",", $category_str );
+		#code...
+		foreach ( $results_email as $index => $post ) {
+			//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
+			$check_category = explode( ",", get_post_meta( $post['ID'], "categories", true ) );
+			$check_location = get_post_meta( $post['ID'], "location", true );
+			$cat_diff       = array_diff( $cat_array, $check_category );
+			if ( empty( $cat_diff ) && ( $check_location === $location_id ) ) {
+				$result3 = send_email_to_lead( $lead_email_id, $post['post_title'], $post['post_content'] );
+				break;
+			}
+		}
+	}
+	if ( ! empty( $results_sms ) ) {
+		$cat_array = explode( ",", $category_str );
+		#code...
+		foreach ( $results_sms as $index => $post ) {
+			//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
+			$check_category = explode( ",", get_post_meta( $post['ID'], "categories", true ) );
+			$check_location = get_post_meta( $post['ID'], "location", true );
+			$cat_diff       = array_diff( $cat_array, $check_category );
+			if ( empty( $cat_diff ) && ( $check_location === $location_id ) ) {
+				$result4 = send_sms_to_lead( $lead_phone_no, $post['post_content'] );
+				break;
+			}
+		}
+	}
+
+	$cross_sell_log_table = $wpdb->prefix . 'edugorilla_crosssell_contact_log';
+	$wpdb->insert(
+		$cross_sell_log_table,
+		array(
+			'lead_id'      => $lead_id,
+			'email_status' => json_encode( $result3 ),
+			'sms_status'   => json_encode( $result4 ),
+			'date_time'    => current_time( 'mysql' )
+		)
+	);
 }
 
 function str_starts_with($haystack, $needle)

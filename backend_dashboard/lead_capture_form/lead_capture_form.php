@@ -192,8 +192,6 @@ function create_lead_capture_form() {
 
 					$institute_emails            = explode( ",", $institute_data_applicable->emails );
 					$institute_phones            = explode( ",", $institute_data_applicable->phones );
-					$client_pref_database        = new ClientEmailPref_Helper();
-					$institute_emails            = $client_pref_database->removeUnsubscribedEmails( $institute_emails );
 					$log_post_id                 = $institute_data_applicable->post_id;
 					$should_send_posting_details = $institute_data_applicable->sendPostDetails;
 					if ( $should_send_posting_details ) {
@@ -204,39 +202,7 @@ function create_lead_capture_form() {
 			}
             
             //Sending mail and sms to lead
-			 global $wpdb;
-			$custom_post_type = 'recipe';
-			$results_email = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_email' and post_status = 'publish'", $custom_post_type ), ARRAY_A );
-			$results_sms = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_sms' and post_status = 'publish'", $custom_post_type ), ARRAY_A );
-			if ( !empty($results_email )){
-				$cat_array = explode(",",$category_str);
-				#code...
-				foreach( $results_email as $index => $post ) {
-				//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
-				$check_category = explode(",",get_post_meta($post['ID'],"categories",true));
-				$check_location = get_post_meta($post['ID'],"location",true);
-				$cat_diff = array_diff($cat_array, $check_category);
-				if(empty($cat_diff) && ($check_location === $location_id)){
-					$result3 = send_email_to_lead($email, $post['post_title'], $post['post_content']);
-					break;
-				}
-				}	
-			}
-			if ( !empty($results_sms )){
-				$cat_array = explode(",",$category_str);
-				#code...
-				foreach( $results_sms as $index => $post ) {
-				//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
-				$check_category = explode(",",get_post_meta($post['ID'],"categories",true));
-				$check_location = get_post_meta($post['ID'],"location",true);
-				$cat_diff = array_diff($cat_array, $check_category);
-				if(empty($cat_diff) && ($check_location === $location_id)){
-					$result4 = send_sms_to_lead($contact_no, $post['post_content']);
-					break;
-				}
-				}
-			}
-			//Sending mail and sms to lead ends
+			contact_lead_for_cross_sell( $lead_id, $category_str, $location_id, $email, $contact_no );
 
 			if ( $result1 ) {
 				$lead_contact_status_str = implode( ', ', $lead_contact_status );

@@ -35,7 +35,7 @@ function create_SMS_postTypes() {
 	$args = array(
 		'labels'        => $labels,
 		'public'        => true,
-		'rewrite'       => array( 'slug' => 'recipe' ),
+		'rewrite'       => array( 'slug' => 'crossSellSMSs' ),
 		'has_archive'   => true,
 		'show_in_menu'  => false,
 		'menu_position' => 1,
@@ -70,7 +70,7 @@ function create_email_postTypes() {
 	$args = array(
 		'labels'        => $labels,
 		'public'        => true,
-		'rewrite'       => array( 'slug' => 'recipe' ),
+		'rewrite'       => array( 'slug' => 'crossSellEmails' ),
 		'has_archive'   => true,
 		'show_in_menu'  => false,
 		'menu_position' => 2,
