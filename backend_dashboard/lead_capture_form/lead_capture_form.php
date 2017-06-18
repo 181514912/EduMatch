@@ -202,6 +202,41 @@ function create_lead_capture_form() {
 					}
 				}
 			}
+            
+            //Sending mail and sms to lead
+			 global $wpdb;
+			$custom_post_type = 'recipe';
+			$results_email = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_email' and post_status = 'publish'", $custom_post_type ), ARRAY_A );
+			$results_sms = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_content FROM {$wpdb->posts} WHERE post_type = 'cross_sell_sms' and post_status = 'publish'", $custom_post_type ), ARRAY_A );
+			if ( !empty($results_email )){
+				$cat_array = explode(",",$category_str);
+				#code...
+				foreach( $results_email as $index => $post ) {
+				//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
+				$check_category = explode(",",get_post_meta($post['ID'],"categories",true));
+				$check_location = get_post_meta($post['ID'],"location",true);
+				$cat_diff = array_diff($cat_array, $check_category);
+				if(empty($cat_diff) && ($check_location === $location_id)){
+					$result3 = send_email_to_lead($email, $post['post_title'], $post['post_content']);
+					break;
+				}
+				}	
+			}
+			if ( !empty($results_sms )){
+				$cat_array = explode(",",$category_str);
+				#code...
+				foreach( $results_sms as $index => $post ) {
+				//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
+				$check_category = explode(",",get_post_meta($post['ID'],"categories",true));
+				$check_location = get_post_meta($post['ID'],"location",true);
+				$cat_diff = array_diff($cat_array, $check_category);
+				if(empty($cat_diff) && ($check_location === $location_id)){
+					$result4 = send_sms_to_lead($contact_no, $post['post_content']);
+					break;
+				}
+				}
+			}
+			//Sending mail and sms to lead ends
 
 			if ( $result1 ) {
 				$lead_contact_status_str = implode( ', ', $lead_contact_status );
