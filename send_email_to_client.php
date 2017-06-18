@@ -181,7 +181,8 @@ function set_lead_data( $leadId, $name, $contact_no, $category, $email, $locatio
 //function to send email to lead
 function send_email_to_lead($email, $subject, $body){
 	add_filter( 'wp_mail_content_type', 'edugorilla_html_mail_content_type' );
-		if ( ! empty( $institute_email ) ) {
+		
+		if ( ! empty( $email ) ) {
 			$headers                                     = array( 'Content-Type: text/html; charset=UTF-8' );
 			$result = wp_mail( $email, $subject, $body, $headers );
 		}
