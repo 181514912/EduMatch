@@ -3,6 +3,21 @@ function log_sent_leads()
 {
 
     global $wpdb;
+	$temparray  = array();
+	$templocationarray    = array();
+	$categories = get_terms( 'listing_categories', array( 'hide_empty' => false ) );
+	$edugorilla_locations = get_terms( 'locations', array( 'hide_empty' => false ) );
+	$subscriber_table = $wpdb->prefix . 'edugorilla_client_preferences ';
+	$q = "select id from $subscriber_table";
+    $subscriber_ids = $wpdb->get_results($q, 'ARRAY_A');
+	$user_meta_helper = new UserMeta_Helper();
+	
+	foreach ( $categories as $category ) {
+		$temparray[ $category->parent ][ $category->term_id ] = $category->name;
+	}
+	foreach ( $edugorilla_locations as $edugorilla_location ) {
+		$templocationarray[ $edugorilla_location->parent ][ $edugorilla_location->term_id ] = $edugorilla_location->name;
+	}
 //Promotion sent Listing
     $table_name  = $wpdb->prefix . 'edugorilla_lead_contact_log ';
     $search_from_date_form = $_POST['search_from_date_form'];
@@ -44,10 +59,47 @@ function log_sent_leads()
 
 //Leads Listing
 	$lead_table        = $wpdb->prefix . 'edugorilla_lead_details';
-	$leads_query       = $wpdb->get_results( "SELECT * FROM $lead_table" );
+	$edugorilla_list_date_from2 = $_POST['edugorilla_list_date_from2'];
+	$edugorilla_list_date_to2   = $_POST['edugorilla_list_date_to2'];
+	$lead_current_page = $_POST['lead_current_page'];
+	$location_filter = $_POST['location'];
+	$category_filter = $_POST['category_id'];
+	$added_by = $_POST['subscribers'];
+	$name = trim($_POST['name']);
+		//checking for empty variables
+			if ( empty( $category_filter ) ) {
+				$category_filter = "-1";
+			}
+			if ( empty( $location_filter ) ) {
+				$location_filter = "-1";
+			}
+			if (empty($added_by)){
+			$added_by = -1;
+			}
+			if (empty($edugorilla_list_date_from2 )){
+			$edugorilla_list_date_from2="-1";}
+			if( empty($edugorilla_list_date_to2)){
+			$edugorilla_list_date_to2="-1";}
+			
+	if(isset($_POST['btnsubmit2'])){
+		$lead_current_page=null;}
+	else{
+	$lead_current_page       = $_POST['lead_current_page'];
+	}
+	
+	//query including filters for counting
+$q= "SELECT * FROM $lead_table WHERE 
+IF($added_by = -1 , 1=1 , admin_id = $added_by) AND 
+IF('$location_filter' = '-1' , 1=1 , location_id = '$location_filter') AND 
+IF('$category_filter' = '-1' , 1=1 , category_id LIKE '%$category_filter%') AND 
+IF('$name' = '' , 1=1 , name = '$name') AND 
+(date_time BETWEEN IF('$edugorilla_list_date_from2' = '-1' , TRUE , '$edugorilla_list_date_from2%') AND IF('$edugorilla_list_date_to2' = '-1' , '2050-12-31%' , '$edugorilla_list_date_to2%'))";
+	
+	//$q = "select * from $lead_table";
+	
+	$leads_query       = $wpdb->get_results( $q );
 	$total_rows        = count( $leads_query ); //counting total rows
-    $lead_current_page = $_REQUEST['lead_current_page'];
-
+    
 	if ( empty( $lead_current_page ) ) {
 		$lead_current_page = 1;
 	}
@@ -63,8 +115,8 @@ function log_sent_leads()
 //end of Leads listing
 
 
-
     global $wpdb;
+	//Promotion sent Listing Datas
 	if ( $search_from_date_form == "self" && !empty($_POST['edugorilla_list_date_from']) && !empty($_POST['edugorilla_list_date_to'])) {
 		$edugorilla_list_date_from = $_POST['edugorilla_list_date_from'];
 		$edugorilla_list_date_to   = $_POST['edugorilla_list_date_to'];
@@ -73,6 +125,19 @@ function log_sent_leads()
 		$q = "select * from {$wpdb->prefix}edugorilla_lead_contact_log order by id desc limit $index, $page_size";
     }
 	$leads_datas = $wpdb->get_results( $q, 'ARRAY_A' );
+	//end of Promotion send listing Datas
+	
+	//Leads Listing Datas
+	$q1 = "SELECT * FROM $lead_table WHERE 
+IF($added_by = -1 , 1=1 , admin_id = $added_by) AND 
+IF('$location_filter' = '-1' , 1=1 , location_id = '$location_filter') AND 
+IF('$category_filter' = '-1' , 1=1 , category_id LIKE '%$category_filter%') AND 
+IF('$name' = '' , 1=1 , name = '$name') AND 
+(date_time BETWEEN IF('$edugorilla_list_date_from2' = '-1' , TRUE , '$edugorilla_list_date_from2%') AND IF('$edugorilla_list_date_to2' = '-1' , '2050-12-31%' , '$edugorilla_list_date_to2%')) 
+ORDER BY id DESC LIMIT $lead_index, $page_size";
+
+		$leads_details = $wpdb->get_results( $q1, 'ARRAY_A' );
+	//end of Leads listing Datas
 
     $p = '';
 	for ( $i = 1; $i <= $promotion_total_pages; $i ++ ) {
@@ -209,15 +274,160 @@ function log_sent_leads()
 
 				<table class="widefat fixed" cellspacing="0">
 					<thead>
-					<div class="alignright actions bulkactions">
-						<form name="f9" action="admin.php">
-							<input type="hidden" name="page" value="sent-lead-logs">
+					<form name="lead-form" method="post">
+						<label>Date From</label><input type="date" name="edugorilla_list_date_from2" id="edugorilla_list_date_from2" value="<?php echo $edugorilla_list_date_from2; ?>">
+						<label>Date To</label><input type="date" name="edugorilla_list_date_to2" id="edugorilla_list_date_to2" value="<?php echo $edugorilla_list_date_to2; ?>">
+					
+					
+							<select name="subscribers">
+								<option value="">Added By Any</option>
+								<?php
+								foreach ($subscriber_ids as $subscriber_id) {
+									$cid=$subscriber_id['id'];
+								$client_name = $user_meta_helper->getUserNameForUserId( $cid );
+								if ( $cid == $added_by ) {
+									?>
+							<option value="<?php echo $cid; ?>" selected> <?php echo $client_name; ?></option>
+							<?php
+								} else {
+							?>
+							<option value="<?php echo $cid; ?>"><?php echo $client_name; ?></option>
+							<?php
+							}
+							}
+							?>
+							</select>
+						
+					<select name="category_id">
+					<option value="">All categories</option>
+							<?php
+							foreach ( $temparray as $var => $vals ) {
+								if($category_filter == $var){
+								?>
+
+								<option value="<?php echo $var; ?>" selected>
+									<?php
+									$d = get_term_by( 'id', $var, 'listing_categories' );
+									echo $d->name;
+									?>
+								</option>
+
+								<?php
+								}
+								else{
+									?>
+
+								<option value="<?php echo $var; ?>">
+									<?php
+									$d = get_term_by( 'id', $var, 'listing_categories' );
+									echo $d->name;
+									?>
+								</option>
+
+								<?php
+								}
+								foreach ( $vals as $index => $val ) {
+									if($category_filter == $index){
+									?>
+
+									<option value="<?php echo $index; ?>" selected>
+										<?php echo $val; ?>
+									</option>
+									<?php
+								}
+								else{
+									?>
+
+									<option value="<?php echo $index; ?>">
+										<?php echo $val; ?>
+									</option>
+									<?php
+								}
+								}
+								?>
+
+								<?php
+								
+							}
+							?>
+						</select>
+						<select name="location">
+							<option value="">All Locations</option>
+							<?php
+							foreach ( $templocationarray as $var => $vals ) {
+								if ( $var != 0 ) {
+									if($location_filter == $var){
+									?>
+
+									<option value="<?php echo $var; ?>" selected>
+										<?php
+										$d = get_term_by( 'id', $var, 'locations' );
+										echo $d->name;
+										?>
+									</option>
+
+									<?php
+									}
+									else {
+										?>
+
+									<option value="<?php echo $var; ?>">
+										<?php
+										$d = get_term_by( 'id', $var, 'locations' );
+										echo $d->name;
+										?>
+									</option>
+
+									<?php
+									}
+									foreach ( $vals as $index => $val ) {
+										?>
+										<!-------Use sub locations here to expand locations------>
+										<?php
+									}
+								} else {
+									foreach ( $vals as $index => $val ) {
+										if ( ! array_key_exists( $index, $templocationarray ) ) {
+											if ($location_filter == $index){
+											?>
+
+											<option value="<?php echo $index; ?>" selected>
+												<?php echo $val; ?>
+											</option>
+
+											<?php
+											}else{
+												?>
+
+											<option value="<?php echo $index; ?>">
+												<?php echo $val; ?>
+											</option>
+
+											<?php
+										}
+										}
+									}
+								}
+								?>
+
+								<?php
+							}
+							?>
+						</select>
+						<input id="edu_name" name="name" value="<?php echo $name; ?>" placeholder="Enter Leads Name...">
+						
+						
+						<input type="hidden" name="search_from_date_form2" value="self">
+						<input type="submit" name="btnsubmit2" class="button action" value="Filter">
+						
+						<div class="alignright actions bulkactions">
 							<label>Page No. </label>
 							<select name="lead_current_page" onchange='this.form.submit();'>
 								<?php echo $lead_sent_p; ?>
 							</select>
-						</form>
+						
 					</div>
+					</form>
 					<tr>
 						<th id="cb" class="manage-column column-cb check-column" scope="col">
 							<input id="cb-select-all-1" style="margin-top:16px;" type="checkbox">
@@ -249,11 +459,9 @@ function log_sent_leads()
 					</tfoot>
 					<tbody>
 					<?php
-					$q1            = "select * from {$wpdb->prefix}edugorilla_lead_details order by id desc limit $lead_index, $page_size";
-					$leads_details = $wpdb->get_results( $q1, 'ARRAY_A' );
+					
 					foreach ( $leads_details as $leads_detail ) {
 						$admin_owner_id   = $leads_detail['admin_id'];
-						$user_meta_helper = new UserMeta_Helper();
 						$admin_owner_name = $user_meta_helper->getUserNameForUserId( $admin_owner_id );
 						if ( ! empty( $leads_detail['category_id'] ) ) {
 							$category_names = array();
