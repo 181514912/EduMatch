@@ -177,8 +177,13 @@ jQuery(document).ready(function ($) {
 						cnfbox += "<tr id=" + v.userId + "><td><input type='checkbox' class='confirmSendPrefDetails' checked='true'/></td><td>" + v.userName + "</td><td class='emailPrefDetails'>" + v.emailDetails + "</td><td class='phonePrefDetails'>" + v.phoneDetails + "</td></tr>";
 					});
 
+					if (data['subscriptionPreferenceDetails'] == null && data['postingDetails'] == null) {
+						//Show this pop up when the subscribers are empty.
+						cnfbox += "<tr><td>N/A</td><td>N/A</td><td class='emailPrefDetails'>N/A</td><td class='phonePrefDetails'>N/A</td></tr>";
+					}
+
 					cnfbox += "</table><center><button id='confirm' onclick='document.lead_capture_details.submit();'>Confirm</button></center>";
-					$("#confirmation").html(cnfbox);
+					$("#confirmInstantLeadSend").html(cnfbox);
 
 				});
 

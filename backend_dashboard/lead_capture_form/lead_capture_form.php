@@ -28,7 +28,8 @@ function create_lead_capture_form() {
 			$keyword             = $lead_detail['keyword'];
 			$location            = $lead_detail['location_id'];
 		}
-	} else if ( $caller == "selfFormSubmit" ) {
+	}
+	if ( $caller == "selfFormSubmit" ) {
 		/** Form was just submitted using submit button, so get Data from the Form **/
 		$name                          = $_POST['name'];
 		$contact_no                    = $_POST['contact_no'];
@@ -120,7 +121,13 @@ function create_lead_capture_form() {
 
 			global $wpdb;
 			$lead_detail_table = $wpdb->prefix . 'edugorilla_lead_details';
-			$result1           = $wpdb->insert( $lead_detail_table, $lead_detail_values );
+
+			if ( $scType == "leadEditOption" ) {
+				$result1 = $wpdb->update( $lead_detail_table, $lead_detail_values, array( 'id' => $lead_id, ) );
+			} else {
+				$result1 = $wpdb->insert( $lead_detail_table, $lead_detail_values );
+			}
+
 
 			$lead_id    = $wpdb->insert_id;
 			$lead_card  = new Lead_Card( $lead_id, $name, $contact_no, $email, $query, $category_str, $location_id, current_time( 'mysql' ), $is_promotional_lead );
@@ -178,7 +185,7 @@ function create_lead_capture_form() {
 						"{email address}"  => $email,
 						"{query}"          => $query
 					);
-					set_lead_data( $name, $contact_no, $institute_data_applicable->contact_category, $email, $institute_data_applicable->contact_location );
+					set_lead_data( $lead_id, $name, $contact_no, $institute_data_applicable->contact_category, $email, $institute_data_applicable->contact_location, $query );
 					foreach ( $email_template_datas as $var => $email_template_data ) {
 						$edugorilla_email_body = str_replace( $var, $email_template_data, $edugorilla_email_body );
 					}
@@ -408,7 +415,8 @@ function create_lead_capture_form() {
 					</th>
 					<td>
 
-						<a id="save_details_button" disabled href="#confirmation" class="button button-primary">Send
+						<a id="save_details_button" disabled href="#confirmInstantLeadSend"
+						   class="button button-primary">Send
 							Details</a>
 					</td>
 				</tr>
@@ -417,7 +425,7 @@ function create_lead_capture_form() {
 	</div>
 
 	<!-------Modal------>
-	<div id="confirmation" style="display:none;">
+	<div id="confirmInstantLeadSend" style="display:none;">
 	</div>
 	<!---/Modal-------->
 	<?php

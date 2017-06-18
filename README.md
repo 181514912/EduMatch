@@ -111,6 +111,10 @@ The following tables will be added to the database after the plugin is installed
 
 We will contribute this project back to Open Source Repository i.e. a Wordpress Plugin or even host in CodeCanyon.
 
+# Testing :
+
+Please use this wiki to check the testing scope : http://wiki.edugorilla.com/index.php?title=EduMatch_Test_Cases
+
 # Glossary:
 
 Lead: Contact details of students who are interested in a particular educational service.
