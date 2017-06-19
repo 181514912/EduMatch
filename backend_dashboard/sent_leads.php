@@ -58,6 +58,7 @@ function log_sent_leads()
 //end of Promotion send listing
 
 //Leads Listing
+	if(!isset($_POST['resetbtn'])){
 	$edugorilla_list_date_from2 = $_POST['edugorilla_list_date_from2'];
 	$edugorilla_list_date_to2   = $_POST['edugorilla_list_date_to2'];
 	$lead_current_page = $_POST['lead_current_page'];
@@ -65,6 +66,14 @@ function log_sent_leads()
 	$category_values = $_POST['category_id'];
 	$added_by = $_POST['subscribers'];
 	$name = trim($_POST['name']);
+	}else{
+	$edugorilla_list_date_from2 = null;
+	$edugorilla_list_date_to2   = null;
+	$location_filter = null;
+	$category_values = null;
+	$added_by = null;
+	$name = null;
+	}
 		//checking for empty variables
 			if ( ! empty( $category_values ) ) {
 				$category_filter = implode( ",", $category_values );
@@ -82,10 +91,10 @@ function log_sent_leads()
 			if( empty($edugorilla_list_date_to2)){
 			$edugorilla_list_date_to2="-1";}
 			
-	if(isset($_POST['btnsubmit2'])){
+	if(isset($_POST['btnsubmit2'])  || isset($_POST['resetbtn'])){
 		$lead_current_page=null;}
 	else{
-	$lead_current_page       = $_POST['lead_current_page'];
+		$lead_current_page       = $_POST['lead_current_page'];
 	}
 	
 	//query including filters for counting
@@ -279,7 +288,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 						<label>Date From</label><input type="date" name="edugorilla_list_date_from2" id="edugorilla_list_date_from2" value="<?php echo $edugorilla_list_date_from2; ?>">
 						<label>Date To</label><input type="date" name="edugorilla_list_date_to2" id="edugorilla_list_date_to2" value="<?php echo $edugorilla_list_date_to2; ?>">
 					
-					
+							&nbsp;
 							<select name="subscribers">
 								<option value="">Added By Any</option>
 								<?php
@@ -298,11 +307,12 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 							}
 							?>
 							</select>
-						
+							&nbsp;
 					<select name="category_id[]" multiple id="edugorilla_category">
 							<?php
 
 							foreach ( $temparray as $var => $vals ) {
+								if($var != 0){
 								?>
 								<?php if ( in_array( $var, $category_values ) ) { ?>
 									<option value="<?php echo $var; ?>" selected>
@@ -334,12 +344,29 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 									}
 								}
 								?>
-
+								<?php
+								} else {
+								foreach ($vals as $index => $val) {
+								if(!array_key_exists($index,$temparray)){
+								?>
+									<?php if ( in_array( $index, $category_values ) ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo $val; ?>
+										</option>
+									<?php } ?>
+									<?php
+								} } }
+								?>
 								<?php
 							}
 							?>
 						</select>
-						<select name="location">
+						&nbsp;
+						<select name="location" id="edugorilla_location">
 							<option value="">All Locations</option>
 							<?php
 							foreach ( $templocationarray as $var => $vals ) {
@@ -361,7 +388,8 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 									</option>
 								<?php } ?>
 								<?php
-								foreach ( $vals as $index => $val ) {
+								//Use bellow code to expand for sub locations
+								/*foreach ( $vals as $index => $val ) {
 									?>
 									<?php if ( $location_filter == $index ) { ?>
 										<option value="<?php echo $index; ?>" selected>
@@ -373,7 +401,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 										</option>
 									<?php } ?>
 									<?php
-								}
+								}*/
 								} else {
 								foreach ($vals as $index => $val) {
 								if(!array_key_exists($index,$templocationarray)){
@@ -397,9 +425,10 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 						</select>
 						<input id="edu_name" name="name" value="<?php echo $name; ?>" placeholder="Enter Leads Name...">
 						
-						
+						&nbsp;
 						<input type="hidden" name="search_from_date_form2" value="self">
-						<input type="submit" name="btnsubmit2" class="button action" value="Filter">
+						<input type="submit" name="btnsubmit2" class="button action" value="Filter">&nbsp;
+						<input type="submit" name="resetbtn" class="button action" value="Reset Filters">
 						<label>&nbsp;&nbsp;&nbsp;<b>: <?php echo $total_rows;?> Leads Found</b></label>
 						<div class="alignright actions bulkactions">
 							<label>Page No. </label>
