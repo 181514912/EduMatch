@@ -67,9 +67,9 @@ function edugorilla_shortcode_require() {
 	wp_enqueue_script( 'angularAnimate', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js' );
 	wp_enqueue_script( 'domURL', plugins_url( '/libs/domurl/domurl.js', __FILE__ ) );
 
-	wp_enqueue_style( 'custom_css', plugins_url( '/frontend/css/edu-match-frontend.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
-	wp_enqueue_style( 'custom_css', plugins_url( '/frontend/css/lead-portal-animations.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
-	wp_enqueue_style( 'custom_css', plugins_url( '/backend_dashboard/lead_capture_form/lead_capture_style.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
+	wp_enqueue_style( 'frontend_css', plugins_url( '/frontend/css/edu-match-frontend.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
+	wp_enqueue_style( 'lead_animation_css', plugins_url( '/frontend/css/lead-portal-animations.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
+	wp_enqueue_style( 'lead_capture_css', plugins_url( '/backend_dashboard/lead_capture_form/lead_capture_style.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
 
 	wp_enqueue_script(
 		'angular-leads-script',                         // Handle
