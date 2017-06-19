@@ -29,3 +29,18 @@
 #pac-input:focus {
 	border-color: #4d90fe;
 }
+
+/*Remove unwanted notice messages*/
+.notice.notice-error.yoast-notice-error {
+	display: none;
+}
+
+/* Inventor plugins warning */
+#setting-error-tgmpa {
+	display: none;
+}
+
+/* Ultimate tweeker warning */
+.updated.activation-notice {
+	display: none;
+}

@@ -93,13 +93,17 @@ jQuery(document).ready(function ($) {
 				// } else {
 				//    $('#save_details_button').attr("onclick", "document.lead_capture_details.submit();");
 				// }
+				prepopulateSaveButton();
 			} else {
 				$('#save_details_button').attr('disabled', true);
+				var errPopUpBox = "Unable to fetch subscription data.<br>Do you want to still proceed?<br><center><button id='confirm' onclick='document.lead_capture_details.submit();'>Confirm</button></center>";
+				$("#confirmInstantLeadSend").html(errPopUpBox);
 			}
 		} else {
 			$('#save_details_button').attr('disabled', true);
+			var invalidErrPopUpBox = "Invalid form entries. Cannot proceed!";
+			$("#confirmInstantLeadSend").html(invalidErrPopUpBox);
 		}
-		prepopulateSaveButton();
 	};
 
 	var prepopulateSaveButton = function () {
@@ -190,6 +194,8 @@ jQuery(document).ready(function ($) {
 			},
 			error: function (err) {
 				console.log(err);
+				var errPopUpBox = "Unable to fetch subscribers<br>Do you want to still proceed?<br><center><button id='confirm' onclick='document.lead_capture_details.submit();'>Confirm</button></center>";
+				$("#confirmInstantLeadSend").html(errPopUpBox);
 			}
 		});
 	};
