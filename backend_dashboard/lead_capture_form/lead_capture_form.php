@@ -349,8 +349,7 @@ function create_lead_capture_form() {
 				</tr>
 				<tr>
 					<th>Location</th>
-					<td>
-						<select disabled name="location" id="edugorilla_location" class="js-example-basic-single">
+					<td><select disabled name="location" id="edugorilla_location" class="js-example-basic-single">
 							<option value="">Select</option>
 							<?php
 							$templocationarray    = array();
@@ -361,7 +360,7 @@ function create_lead_capture_form() {
 							}
 
 							foreach ( $templocationarray as $var => $vals ) {
-
+								if($var != 0){
 								?>
 								<?php if ( $var == $location ) { ?>
 									<option value="<?php echo $var; ?>" selected>
@@ -392,6 +391,21 @@ function create_lead_capture_form() {
 									<?php } ?>
 									<?php
 								}
+								} else {
+								foreach ($vals as $index => $val) {
+								if(!array_key_exists($index,$templocationarray)){
+								?>
+									<?php if ( $location == $index ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo $val; ?>
+										</option>
+									<?php } ?>
+									<?php
+								} } }
 								?>
 
 								<?php
