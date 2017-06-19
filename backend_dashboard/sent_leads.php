@@ -7,8 +7,8 @@ function log_sent_leads()
 	$templocationarray    = array();
 	$categories = get_terms( 'listing_categories', array( 'hide_empty' => false ) );
 	$edugorilla_locations = get_terms( 'locations', array( 'hide_empty' => false ) );
-	$subscriber_table = $wpdb->prefix . 'edugorilla_client_preferences ';
-	$q = "select id from $subscriber_table";
+	$lead_table = $wpdb->prefix . 'edugorilla_lead_details';
+	$q = "SELECT DISTINCT admin_id from $lead_table";
     $subscriber_ids = $wpdb->get_results($q, 'ARRAY_A');
 	$user_meta_helper = new UserMeta_Helper();
 	
@@ -58,16 +58,17 @@ function log_sent_leads()
 //end of Promotion send listing
 
 //Leads Listing
-	$lead_table        = $wpdb->prefix . 'edugorilla_lead_details';
 	$edugorilla_list_date_from2 = $_POST['edugorilla_list_date_from2'];
 	$edugorilla_list_date_to2   = $_POST['edugorilla_list_date_to2'];
 	$lead_current_page = $_POST['lead_current_page'];
 	$location_filter = $_POST['location'];
-	$category_filter = $_POST['category_id'];
+	$category_values = $_POST['category_id'];
 	$added_by = $_POST['subscribers'];
 	$name = trim($_POST['name']);
 		//checking for empty variables
-			if ( empty( $category_filter ) ) {
+			if ( ! empty( $category_values ) ) {
+				$category_filter = implode( ",", $category_values );
+			} else {
 				$category_filter = "-1";
 			}
 			if ( empty( $location_filter ) ) {
@@ -283,7 +284,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 								<option value="">Added By Any</option>
 								<?php
 								foreach ($subscriber_ids as $subscriber_id) {
-									$cid=$subscriber_id['id'];
+									$cid=$subscriber_id['admin_id'];
 								$client_name = $user_meta_helper->getUserNameForUserId( $cid );
 								if ( $cid == $added_by ) {
 									?>
@@ -298,56 +299,43 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 							?>
 							</select>
 						
-					<select name="category_id">
-					<option value="">All categories</option>
+					<select name="category_id[]" multiple id="edugorilla_category">
 							<?php
+
 							foreach ( $temparray as $var => $vals ) {
-								if($category_filter == $var){
 								?>
-
-								<option value="<?php echo $var; ?>" selected>
-									<?php
-									$d = get_term_by( 'id', $var, 'listing_categories' );
-									echo $d->name;
-									?>
-								</option>
-
+								<?php if ( in_array( $var, $category_values ) ) { ?>
+									<option value="<?php echo $var; ?>" selected>
+										<?php
+										$d = get_term_by( 'id', $var, 'listing_categories' );
+										echo $d->name;
+										?>
+									</option>
+								<?php } else { ?>
+									<option value="<?php echo $var; ?>">
+										<?php
+										$d = get_term_by( 'id', $var, 'listing_categories' );
+										echo $d->name;
+										?>
+									</option>
+								<?php } ?>
 								<?php
-								}
-								else{
-									?>
-
-								<option value="<?php echo $var; ?>">
-									<?php
-									$d = get_term_by( 'id', $var, 'listing_categories' );
-									echo $d->name;
-									?>
-								</option>
-
-								<?php
-								}
 								foreach ( $vals as $index => $val ) {
-									if($category_filter == $index){
 									?>
-
-									<option value="<?php echo $index; ?>" selected>
-										<?php echo $val; ?>
-									</option>
-									<?php
-								}
-								else{
-									?>
-
-									<option value="<?php echo $index; ?>">
-										<?php echo $val; ?>
-									</option>
-									<?php
-								}
+									<?php if ( in_array( $index, $category_values ) ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo $val; ?>
+										</option>
+										<?php
+									}
 								}
 								?>
 
 								<?php
-								
 							}
 							?>
 						</select>
@@ -355,59 +343,52 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 							<option value="">All Locations</option>
 							<?php
 							foreach ( $templocationarray as $var => $vals ) {
-								if ( $var != 0 ) {
-									if($location_filter == $var){
-									?>
-
+								if($var != 0){
+								?>
+								<?php if ( $var == $location_filter ) { ?>
 									<option value="<?php echo $var; ?>" selected>
 										<?php
 										$d = get_term_by( 'id', $var, 'locations' );
 										echo $d->name;
 										?>
 									</option>
-
-									<?php
-									}
-									else {
-										?>
-
+								<?php } else { ?>
 									<option value="<?php echo $var; ?>">
 										<?php
 										$d = get_term_by( 'id', $var, 'locations' );
 										echo $d->name;
 										?>
 									</option>
-
+								<?php } ?>
+								<?php
+								foreach ( $vals as $index => $val ) {
+									?>
+									<?php if ( $location_filter == $index ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo "->" . $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo "->" . $val; ?>
+										</option>
+									<?php } ?>
 									<?php
-									}
-									foreach ( $vals as $index => $val ) {
-										?>
-										<!-------Use sub locations here to expand locations------>
-										<?php
-									}
-								} else {
-									foreach ( $vals as $index => $val ) {
-										if ( ! array_key_exists( $index, $templocationarray ) ) {
-											if ($location_filter == $index){
-											?>
-
-											<option value="<?php echo $index; ?>" selected>
-												<?php echo $val; ?>
-											</option>
-
-											<?php
-											}else{
-												?>
-
-											<option value="<?php echo $index; ?>">
-												<?php echo $val; ?>
-											</option>
-
-											<?php
-										}
-										}
-									}
 								}
+								} else {
+								foreach ($vals as $index => $val) {
+								if(!array_key_exists($index,$templocationarray)){
+								?>
+									<?php if ( $location_filter == $index ) { ?>
+										<option value="<?php echo $index; ?>" selected>
+											<?php echo $val; ?>
+										</option>
+									<?php } else { ?>
+										<option value="<?php echo $index; ?>">
+											<?php echo $val; ?>
+										</option>
+									<?php } ?>
+									<?php
+								} } }
 								?>
 
 								<?php
@@ -419,7 +400,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 						
 						<input type="hidden" name="search_from_date_form2" value="self">
 						<input type="submit" name="btnsubmit2" class="button action" value="Filter">
-						
+						<label>&nbsp;&nbsp;&nbsp;<b>: <?php echo $total_rows;?> Leads Found</b></label>
 						<div class="alignright actions bulkactions">
 							<label>Page No. </label>
 							<select name="lead_current_page" onchange='this.form.submit();'>
