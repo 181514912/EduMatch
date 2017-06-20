@@ -165,12 +165,14 @@ function create_edugorilla_menus() {
 			$label = $taxonomy->label;
 		}
 	}
+  	$icon_url = plugins_url( 'pdf_library/plugin_icon.png', dirname(__FILE__) );
 	add_object_page(
 		'EduMatchMainScreen',
 		'EduMatch',
 		'read',
 		'edumatch-main-screen',
-		'create_lead_capture_form'
+		'create_lead_capture_form',
+		$icon_url
 	);
 
 	add_submenu_page(
