@@ -457,7 +457,7 @@ function allocate_educash_form_page() {
 
 
 			$pdf->addCompanyAddress( "Address: 4719/A, Sector 23A, Gurgaon-122002, India\n\nWebsite: https://edugorilla.com\n\nEmail: hello@edugorilla.com\n\nPhone no. +91 9410007819" );
-			$pdf->addClientAddress( ucwords( "\n" . $firstname . ' ' . $lastname . "\n\n" .
+			$pdf->addClientAddress( ucwords( "\n" . $companyname . "\n\n" .
 			                                 $street . ", " .
 			                                 $city . ' - ' . $postalcode . ", " .
 			                                 $country ) . "\n\n" . $clientEmail . "\n\n" . $phone_number );
