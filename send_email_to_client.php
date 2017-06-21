@@ -268,6 +268,16 @@ function get_category_current_user($user_id, $client_data)
 		$more_category = "";
 		$cat_arr=explode(",",$client_data->category);
 		foreach ($cat_arr as $client_) {
+			if (strcmp($client_ , "-1") ==0) {
+				# code...
+				$category_name = "category".$count;
+				$category_data = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="">';
+				$removeButton  = '<input type = "button" name = "removeCategory' . $count . '" value = "  -  " onclick = "removeThisRow(' . $count . ')">';
+				$more_category = $more_category . $category_data . $removeButton;
+				$count         = $count+1;
+				
+			}else{
+				
 		foreach ($categories_list as $category_) {
 			# code...
 			if (preg_match('/'.$category_->term_id.'/', $client_)) {
@@ -280,7 +290,7 @@ function get_category_current_user($user_id, $client_data)
 				
 			}
 		}
-		}
+		}}
 }
 $category_result = array();
 array_push($category_result ,$more_category);
@@ -298,6 +308,13 @@ function get_location_current_user($user_id , $client_data)
 			$more_location = "";
 			$loc_arr=explode(",",$client_data->location);
 		foreach ($loc_arr as $client_) {
+			if (strcmp($client_ , "-1") ==0) {
+				# code...
+				$location_name = "location" . $count2;
+				$more_location = $more_location . '<br name="br' . $location_name . '"/><input list="location_list" name="' . $location_name . '" size="30" value="">';
+				$count2        = $count2+1;
+				
+			}else{
 		foreach ($location_list as $location_) {
 			# code...
 			if (preg_match('/'.$location_->term_id.'/', $client_)) {
@@ -308,7 +325,7 @@ function get_location_current_user($user_id , $client_data)
 				
 			}
 		}
-		}
+		}}
 
 }
 $location_result = array();
