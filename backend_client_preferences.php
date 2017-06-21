@@ -152,9 +152,11 @@ function form_not_empty(){
 		$location = array();
 		$more_category = "";
 		$more_location = "";
-		for ($i = 0; $i < $category_count; $i++) {
+	for ($i = 0; $i < $category_count; $i++) {
 			# code...
 			$category_name = "category".$i;
+			$location_name = "location".$i;
+			if(!empty($_POST[ $category_name ]) || !empty($_POST[$location_name])){
 			if ($i>0) {
 				# code...
 				$categoryRowValue = '<br name="br' . $category_name . '" /><input list="categories_list" name="' . $category_name . '" size="30" value="' . $_POST[ $category_name ] . '">';
@@ -163,35 +165,42 @@ function form_not_empty(){
 			}else
 				$category_select_val = $_POST[$category_name];
 			array_push($category, $_POST[$category_name]);
-		}
-		
-		for ($i = 0; $i < $location_count; $i++) {
+			
 			# code...
-			$location_name = "location".$i;
+			
 			if ($i>0) {
 				# code...
 				$more_location = $more_location.'<br/><input list="location_list" name="'.$location_name.'" size="30" value="'.$_POST[$location_name].'">';
 			}else
 			$location_select_val = $_POST[$location_name];
 			array_push($location, $_POST[$location_name]);
+			}
 		}
 		foreach ($category as $category_value) {
 			$category_value =  str_replace("&","&amp;",$category_value);
+			$temp_cat = $all_cat;
 			foreach ($categories_list as $cat_value) {
 				//echo $categoryString;
 				if(strcmp($cat_value->name , $category_value) == 0){
 					$all_cat = $cat_value->term_id . "," . $all_cat;
 				}
 			}
+			if(strcmp($temp_cat , $all_cat) ==0){
+				$all_cat = "-1,".$all_cat;
+			}
 		}
 		foreach ($location as $location_value) {
 			$location_value =  str_replace("&","&amp;",$location_value);
 			$location_value = str_replace("->","",$location_value);
+			$temp_loc = $all_loc;
 			foreach ($location_list as $loc_value) {
 				if (strcmp($location_value , $loc_value->name) == 0) {
 					# code...
 					$all_loc = $loc_value->term_id . "," . $all_loc;
 				}
+			}
+			if(strcmp($temp_loc , $all_loc) ==0){
+				$all_loc = "-1,".$all_loc;
 			}
 		}
 		
@@ -270,13 +279,15 @@ function form_not_empty(){
 		function addMoreRows() {
 			var ctrC = parseInt(document.getElementById("category_count").value);
 			var ctrL = parseInt(document.getElementById("location_count").value);
-
+			var ctrB = ctrC;
+			
 			//Create an input type dynamically.
 			var element_c = document.createElement("input");
 			var element_l = document.createElement("input");
+			var element_b = document.createElement("input");
 			var br1 = document.createElement("br");
 			var br2 = document.createElement("br");
-
+						
 			var element_name_c = "category" + ctrC;
 			element_c.setAttribute("list", "categories_list");
 			element_c.setAttribute("size", 30);
@@ -286,6 +297,14 @@ function form_not_empty(){
 			foo1.insertBefore(element_c, foo1.childNodes[0]);
 			ctrC++;
 			document.getElementById("category_count").value = ctrC;
+			
+			var element_name_b = "removeCategory" + ctrB;
+			element_b.setAttribute("type", "button");
+			element_b.setAttribute("value", "  -  ");
+			element_b.setAttribute("name", element_name_b);
+			element_b.setAttribute("onclick", "removeThisRow('" + ctrB + "')");
+			var foo0 = document.getElementById("get_category");
+			foo0.insertBefore(element_b, foo0.childNodes[1]);
 
 			var element_name_l = "location" + ctrL;
 			element_l.setAttribute("list", "location_list");
