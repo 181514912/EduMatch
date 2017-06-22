@@ -244,7 +244,6 @@ function form_not_empty(){
 						'preferences' => $notification,
 						'location' => $all_loc,
 						'unlock_lead' => $unlock_lead_,
-						
 						'unsubscribe_email' => $not_email,
 						'unsubscribe_sms' => $not_sms,
 						'category' => $all_cat
@@ -339,7 +338,10 @@ function form_not_empty(){
 		<table>
 		    <tr>
 			    <td>Subscriber's Email</td>
-			    <td><input type = "text" name = "client_email2" value = "<?php echo $client_email.$client_email2; ?>" readonly></td>
+			    <td><input type = "text" name = "client_email2" value = "<?php 
+				if(empty($client_email2)){
+				echo $client_email;
+				}else{echo $client_email2;}?>" readonly></td>
 			</tr>
 			<tr>
 				<td rowspan="4">Notification Preferences<sup><font color="red">*</font></sup> :</td>
