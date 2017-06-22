@@ -80,11 +80,7 @@ class EduCash_Helper
 		$userId = wp_get_current_user()->ID;
 		return $this->getEduCashForUser($userId);
 	}
-	public function getEduCashForCurrentUser2($userId)
-	{
-		//$userId = wp_get_current_user()->ID;
-		return $this->getEduCashForUser($userId);
-	}
+
 	public function addEduCashToUser( $userId, $transaction_cost, $transactionMessage )
 	{
         $databaseHelper      = new DataBase_Helper();
