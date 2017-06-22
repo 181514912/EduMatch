@@ -180,7 +180,7 @@ function edugorilla_show_pref_details( $location_ids, $category ) {
 		if ( $cea->unlock_lead == 1 ) {
 			//Temporarily not send locked leads to anyone
 			$eduCashHelper = new EduCash_Helper();
-			$cashAtHand    = $eduCashHelper->getEduCashForCurrentUser();
+			$cashAtHand    = $eduCashHelper->getEduCashForCurrentUser2($cea->user_id);
 			if ( $cashAtHand > 0 ) {
 				$hasMoneyCheck = 1;
 			}
