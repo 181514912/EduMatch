@@ -140,7 +140,13 @@ class EduLead_Helper
 	{
 		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
-
+	
+	function check_duplicate_leads($contact, $category, $location){
+		global $wpdb;
+		$q            = "select name from {$wpdb->prefix}edugorilla_lead_details where contact_no like '$contact' AND category_id like '$category' AND location_id like '$location'";
+		$lead_details = $wpdb->get_results( $q , 'ARRAY_A' );
+		return $lead_details;
+	}
 }
 
 ?>

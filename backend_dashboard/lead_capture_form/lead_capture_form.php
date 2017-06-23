@@ -98,7 +98,12 @@ function create_lead_capture_form() {
 			if ( empty( $is_promotional_lead ) ) {
 				$is_promotional_lead = "no";
 			}
-
+			
+		/** Checking for Duplicate Leads*/
+			$lead_exits = new EduLead_Helper();
+			$lead_name = $lead_exits->check_duplicate_leads($contact_no, $category_str, $location_id);
+			if(empty($lead_name[0]['name'])){
+				
 			$institute_applicable_datas    = json_decode( stripslashes( $edugorilla_institute_datas ) );
 			$subscription_applicable_datas = json_decode( stripslashes( $edugorilla_subscription_datas ) );
 
@@ -223,6 +228,10 @@ function create_lead_capture_form() {
 
 			//  foreach($_REQUEST as $var=>$val)$$var="";
 		}
+		else{
+			$success = "Lead Already Exists : ".$lead_name[0]['name'];
+		}
+	}
 	}
 	?>
 
