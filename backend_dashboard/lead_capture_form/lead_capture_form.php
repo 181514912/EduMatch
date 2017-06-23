@@ -31,12 +31,12 @@ function create_lead_capture_form() {
 	}
 	if ( $caller == "selfFormSubmit" ) {
 		/** Form was just submitted using submit button, so get Data from the Form **/
-		$name                          = $_POST['name'];
-		$contact_no                    = $_POST['contact_no'];
+		$name                          = trim($_POST['name']);
+		$contact_no                    = trim($_POST['contact_no']);
 		$keyword                       = $_POST['keyword'];
-		$email                         = $_POST['email'];
+		$email                         = trim($_POST['email']);
 		$listing_type                  = $_POST['listing_type'];
-		$query                         = $_POST['query'];
+		$query                         = trim($_POST['query']);
 		$category_id                   = $_POST['category_id'];
 		$location_id                   = $_POST['location'];
 		$edugorilla_institute_datas    = $_POST['edugorilla_institute_datas_name'];

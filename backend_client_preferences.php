@@ -11,10 +11,10 @@ function client_preferences_page(){
 		$_POST['submit']=true;
 	}
 	if(isset($_POST['submit'])){
-		if(empty($_POST['client_email'])){
+		if(empty(trim($_POST['client_email']))){
 			$php_empty_error = "*This field cannot be blank";
 		} else{
-			$client_email = $_POST['client_email'];
+			$client_email = trim($_POST['client_email']);
 			$check_client = $wpdb->get_var("SELECT COUNT(ut.ID) from $table_name cpt,$users_table ut WHERE cpt.id=ut.ID AND ut.user_email = '".$client_email."' ");
             if($check_client == 0){
                 $no_client_found = "*This client does not exist in our database";
@@ -47,7 +47,7 @@ function form_not_empty(){
 				<tr>
 					<th>Subscriber's Email<sup><font color="red">*</font></sup></th>
 					<td>
-						<input type = 'text' id = 'client_email' name = 'client_email' value = "<?php echo $_POST['client_email']; ?>" placeholder = 'Type email here...' maxlength = '100'>
+						<input type = 'text' id = 'client_email' name = 'client_email' value = "<?php echo trim($_POST['client_email']); ?>" placeholder = 'Type email here...' maxlength = '100'>
 						<font color = "red"><span id = 'js_empty_error'></span><?php echo $php_empty_error.$no_client_found; ?></font>
 					</td>
 				</tr>
@@ -66,7 +66,7 @@ function form_not_empty(){
 <br/><br/><br/>
 
 <?php
-       if(isset($_POST['submit']) && !(empty($_POST['client_email'])) && $check_client > 0){
+       if(isset($_POST['submit']) && !(empty(trim($_POST['client_email']))) && $check_client > 0){
          $value = $wpdb->get_row("SELECT ut.display_name AS client_name,ut.user_email AS email_id,cpt.* FROM $table_name cpt,$users_table ut WHERE ut.ID=cpt.id AND ut.user_email = '$client_email' ");
 		 
 		 $not_email = $value->unsubscribe_email;
@@ -459,7 +459,7 @@ function form_not_empty(){
 	</form>
 </div>
 <?php
-if(isset($_POST['submit']) && !(empty($_POST['client_email'])) && $check_client > 0){
+if(isset($_POST['submit']) && !(empty(trim($_POST['client_email']))) && $check_client > 0){
 	echo "<script>document.getElementById('preference_form').style.display = 'block';</script>";
 }
 if ($_POST['submit_client_pref']) {

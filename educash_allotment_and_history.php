@@ -10,13 +10,13 @@ function allocate_educash_form_page() {
 //Checking if the admin has filled adequate information to submit the form to allot educash and inserting the legal values in table
 
 	if ( $_POST['submit'] ) {
-		if ( empty( $_POST['clientName'] ) ) {
+		if ( empty( trim($_POST['clientName']) ) ) {
 			echo '<script>alert("The field of client email cannot be blank");</script>';
 		} else {
 			if ( empty( $_POST['educash'] ) ) {
 				echo '<script>alert("The field of educash cannot be blank");</script>';
 			} else {
-				$clientEmail  = $_POST['clientName'];
+				$clientEmail  = trim($_POST['clientName']);
 				$check_client = $wpdb->get_var( "SELECT COUNT(ID) from $users_table WHERE user_email = '$clientEmail' " );
 				if ( $check_client == 0 ) {
 					echo '<script>alert("This client does not exist in our database");</script>';
@@ -25,17 +25,17 @@ function allocate_educash_form_page() {
 					$adminName     = wp_get_current_user();
 					$time          = current_time( 'mysql' );
 					$money         = $_POST['money'];
-					$adminComment  = $_POST['adminComment'];
+					$adminComment  = trim($_POST['adminComment']);
 
-					$firstname    = $_POST['client_firstname'];
-					$lastname     = $_POST['client_lastname'];
-					$street       = $_POST['client_street'];
-					$city         = $_POST['client_city'];
-					$state        = $_POST['client_state'];
-					$companyname  = $_POST['client_companyname'];
-					$postalcode   = $_POST['client_postalcode'];
+					$firstname    = trim($_POST['client_firstname']);
+					$lastname     = trim($_POST['client_lastname']);
+					$street       = trim($_POST['client_street']);
+					$city         = trim($_POST['client_city']);
+					$state        = trim($_POST['client_state']);
+					$companyname  = trim($_POST['client_companyname']);
+					$postalcode   = trim($_POST['client_postalcode']);
 					$phone_number = $_POST['client_phone_number'];
-					$country      = $_POST['client_country'];
+					$country      = trim($_POST['client_country']);
 
 					$user_meta_helper = new UserMeta_Helper();
 					$client_ID        = $user_meta_helper->getUserIdFromEmail( $clientEmail );
@@ -58,13 +58,13 @@ function allocate_educash_form_page() {
 	}
 
 	if ( $_POST['SUBMIT'] ) {
-		if ( empty( $_POST['clientName1'] ) ) {
+		if ( empty( trim($_POST['clientName1']) ) ) {
 			$errinclientname = "<span  style='color:red;'>* This field cannot be blank</span>";
 		} else {
 			if ( empty( $_POST['educash1'] ) ) {
 				$educasherr = "<span style='color:red;'>* This field cannot be blank</span>";
 			} else {
-				$clientEmail  = $_POST['clientName1'];
+				$clientEmail  = trim($_POST['clientName1']);
 				$check_client = $wpdb->get_var( "SELECT COUNT(ID) from $users_table WHERE user_email = '$clientEmail' " );
 				if ( $check_client == 0 ) {
 					$invalid_client = "<span style='color:red'>This client does not exist in our database</span>";
@@ -180,7 +180,7 @@ function allocate_educash_form_page() {
 	</style>
 	<script>
 		function validate_allotment_form() {
-			var x = document.getElementById("clientName11").value;
+			var x = document.getElementById("clientName11").value.trim();
 			var y = document.getElementById("educash11").value;
 			if (x == "" && (y == "" || y == 0)) {
 				document.getElementById('errmsg1').innerHTML = "* This field cannot be blank";
@@ -200,7 +200,7 @@ function allocate_educash_form_page() {
 			}
 		}
 		function validate_final_allotment_form() {
-			var x = document.getElementById("clientName22").value;
+			var x = document.getElementById("clientName22").value.trim();
 			var y = document.getElementById("educash22").value;
 			var z = document.getElementById("money22").value;
 			var w = document.getElementById("clientMobile22").value.toString().length;
@@ -294,7 +294,7 @@ function allocate_educash_form_page() {
 								<th>Subscriber Email<sup><font color="red">*</font></sup></th>
 								<td>
 									<input type='text' id='clientName22' class='popup_input_field' name='clientName'
-									       value="<?php echo $_POST['clientName1']; ?>" maxlength='100'>
+									       value="<?php echo trim($_POST['clientName1']); ?>" maxlength='100'>
 									<span style='color:red;' id='errmsgf1'></span>
 								</td>
 							</tr>
@@ -353,7 +353,7 @@ function allocate_educash_form_page() {
 						<br/>
 						<center><b>Comments (optional)</b><br/><textarea rows='4' cols='60' id='adminComment22'
 						                                                 class='popup_input_field' name='adminComment'
-						                                                 maxlength='500'><?php echo $_POST['adminComment1']; ?></textarea><br/><br/>
+						                                                 maxlength='500'><?php echo trim($_POST['adminComment1']); ?></textarea><br/><br/>
 							<input type='submit' name='submit'><br/><br/></center>
 
 
@@ -371,7 +371,7 @@ function allocate_educash_form_page() {
 					<th>Subscriber Email<sup><font color="red">*</font></sup></th>
 					<td>
 						<input type='text' id='clientName11' name='clientName1'
-						       value="<?php echo $_POST['clientName1']; ?>" placeholder='Type email here...'
+						       value="<?php echo trim($_POST['clientName1']); ?>" placeholder='Type email here...'
 						       maxlength='100'>
 						<span style='color:red;' id='errmsg1'></span>
 						<span><?php echo $errinclientname;
@@ -391,7 +391,7 @@ function allocate_educash_form_page() {
 					<th>Comments (optional)</th>
 					<td>
 						<textarea rows='4' cols='60' id='adminComment11' name='adminComment1'
-						          maxlength='500'><?php echo $_POST['adminComment1']; ?></textarea>
+						          maxlength='500'><?php echo trim($_POST['adminComment1']); ?></textarea>
 					</td>
 				</tr>
 				<tr>
@@ -408,7 +408,7 @@ function allocate_educash_form_page() {
 
 	<?php
 	if ( $_POST['SUBMIT'] ) {
-		if ( ( ! empty( $_POST['clientName1'] ) ) && ( ! empty( $_POST['educash1'] ) ) && ( ! ( $check_client == 0 ) ) && $final_total >= 0 ) {
+		if ( ( ! empty( trim($_POST['clientName1']) ) ) && ( ! empty( $_POST['educash1'] ) ) && ( ! ( $check_client == 0 ) ) && $final_total >= 0 ) {
 			echo "<script>function display_dialogue(){var modal = document.getElementById('myModalbg');
 		 modal.style.display = 'block';
          var spanbg = document.getElementsByClassName('closebg')[0];
@@ -424,14 +424,14 @@ function allocate_educash_form_page() {
 		};
 
 		if ( $final_total < 0 ) {
-			echo "<center><span style='color:red;'>The total balance that the client " . $_POST['clientName1'] . " has
+			echo "<center><span style='color:red;'>The total balance that the client " . trim($_POST['clientName1']) . " has
                  is " . $total . ". Your entry will leave this client with negative amount of educash which is not allowed.</span></center>";
 		}
 	}
 
 //Displaying the transaction made just now if the values are legal and sending a mail to respective client otherwise displaying error message
 
-	if ( $_POST['submit'] && ( ! empty( $_POST['clientName'] ) ) && ( ! empty( $_POST['educash'] ) ) && ( ! ( $check_client == 0 ) ) ) {
+	if ( $_POST['submit'] && ( ! empty( trim($_POST['clientName']) ) ) && ( ! empty( $_POST['educash'] ) ) && ( ! ( $check_client == 0 ) ) ) {
 		if ( $make_transaction == true ) {
 
 //Creating invoice
@@ -532,7 +532,7 @@ function allocate_educash_form_page() {
 			$check_transaction = new EduCash_Helper();
 			$total             = $check_transaction->getEduCashForUser( $client_ID_result );
 
-			echo "<center><span style='color:red;'>The total balance that the client " . $_POST['clientName'] . " has
+			echo "<center><span style='color:red;'>The total balance that the client " . trim($_POST['clientName']) . " has
                  is " . $total . ". Your entry will leave this client with negative amount of educash which is not allowed.</span></center>";
 		}
 	}
@@ -547,7 +547,7 @@ $users_table = $wpdb->users;
 //Checking if the admin has filled atleast one field to submit the form to see history
 
 if ( $_POST['Submit'] ) {
-	if ( empty( $_POST['admin_Name'] ) && empty( $_POST['client_Name'] ) && empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
+	if ( empty( trim($_POST['admin_Name']) ) && empty( trim($_POST['client_Name']) ) && empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
 		$all_four_error = "<span style='color:red;'> * All four fields cannot be blank</span>";
 	}
 }
@@ -605,14 +605,14 @@ if ( $_POST['Submit'] ) {
 	<?php
 	//Displaying the history of required fields
 
-	$admin_Name       = $_POST['admin_Name'];
-	$client_Name      = $_POST['client_Name'];
+	$admin_Name       = trim($_POST['admin_Name']);
+	$client_Name      = trim($_POST['client_Name']);
 	$admin_ID_result  = $wpdb->get_var( "SELECT ID FROM $users_table WHERE user_email = '$admin_Name' " );
 	$client_ID_result = $wpdb->get_var( "SELECT ID FROM $users_table WHERE user_email = '$client_Name' " );
 	$date             = $_POST['date'];
 	$date2            = $_POST['date2'];
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( ! empty( $_POST['admin_Name'] ) || ! empty( $_POST['client_Name'] ) ) && empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
+		if ( ( ! empty( $admin_Name ) || ! empty( $client_Name ) ) && empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1)" );
 			if ( $check_result == 0 ) {
@@ -638,7 +638,7 @@ if ( $_POST['Submit'] ) {
 		}
 	}
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( ! empty( $_POST['admin_Name'] ) || ! empty( $_POST['client_Name'] ) ) && ! empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
+		if ( ( ! empty( $admin_Name ) || ! empty( $client_Name ) ) && ! empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN '$date' AND '2050-12-31' " );
 			if ( $check_result == 0 ) {
@@ -664,7 +664,7 @@ if ( $_POST['Submit'] ) {
 		}
 	}
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( ! empty( $_POST['admin_Name'] ) || ! empty( $_POST['client_Name'] ) ) && empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
+		if ( ( ! empty( $admin_Name ) || ! empty( $client_Name ) ) && empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE IF('$admin_Name' != '', admin_id = '$admin_ID_result', 1=1) AND
                                             IF('$client_Name' != '', client_id = '$client_ID_result', 1=1) AND DATE(time) BETWEEN 'TRUE' AND '$date2' " );
 			if ( $check_result == 0 ) {
@@ -690,7 +690,7 @@ if ( $_POST['Submit'] ) {
 		}
 	}
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( empty( $_POST['admin_Name'] ) && empty( $_POST['client_Name'] ) ) && ! empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
+		if ( ( empty( $admin_Name ) && empty( $client_Name ) ) && ! empty( $_POST['date'] ) && empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE DATE(time) BETWEEN '$date' AND '2050-12-31' " );
 			if ( $check_result == 0 ) {
 				echo "<center><span style='color:red;'>No records found</span></center>";
@@ -713,7 +713,7 @@ if ( $_POST['Submit'] ) {
 		}
 	}
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( empty( $_POST['admin_Name'] ) && empty( $_POST['client_Name'] ) ) && empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
+		if ( ( empty( $admin_Name ) && empty( $client_Name ) ) && empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE DATE(time) BETWEEN 'TRUE' AND '$date2' " );
 			if ( $check_result == 0 ) {
 				echo "<center><span style='color:red;'>No records found</span></center>";
@@ -736,7 +736,7 @@ if ( $_POST['Submit'] ) {
 		}
 	}
 	if ( ( $_POST['Submit'] ) ) {
-		if ( ( empty( $_POST['admin_Name'] ) && empty( $_POST['client_Name'] ) ) && ! empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
+		if ( ( empty( $admin_Name ) && empty( $client_Name ) ) && ! empty( $_POST['date'] ) && ! empty( $_POST['date2'] ) ) {
 			$check_result = $wpdb->get_var( "SELECT COUNT(ID) FROM $table_name3  WHERE DATE(time) BETWEEN '$date' AND '$date2' " );
 			if ( $check_result == 0 ) {
 				echo "<center><span style='color:red;'>No records found</span></center>";

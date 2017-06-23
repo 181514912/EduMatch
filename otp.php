@@ -3,7 +3,7 @@ function edugorilla_otp()
 {
     $otp_form = $_POST['otp_form'];
     if ($otp_form == "self") {
-        $edugorilla_mno = $_POST['edugorilla_mno'];
+        $edugorilla_mno = trim($_POST['edugorilla_mno']);
         if (!preg_match("/([0-9]{10}+)/", $edugorilla_mno)) $error = "INVALID";
 
         if (empty($error)) {
