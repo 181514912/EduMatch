@@ -543,7 +543,13 @@ function transaction_history_form_page()
 global $wpdb;
 $table_name3 = $wpdb->prefix . 'edugorilla_lead_educash_transactions';
 $users_table = $wpdb->users;
-
+$cid = $_REQUEST['cid'];
+	if(!empty($cid) && is_numeric($cid)){
+		$email = $wpdb->get_var("SELECT user_email from $users_table WHERE ID = ".$cid);
+		//echo $email;
+		$_POST['client_Name']=$email;
+		$_POST['Submit']=true;
+	}
 //Checking if the admin has filled atleast one field to submit the form to see history
 
 if ( $_POST['Submit'] ) {
@@ -563,25 +569,25 @@ if ( $_POST['Submit'] ) {
 			<tr>
 				<th>Admin Email</th>
 				<td>
-					<input type='text' name='admin_Name' placeholder='Type admin email here...' maxlength='100'>
+					<input type='text' name='admin_Name' value = "<?php echo trim($_POST['admin_Name']); ?>" placeholder='Type admin email here...' maxlength='100'>
 				</td>
 			</tr>
 			<tr>
 				<th>Client Email</th>
 				<td>
-					<input type='text' name='client_Name' placeholder='Type client email here...' max='100'>
+					<input type='text' name='client_Name' value = "<?php echo trim($_POST['client_Name']); ?>" placeholder='Type client email here...' max='100'>
 				</td>
 			</tr>
 			<tr>
 				<th>Date From:</th>
 				<td>
-					<input type='date' name='date' min='1990-12-31' max='2050-12-31'>
+					<input type='date' name='date' value = "<?php echo trim($_POST['date']); ?>" min='1990-12-31' max='2050-12-31'>
 				</td>
 			</tr>
 			<tr>
 				<th>Date To:</th>
 				<td>
-					<input type='date' name='date2' min='1990-12-31' max='2050-12-31'>
+					<input type='date' name='date2' value = "<?php echo trim($_POST['date2']); ?>" min='1990-12-31' max='2050-12-31'>
 				</td>
 			</tr>
 			<tr>

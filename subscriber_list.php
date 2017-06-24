@@ -145,6 +145,8 @@ function subscribers_list()
                                 <div class="row-actions">
 								<span><a href="admin.php?page=client_preferences_page&iid=<?php echo $client_ID_result; ?>" target="_blank">
                                             Edit</a> | </span>
+								<span><a href="admin.php?page=transaction_history_form_page&cid=<?php echo $client_ID_result; ?>" target="_blank">
+                                            Transactions</a> | </span>
 								<?php
 									if ($isactive == 0){
 								?>
