@@ -9,6 +9,10 @@ include_once plugin_dir_path( __FILE__ ) . "backend_client_preferences.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/calculate_subscribers_to_contact.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_capture_form/lead_capture_form.php";
 include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/sent_leads.php";
+include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/email_setting.php";
+include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/sms_setting.php";
+include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_transaction_history.php";
+include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_educash_payment.php";
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-Lead-Card.php'; /*Cards used for displaying leads */
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-Custom-Lead-API.php'; /*API to be used for displaying leads */
 include_once plugin_dir_path( __FILE__ ) . 'frontend/class-EduCash-Helper.php'; /*Utility class used for dealing with EduCash */
@@ -24,15 +28,30 @@ include_once plugin_dir_path( __FILE__ ) . "manage_leads.php";
 require_once plugin_dir_path( __FILE__ ) . 'frontend/taxonomies/class-edugorilla-taxonomy-edu-categories.php';
 
 
-function script() {
+function edugorilla_enqueue_css_and_scripts() {
 	wp_enqueue_style( 'select2-css', plugins_url( '/libs/select2/select2.css', __FILE__ ) );
 	wp_enqueue_style( 'modal-css', plugins_url( '/css/jquery.modal.css', __FILE__ ) );
 	wp_enqueue_style( 'jquery-ui-styles', "//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" );
+	wp_enqueue_style( 'frontend_css', plugins_url( '/frontend/css/edu-match-frontend.css', __FILE__ ) );
+	wp_enqueue_style( 'lead_animation_css', plugins_url( '/frontend/css/lead-portal-animations.css', __FILE__ ) );
+	wp_enqueue_style( 'lead_capture_css', plugins_url( '/backend_dashboard/lead_capture_form/lead_capture_style.css', __FILE__ ) );
+
+	wp_enqueue_script( 'ajaxlib2', 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js' );
+	wp_enqueue_script( 'bootjs', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js' );
+	wp_enqueue_script( 'angularJs', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js' );
+	wp_enqueue_script( 'angularAnimate', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js' );
+	wp_enqueue_script( 'domURL', plugins_url( '/libs/domurl/domurl.js', __FILE__ ) );
 
 	wp_enqueue_script(
 		'select2-script',                         // Handle
 		plugins_url( '/libs/select2/select2.js', __FILE__ ),  // Path to file
 		array( 'jquery' )                             // Dependancies
+	);
+
+	wp_enqueue_script(
+		'angular-leads-script',                         // Handle
+		plugins_url( '/frontend/js/lead-portal.js', __FILE__ ),  // Path to file
+		array( 'angularJs' )                             // Dependancies
 	);
 
 	wp_enqueue_script(
@@ -48,35 +67,12 @@ function script() {
 
 }
 
-add_action( 'admin_enqueue_scripts', 'script', 2000 );
+add_action( 'admin_enqueue_scripts', 'edugorilla_enqueue_css_and_scripts', 2000 );
 
 function edugorilla_html_mail_content_type() {
 	return 'text/html';
 }
 
-
-include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/email_setting.php";
-include_once plugin_dir_path( __FILE__ ) . "backend_dashboard/lead_templates/sms_setting.php";
-include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_transaction_history.php";
-include_once plugin_dir_path( __FILE__ ) . "inc/shortcode_educash_payment.php";
-
-function edugorilla_shortcode_require() {
-	wp_enqueue_script( 'ajaxlib2', 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js' );
-	wp_enqueue_script( 'bootjs', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js' );
-	wp_enqueue_script( 'angularJs', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js' );
-	wp_enqueue_script( 'angularAnimate', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js' );
-	wp_enqueue_script( 'domURL', plugins_url( '/libs/domurl/domurl.js', __FILE__ ) );
-
-	wp_enqueue_style( 'frontend_css', plugins_url( '/frontend/css/edu-match-frontend.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
-	wp_enqueue_style( 'lead_animation_css', plugins_url( '/frontend/css/lead-portal-animations.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
-	wp_enqueue_style( 'lead_capture_css', plugins_url( '/backend_dashboard/lead_capture_form/lead_capture_style.css', __FILE__ ), array(), rand( 111, 9999 ), 'all' );
-
-	wp_enqueue_script(
-		'angular-leads-script',                         // Handle
-		plugins_url( '/frontend/js/lead-portal.js', __FILE__ ),  // Path to file
-		array( 'angularJs' )                             // Dependancies
-	);
-}
 
 if ( ! function_exists( 'write_log' ) ) {
 	function write_log( $log ) {
@@ -90,6 +86,4 @@ if ( ! function_exists( 'write_log' ) ) {
 	}
 }
 
-
-add_action( 'wp_enqueue_scripts', 'edugorilla_shortcode_require' );
 ?>
