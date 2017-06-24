@@ -103,12 +103,15 @@ IF($added_by = -1 , 1=1 , admin_id = $added_by) AND
 IF('$location_filter' = '-1' , 1=1 , location_id = '$location_filter') AND 
 IF('$category_filter' = '-1' , 1=1 , category_id LIKE '%$category_filter%') AND 
 IF('$name' = '' , 1=1 , name = '$name') AND 
-(date_time BETWEEN IF('$edugorilla_list_date_from2' = '-1' , TRUE , '$edugorilla_list_date_from2%') AND IF('$edugorilla_list_date_to2' = '-1' , '2050-12-31%' , '$edugorilla_list_date_to2%'))";
+(date_time BETWEEN IF('$edugorilla_list_date_from2' = '-1' , TRUE , '$edugorilla_list_date_from2%') AND IF('$edugorilla_list_date_to2' = '-1' , '2050-12-31%' , '$edugorilla_list_date_to2%')) ORDER BY id DESC";
 	
 	//$q = "select * from $lead_table";
 	
 	$leads_query       = $wpdb->get_results( $q );
+	$all_leads_datas = $wpdb->get_results( $q, 'ARRAY_A' );
 	$total_rows        = count( $leads_query ); //counting total rows
+	if(isset($_POST['download'])){
+	leads_csv_download($all_leads_datas);}
     
 	if ( empty( $lead_current_page ) ) {
 		$lead_current_page = 1;
@@ -148,7 +151,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 
 		$leads_details = $wpdb->get_results( $q1, 'ARRAY_A' );
 	//end of Leads listing Datas
-
+	
     $p = '';
 	for ( $i = 1; $i <= $promotion_total_pages; $i ++ ) {
 		if ( $i == $current_page ) {
@@ -431,6 +434,7 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 						<input type="submit" name="resetbtn" class="button action" value="Reset Filters">
 						<label>&nbsp;&nbsp;&nbsp;<b>: <?php echo $total_rows;?> Leads Found</b></label>
 						<div class="alignright actions bulkactions">
+						<input type="submit" name="download" class="button action" value="Download Logs">
 							<label>Page No. </label>
 							<select name="lead_current_page" onchange='this.form.submit();'>
 								<?php echo $lead_sent_p; ?>
@@ -607,5 +611,58 @@ function edugorilla_view_leads() {
 
 add_action( 'wp_ajax_edugorilla_view_leads', 'edugorilla_view_leads' );
 add_action( 'wp_ajax_nopriv_edugorilla_view_leads', 'edugorilla_view_leads' );
+
+function leads_csv_download($data, $filename = "LeadLogs.csv", $delimiter=",") {
+	if(!$data) return false;
+    ob_end_clean();
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="'.$filename.'";');
+    $f = fopen('php://output', 'w');
+	$user_meta_helper = new UserMeta_Helper();
+	$headrow = array('Name','Contact','Email','Query','Category','Location','Added By','Date');
+    fputcsv($f, $headrow, $delimiter);
+		foreach ($data as $leads_detail) {
+						$admin_owner_id   = $leads_detail['admin_id'];
+						$admin_owner_name = $user_meta_helper->getUserNameForUserId( $admin_owner_id );
+						if ( ! empty( $leads_detail['category_id'] ) ) {
+							$category_names = array();
+							$term_ids       = explode( ",", $leads_detail['category_id'] );
+
+							if ( ! empty( $term_ids ) ) {
+								foreach ( $term_ids as $index => $term_id ) {
+									$category_data    = get_term_by( 'id', $term_id, 'listing_categories' );
+									$category_names[] = $category_data->name;
+								}
+
+								$leads_category = html_entity_decode(implode( ",", $category_names ));
+							} else {
+								$leads_category = "N/A";
+							}
+
+						} else {
+							$leads_category = "N/A";
+						}
+
+						if ( ! empty( $leads_detail['location_id'] ) ) {
+							$location_data  = get_term_by( 'id', $leads_detail['location_id'], 'locations' );
+							$leads_location = html_entity_decode($location_data->name);
+						} else {
+							$leads_location = "N/A";
+						}
+		$line = array(
+				'Name'      => $leads_detail['name'],
+				'Contact'   => $leads_detail['contact_no'],
+				'Email'     => $leads_detail['email'],
+				'Query'     => $leads_detail['query'],
+				'Category'  => $leads_category,
+				'Location'  => $leads_location,
+				'Added_By'  => $admin_owner_name,
+				'Date'      => $leads_detail['date_time']
+			);
+        fputcsv($f, $line, $delimiter);
+    }
+	fclose($f);
+	exit();
+}
 
 ?>
