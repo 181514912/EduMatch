@@ -96,6 +96,24 @@ function log_sent_leads()
 	else{
 		$lead_current_page       = $_POST['lead_current_page'];
 	}
+		//query for calculating graph datas
+$qry= "SELECT COUNT(`id`) leads, DATE_FORMAT(`date_time`, '%Y-%m-%d') dates FROM $lead_table WHERE 
+IF($added_by = -1 , 1=1 , admin_id = $added_by) AND 
+IF('$location_filter' = '-1' , 1=1 , location_id = '$location_filter') AND 
+IF('$category_filter' = '-1' , 1=1 , category_id LIKE '%$category_filter%') AND 
+IF('$name' = '' , 1=1 , name = '$name') AND 
+(date_time BETWEEN IF('$edugorilla_list_date_from2' = '-1' , TRUE , '$edugorilla_list_date_from2%') AND IF('$edugorilla_list_date_to2' = '-1' , '2050-12-31%' , '$edugorilla_list_date_to2%')) GROUP BY dates";
+
+$leads_details = $wpdb->get_results( $qry, 'ARRAY_A');
+	$temp_data     = array();
+		foreach ( $leads_details as $leads_detail ) {
+			$dates = explode("-",$leads_detail['dates']);
+			$temp_data[] = array('count' => (int)$leads_detail['leads'],
+								 'year'  => (int)$dates[0],
+								 'month' => (int)$dates[1] -1,
+								 'day'	=> (int)$dates[2]);
+		}
+	//query for calculating graph datas ends
 	
 	//query including filters for counting
 $q= "SELECT * FROM $lead_table WHERE 
@@ -433,7 +451,9 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 						<input type="submit" name="btnsubmit2" class="button action" value="Filter">&nbsp;
 						<input type="submit" name="resetbtn" class="button action" value="Reset Filters">
 						<label>&nbsp;&nbsp;&nbsp;<b>: <?php echo $total_rows;?> Leads Found</b></label>
+						<div id="chart_div"></div>
 						<div class="alignright actions bulkactions">
+						<input type="button" name="show_map" id="show_map" value="Show Graph">
 						<input type="submit" name="download" class="button action" value="Download Logs">
 							<label>Page No. </label>
 							<select name="lead_current_page" onchange='this.form.submit();'>
@@ -531,7 +551,42 @@ ORDER BY id DESC LIMIT $lead_index, $page_size";
 
 			</div>
 		</div>
+		<-- Showing graph -->
+	 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	 <script>
+	 function drawChart() {
+		 var jsonData = <?php echo json_encode($temp_data); ?>;
+			//console.log(jsonData);
 
+						var data = new google.visualization.DataTable();
+						data.addColumn('date', 'X');
+						data.addColumn('number', 'leads');
+						var data_array = [];
+						 for (var i = 0; i < jsonData.length; i++) {
+							data_array[i] = [new Date(jsonData[i]['year'],jsonData[i]['month'],jsonData[i]['day']), Number(jsonData[i]['count'])];
+						}
+						data.addRows(data_array);
+
+						var options = {
+							hAxis: {
+								title: 'Time'
+							},
+							vAxis: {
+								title: 'Number of Leads',
+								format: '#',
+							}
+							};
+						// Instantiate and draw our chart, passing in some options.
+						var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+						chart.draw(data, options);
+    }
+		$(document).on('click', '#show_map', function () {
+		google.charts.load('current', {'packages':['corechart', 'line']});
+		google.charts.setOnLoadCallback(drawChart);
+		});
+
+	 </script>
 
 		<?php
 		if ( $list_caller == "self" ) {
