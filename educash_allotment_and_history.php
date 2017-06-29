@@ -49,7 +49,7 @@ function allocate_educash_form_page() {
 					update_user_meta( $client_ID, 'user_address_postal_code', $postalcode );
 					update_user_meta( $client_ID, 'user_general_phone', $phone_number );
 					update_user_meta( $client_ID, 'user_address_country', $country );
-
+                    $result = wp_update_user( array( 'ID' => $client_ID, 'display_name' => $firstname.' '.$lastname ) );
 					$initiate_transaction = new EduCash_Helper();
 					$make_transaction     = $initiate_transaction->addEduCashToUser( $client_ID, $educash_added, $educash_added );
 				}
