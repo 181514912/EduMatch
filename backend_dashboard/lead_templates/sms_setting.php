@@ -14,6 +14,7 @@ function edugorilla_sms_setting()
               <li><a href="#tabs-monthly-digest-sms">Monthly Digest SMS</a></li>
               <li><a href="#tabs-educash-added">EduCash Added</a></li>
               <li><a href="#tabs-educash-deducted">EduCash Deducted</a></li>
+			  <li><a href="#tabs-otp">OTP</a></li>
               <!--<li><a href="#tabs-4">Tab 4</a></li>
               <li><a href="#tabs-5">Tab 5</a></li>-->
           </ul>
@@ -542,6 +543,70 @@ function edugorilla_sms_setting()
                                <input type="submit" class="button button-primary" value="Save">
                            </td>
                        </tr>
+                   </table>
+               </form>
+           </div>
+		               <div id="tabs-otp">
+               <?php
+               $sms_setting_form_otp = $_POST['sms_setting_form_otp'];
+               if ($sms_setting_form_otp == "self") {
+                   $errors1 = array();
+
+                   $edugorilla_sms_body_otp = $_POST['edugorilla_body_otp'];
+
+                   if (empty($edugorilla_sms_body_otp)) $errors1['edugorilla_body_otp'] = "Empty";
+                   if (empty($errors1)) {
+                       $edugorilla_sms_setting_otp = array('body' => stripslashes($edugorilla_sms_body_otp));
+                       update_option("sms_setting_form_otp", $edugorilla_sms_setting_otp);
+                       $success1 = "otp Settings Saved Successfully.";
+                       $sms_setting_options_otp = get_option('sms_setting_form_otp');
+
+                       $edugorilla_sms_body_otp = stripslashes($sms_setting_options_otp['body']);
+                   }
+               } else {
+                   $sms_setting_options_otp = get_option('sms_setting_form_otp');
+
+                   $edugorilla_sms_body_otp = stripslashes($sms_setting_options_otp['body']);
+               }
+               if ($success1) {
+                   ?>
+                   <div class="updated notice">
+                       <p><?php echo $success1; ?></p>
+                   </div>
+                   <?php
+               }
+               ?>
+               <form method="post">
+                   <table class="form-table">
+
+                       <tr>
+                           <th>SMS Body<sup><font color="red">*</font></sup></th>
+                           <td>
+                               <?php
+                               $content = $edugorilla_sms_body_otp;
+                               $editor_id = 'edugorilla_body_otp';?>
+                               <textarea name="edugorilla_body_otp" rows="15" cols="100" ><?php echo $content;?></textarea>
+                               <font color="red"><?php echo $errors1['edugorilla_body_otp']; ?></font>
+                           </td>
+                       </tr>
+                       <tr>
+                           <th></th>
+                           <td>
+                               <input type="hidden" name="sms_setting_form_otp" value="self">
+                               <input type="submit" class="button button-primary" value="Save">
+                           </td>
+                       </tr>
+					   <tr>
+                          <th>Definitions :</th>
+                          <td>
+                              <table>
+								<tr>
+									<th>1. {otp} :</th>
+								<td>otp to be send.</td>
+								</tr>
+							  </table>
+                          </td>
+                      </tr>
                    </table>
                </form>
            </div>
