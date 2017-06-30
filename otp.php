@@ -9,7 +9,10 @@ function edugorilla_otp()
         if (empty($error)) {
         	include_once plugin_dir_path(__FILE__) . "api/gupshup.api.php";
         	$otp = rand(1000,9999);
-        	$msg = "Your OTP for EduGorilla Live Chat is ".$otp.".";
+			$sms_setting_options_otp = get_option('sms_setting_form_otp');
+            $edugorilla_otp_body = stripslashes($sms_setting_options_otp['body']);
+			$msg = str_replace("{otp}",$otp,$edugorilla_otp_body);
+        	/*$msg = "Your OTP for EduGorilla Live Chat is ".$otp.".";*/
         	$credentials = get_option("ghupshup_credentials");
         	$response = send_sms($credentials['user_id'],$credentials['password'],$edugorilla_mno,$msg);
 
@@ -59,6 +62,7 @@ function edugorilla_settings()
 
     <ul>
       <li><a href="#tabs-1">Gupshup Credentials</a></li>
+	  <li><a href="#tabs-4">Promotional Credentials</a></li>
       <li><a href="#tabs-2">PayUMoney Credentials</a></li>
       <li><a href="#tabs-3">Google url shortening key</a></li>
     </ul>
@@ -109,6 +113,58 @@ function edugorilla_settings()
                     </tr>
                     <tr>
                         <td><input type="hidden" name="ghupshup_credentials_form" value="self"></td>
+                        <td><input type="submit" class="button button-primary" value="Save"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+      </div>
+	  <div id="tabs-4">
+        <?php
+        $promotional_credentials_form = $_POST['promotional_credentials_form'];
+        if($promotional_credentials_form == "self")
+        {
+            $promotional_user_id = $_POST['promotional_user_id'];
+            $promotional_pwd = $_POST['promotional_pwd'];
+
+            $errors = array();
+
+            if(empty($promotional_user_id)) $errors['promotional_user_id'] = "Empty";
+            if(empty($promotional_pwd)) $errors['promotional_pwd'] = "Empty";
+
+            if(empty($errors))
+            {
+                $credentials = array("user_id"=>$promotional_user_id, "password" => $promotional_pwd);
+                update_option("promotional_credentials",$credentials);
+                $success = "Saved Successfully";
+            }
+        }else
+        {
+            $credentials = get_option("promotional_credentials");
+            $promotional_user_id = $credentials['user_id'];
+            $promotional_pwd = $credentials['password'];
+        }
+        ?>
+        <div class="wrap">
+            <h1>Promotional SMS Credentials</h1>
+            <form method="post">
+                <table>
+                    <tr>
+                        <th>User ID</th>
+                        <td>
+                            <input name="promotional_user_id" value="<?php echo $promotional_user_id; ?>">
+                            <font color="red"><?php echo $errors['promotional_user_id']; ?></font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Password</th>
+                        <td>
+                            <input name="promotional_pwd" value="<?php echo $promotional_pwd; ?>">
+                            <font color="red"><?php echo $errors['promotional_pwd']; ?></font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="hidden" name="promotional_credentials_form" value="self"></td>
                         <td><input type="submit" class="button button-primary" value="Save"></td>
                     </tr>
                 </table>
