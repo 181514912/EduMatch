@@ -195,9 +195,13 @@ function send_email_to_lead($email, $subject, $body){
 	return $result;
 }
 //function to send sms to lead
-function send_sms_to_lead($contact_no, $msg){
+function send_sms_to_lead($contact_no, $msg, $sms_type){
 	include_once plugin_dir_path( __FILE__ ) . "api/gupshup.api.php";
-	$credentials = get_option( "ghupshup_credentials" );
+	if($sms_type == 'Transactional'){
+		$credentials = get_option( "ghupshup_credentials" );
+	}else{
+		$credentials = get_option( "promotional_credentials" );
+	}
 	$result = send_sms( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
 	return $result;
 }
@@ -230,9 +234,10 @@ function contact_lead_for_cross_sell( $lead_id, $category_str, $location_id, $le
 			//$output .= '<option value="' . $post['ID'] . '">' . $post['post_title'] . '</option>';$category_str,$location_id
 			$check_category = explode( ",", get_post_meta( $post['ID'], "categories", true ) );
 			$check_location = get_post_meta( $post['ID'], "location", true );
+			$sms_type		= get_post_meta( $post['ID'], "sms_type", true );
 			$cat_diff       = array_diff( $cat_array, $check_category );
 			if ( empty( $cat_diff ) && ( $check_location === $location_id ) ) {
-				$result4 = send_sms_to_lead( $lead_phone_no, $post['post_content'] );
+				$result4 = send_sms_to_lead( $lead_phone_no, $post['post_content'], $sms_type );
 				break;
 			}
 		}
