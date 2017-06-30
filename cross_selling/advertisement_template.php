@@ -97,7 +97,7 @@ function cross_sell_meta_box()
 {
 	global $post;
 	$custom = get_post_custom( $post->ID );
- 
+	$post_type = get_post_type();
 	?>
 	<style>.width99 {width:99%;}</style>
 	<p>
@@ -189,13 +189,28 @@ function cross_sell_meta_box()
 						</select>
 	</p>
 	<?php
+	if($post_type == 'cross_sell_sms'){
+	?>
+	<p>
+			<label>SMS Type:</label><br />
+						<select name="sms_type" id="" class="">
+								<option value="Promotional">
+								Promotional
+								</option>
+								<option value="Transactional">
+								Transactional
+								</option>
+						</select>
+	</p>
+	<?php
+	}
 }
 /**
  * Save custom field data when creating/updating posts
  */
 function save_email_details_custom_fields(){
   global $post;
- 
+	$post_type = get_post_type();
   if ( $post )
   {
 	  $category_id = @$_POST['category_id'];
@@ -209,6 +224,10 @@ function save_email_details_custom_fields(){
 	  
     update_post_meta($post->ID, "categories", $category_str);
     update_post_meta($post->ID, "location",$location_id );
+	if($post_type == 'cross_sell_sms'){
+		$sms_type = @$_POST['sms_type'];
+		update_post_meta($post->ID, "sms_type", $sms_type);
+	}
   }
 }
 add_action( 'admin_init', 'add_cross_sell_meta_boxes' );
@@ -219,8 +238,12 @@ add_filter('manage_cross_sell_email_posts_columns','filter_csp_columns' ) ;
 add_filter('manage_cross_sell_sms_posts_columns','filter_csp_columns' ) ;
 
 function filter_csp_columns( $columns ) {
+	$post_type = get_post_type();
     $columns['mycategory'] = 'Category Details';
 	$columns['mylocation'] = 'Location Details';
+	if($post_type == 'cross_sell_sms'){
+		$columns['smsType'] = 'SMS Type';
+	}
     return $columns;
 }
 
@@ -265,7 +288,12 @@ function action_custom_columns_content ( $column_id, $post_id ) {
 							$leads_location = "N/A";
 				echo $leads_location;
         break;
-        
+        case 'smsType':
+            $value = get_post_meta($post_id, 'sms_type', true );
+				if(empty($value))
+					$value = "N/A";
+			echo $value;
+        break;
 
    }
 }
