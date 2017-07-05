@@ -199,10 +199,11 @@ function send_sms_to_lead($contact_no, $msg, $sms_type){
 	include_once plugin_dir_path( __FILE__ ) . "api/gupshup.api.php";
 	if($sms_type == 'Transactional'){
 		$credentials = get_option( "ghupshup_credentials" );
+		$result = send_sms( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
 	}else{
 		$credentials = get_option( "promotional_credentials" );
-	}
-	$result = send_sms( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
+		$result = send_sms_promotional( $credentials['user_id'], $credentials['password'], $contact_no, $msg );
+	}	
 	return $result;
 }
 
